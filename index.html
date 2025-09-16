@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Validador de Constancias y Reconocimientos del ITD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- SheetJS for reading Excel files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+      @keyframes fade-in {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .animate-spin { animation: spin 1s linear infinite; }
+    </style>
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <audio id="beep-success" src="https://cdn.freesound.org/previews/270/270319_5123851-lq.mp3" preload="auto"></audio>
+    <audio id="beep-fail" src="https://cdn.freesound.org/previews/235/235927_4102603-lq.mp3" preload="auto"></audio>
+    <script type="text/babel">
+      // ============================================================================
+      // CONFIG & TYPES
+      // ============================================================================
+      const LOGO_URL = 'https://github.com/DA-itd/web2/image.jpg';
+      const DATABASE_URL = 'https://api.allorigins.win/raw?url=https://github.com/DA-itd/web2/blob/main/database.xlsx';
+
+      const POTENTIAL_FOLIO_HEADERS = [
+        'folio', 'id', 'clave', 'constancia', 'folio de constancia',
+        'folio constancia', 'no. folio', 'número de folio', 'num folio', 'folio certificado',
+      ];
+      
+      const ValidationStatus = {
+        IDLE: 'idle',
+        SUCCESS: 'success',
+        NOT_FOUND: 'not_found',
+        ERROR: 'error',
+      };
+
+      // ============================================================================
+      // UTILS
+      // ============================================================================
+      const getProperty = (obj, keyName) => {
+        if (!obj || typeof obj !== 'object' || !keyName) return undefined;
+        const keyToFind = keyName.toLowerCase();
+        const foundKey = Object.keys(obj).find(k => k.trim().toLowerCase() === keyToFind);
+        return foundKey ? obj[foundKey] : undefined;
+      };
+
+      const getFlexibleProperty = (obj, keys) => {
+        if (!obj || typeof obj !== 'object' || !Array.isArray(keys)) return undefined;
+        for (const key of keys) {
+          const value = getProperty(obj, key);
+          if (value !== undefined && value !== null) return value;
+        }
+        return undefined;
+      };
+      
+      const formatDate = (dateValue) => {
+          if (dateValue === undefined || dateValue === null) return 'N/A';
+          if (typeof dateValue === 'string') {
+               if (!isNaN(dateValue) && !isNaN(parseFloat(dateValue))) {
+                   let date = new Date((parseFloat(dateValue) - 25569) * 86400 * 1000);
+                   date = new Date(date.valueOf() + date.getTimezoneOffset() * 60000);
+                   if (isNaN(date.getTime())) return String(dateValue);
+                   return date.toLocaleDateString('es-ES',{ day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
+               }
+               return dateValue.toUpperCase();
+          }
+          let date;
+          if (typeof dateValue === 'number') {
+              date = new Date((dateValue - 25569) * 86400 * 1000);
+              date = new Date(date.valueOf() + date.getTimezoneOffset() * 60000);
+          } else {
+              date = new Date(dateValue);
+          }
+          if (!date || isNaN(date.getTime())) return String(dateValue).toUpperCase();
+          return date.toLocaleDateString('es-ES',{ day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
+      };
+
+      const playSound = (id) => {
+          const sound = document.getElementById(id);
+          if (sound) {
+              sound.currentTime = 0;
+              sound.play().catch(error => console.error(`Error playing sound: ${id}`, error));
+          }
+      };
+
+      // ============================================================================
+      // PDF SERVICE
+      // ============================================================================
+      const getImageDataFromURL = (url) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.crossOrigin = 'Anonymous';
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.drawImage(img, 0, 0);
+              const dataURL = canvas.toDataURL('image/jpeg');
+              resolve({ dataURL, width: img.width, height: img.height });
+            } else {
+              reject(new Error('Could not get canvas context.'));
+            }
+          };
+          img.onerror = (err) => reject(err);
+          img.src = url;
+        });
+      };
+
+      const getPdfDisplayValue = (key, value) => {
+        if (value === null || value === undefined) return 'N/A';
+        let valueStr = String(value).trim();
+        if (key === 'Fecha') return formatDate(value);
+        if (key === 'Duración') {
+           const upperValue = valueStr.toUpperCase();
+           if (upperValue.includes('HORAS')) return upperValue;
+           if (!isNaN(parseFloat(valueStr)) && valueStr !== '') return `${valueStr} HORAS`;
+           return upperValue;
+        }
+        return valueStr.toUpperCase();
+      };
+
+      const generatePdf = async (result) => {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF();
+
+          try {
+              const { dataURL, width, height } = await getImageDataFromURL(LOGO_URL);
+              const aspectRatio = width / height;
+              const pdfImageHeight = 20;
+              const pdfImageWidth = pdfImageHeight * aspectRatio;
+              doc.addImage(dataURL, 'JPEG', 15, 12, pdfImageWidth, pdfImageHeight);
+          } catch (error) {
+              console.error("No se pudo agregar el logo al PDF:", error);
+          }
+
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(11);
+          doc.text("TECNOLÓGICO NACIONAL DE MÉXICO", 105, 20, { align: 'center' });
+          doc.text("INSTITUTO TECNOLÓGICO DE DURANGO", 105, 27, { align: 'center' });
+
+          const documentTypeRaw = getFlexibleProperty(result, ['tipo']);
+          const documentType = documentTypeRaw ? String(documentTypeRaw).trim().toLowerCase() : '';
+          
+          let titleText = 'Documento de Validez';
+          if (documentType === 'constancia') {
+              titleText = 'Constancia de Validez';
+          } else if (documentType === 'reconocimiento') {
+              titleText = 'Reconocimiento de Validez';
+          }
+
+          doc.setFontSize(18);
+          doc.text(titleText, 105, 45, { align: 'center' });
+          
+          const data = {
+              'Folio': getFlexibleProperty(result, ['Folio', 'ID']),
+              'Nombre del Titular': getFlexibleProperty(result, ['Nombre', 'Nombre del Titular']),
+              'Curso/Taller': getFlexibleProperty(result, ['Curso', 'Nombre del curso-taller']),
+              'Fecha': getFlexibleProperty(result, ['Fecha', 'Fecha del curso-taller']),
+              'Departamento': getFlexibleProperty(result, ['Departamento']),
+              'Duración': getFlexibleProperty(result, ['Duracion', 'Duración']),
+          };
+          
+          let y = 65;
+          doc.setFontSize(11);
+          const labelX = 20;
+          const valueX = 70;
+
+          Object.entries(data).forEach(([key, value]) => {
+              if (value === undefined || value === null) return;
+              doc.setFont("helvetica", "bold");
+              doc.text(`${key}:`, labelX, y);
+              doc.setFont("helvetica", "normal");
+              const displayValue = getPdfDisplayValue(key, value);
+              const lines = doc.splitTextToSize(displayValue, 120);
+              doc.text(lines, valueX, y);
+              y += (lines.length * 7) + 5;
+          });
+
+          y += 5;
+
+          doc.setLineWidth(0.2);
+          doc.line(20, y, 190, y);
+          y += 10;
+          doc.setFontSize(9);
+          doc.setTextColor(150, 150, 150);
+          doc.setFont("helvetica", "normal");
+          doc.text("Este documento es una representación digital para la verificación de la constancia.", 105, y, { align: 'center' });
+          y += 5;
+          const now = new Date();
+          const generatedDate = now.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+          const generatedTime = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+          doc.text(`Generado el: ${generatedDate}, ${generatedTime}`, 105, y, { align: 'center' });
+          y += 5;
+          doc.text("Contacto para dudas o aclaraciones: coord_actualizaciondocente@itdurango.edu.mx", 105, y, { align: 'center' });
+
+          const folio = getFlexibleProperty(result, ['Folio', 'ID']) || 'Certificado';
+          doc.save(`Validacion-${folio}.pdf`);
+      };
+
+      // ============================================================================
+      // DATABASE SERVICE
+      // ============================================================================
+      const loadDatabase = async () => {
+        const cacheBustingUrl = `${DATABASE_URL}?v=${new Date().getTime()}`;
+        const response = await fetch(cacheBustingUrl);
+        if (!response.ok) throw new Error('No se pudo cargar la base de datos.');
+        
+        const arrayBuffer = await response.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+        let allData = [];
+
+        workbook.SheetNames.forEach(sheetName => {
+          const worksheet = workbook.Sheets[sheetName];
+          if (!worksheet || !worksheet['!ref']) return;
+          
+          const dataAoA = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false });
+          if (dataAoA.length === 0) return;
+
+          let headerRowIndex = -1;
+          for (let i = 0; i < dataAoA.length; i++) {
+            const row = dataAoA[i];
+            if (Array.isArray(row) && row.some(cell => {
+              const cellVal = String(cell || '').trim().toLowerCase();
+              return POTENTIAL_FOLIO_HEADERS.includes(cellVal);
+            })) {
+              headerRowIndex = i;
+              break;
+            }
+          }
+          if (headerRowIndex === -1) return;
+
+          const headers = dataAoA[headerRowIndex].map(h => (h ? String(h).trim() : ''));
+          const dataRows = dataAoA.slice(headerRowIndex + 1);
+
+          const sheetJson = dataRows
+            .filter(row => Array.isArray(row) && row.some(cell => String(cell || '').trim() !== ''))
+            .map(row => {
+              const record = {};
+              headers.forEach((header, i) => {
+                if (header && i < row.length) record[header] = row[i];
+              });
+              return record;
+            });
+
+          allData = allData.concat(sheetJson);
+        });
+
+        return allData;
+      };
+
+      // ============================================================================
+      // ICONS
+      // ============================================================================
+      const SearchIcon = (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      );
+      const SuccessIcon = (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      );
+      const ErrorIcon = (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      );
+      const DownloadIcon = (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+      );
+      const SpinnerIcon = (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" {...props}>
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      );
+
+      // ============================================================================
+      // COMPONENTS
+      // ============================================================================
+      const Header = () => (
+        <header className="bg-white shadow-sm w-full">
+          <div className="container mx-auto px-6 py-4 flex items-center">
+            <img src={LOGO_URL} alt="Logo ITD" className="h-10 mr-4" />
+            <h1 className="text-lg sm:text-xl font-bold text-gray-800">Validador de Constancias y Reconocimientos del ITD</h1>
+          </div>
+        </header>
+      );
+
+      const Footer = () => (
+        <footer className="w-full mt-auto py-6 text-center text-xs text-gray-500 px-4">
+          <p>© {new Date().getFullYear()} Validador de Constancias. Todos los derechos reservados.</p>
+          <p>Desarrollo académico, coordinación de actualización docente del ITD.</p>
+        </footer>
+      );
+
+      const SearchForm = ({ query, setQuery, onSearch, onClear }) => {
+        const handleSearch = (e) => {
+          e.preventDefault();
+          onSearch(query);
+        };
+
+        return (
+          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-md w-full max-w-2xl mx-auto">
+            <h2 className="text-xl font-bold text-gray-800 mb-2">Buscar Constancia</h2>
+            <p className="text-gray-600 mb-6">Ingrese el folio de la constancia para verificar su validez.</p>
+            <form onSubmit={handleSearch} className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+              <div className="relative flex-grow w-full">
+                <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Ej: TNM-054-00-2025-123"
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  autoFocus
+                />
+              </div>
+              <div className="flex space-x-2 w-full sm:w-auto">
+                <button type="submit" className="flex-1 sm:flex-none px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  Verificar
+                </button>
+                <button type="button" onClick={onClear} className="flex-1 sm:flex-none px-6 py-2 bg-gray-200 text-gray-700 font-semibold rounded-md hover:bg-gray-300 transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">
+                  Borrar
+                </button>
+              </div>
+            </form>
+          </div>
+        );
+      };
+
+      const ValidationResult = ({ status, result }) => {
+        const [isGeneratingPdf, setIsGeneratingPdf] = React.useState(false);
+
+        const handleDownload = async () => {
+          if (!result) return;
+          setIsGeneratingPdf(true);
+          try {
+            await generatePdf(result);
+          } catch (error) {
+            console.error("PDF Generation failed", error);
+            alert("Hubo un error al generar el PDF.");
+          } finally {
+            setIsGeneratingPdf(false);
+          }
+        };
+
+        if (status === ValidationStatus.IDLE) return null;
+
+        if (status === ValidationStatus.NOT_FOUND) {
+          return (
+            <div className="w-full max-w-2xl mx-auto mt-8 p-6 bg-red-50 border-l-4 border-red-500 animate-fade-in rounded-r-lg shadow">
+              <div className="flex items-center">
+                <ErrorIcon className="w-8 h-8 text-red-500 mr-4 flex-shrink-0" />
+                <div>
+                  <h3 className="text-lg font-bold text-red-800">Documento no Encontrado</h3>
+                  <p className="text-red-700">El folio ingresado no fue encontrado en la base de datos. Por favor, verifique el folio e intente de nuevo.</p>
+                </div>
+              </div>
+            </div>
+          );
+        }
+        
+        if (status === ValidationStatus.SUCCESS && result) {
+          const documentTypeRaw = getFlexibleProperty(result, ['tipo']);
+          const documentType = documentTypeRaw ? String(documentTypeRaw).trim().toLowerCase() : '';
+
+          let validationTitleText = "Documento Válido";
+          if (documentType === 'constancia') {
+              validationTitleText = 'Constancia Válida';
+          } else if (documentType === 'reconocimiento') {
+              validationTitleText = 'Reconocimiento Válido';
+          }
+          
+          const formatDuration = (value) => {
+              if (value === null || value === undefined) return 'N/A';
+              const valueStr = String(value).trim();
+              const upperValue = valueStr.toUpperCase();
+              if (upperValue.includes('HORAS')) return upperValue;
+              if (!isNaN(parseFloat(valueStr)) && valueStr !== '') return `${valueStr} HORAS`;
+              return upperValue;
+          };
+
+          const displayData = {
+            'Folio': getFlexibleProperty(result, ['Folio', 'ID']),
+            'Nombre del Titular': getFlexibleProperty(result, ['Nombre', 'Nombre del Titular']),
+            'Nombre del curso-taller': getFlexibleProperty(result, ['Curso', 'Nombre del curso-taller']),
+            'Fecha del curso-taller': formatDate(getFlexibleProperty(result, ['Fecha', 'Fecha del curso-taller'])),
+            'Departamento': getFlexibleProperty(result, ['Departamento']),
+            'Duración': formatDuration(getFlexibleProperty(result, ['Duracion', 'Duración'])),
+          };
+
+          return (
+            <div className="w-full max-w-2xl mx-auto mt-8 bg-green-50 border-l-4 border-green-500 animate-fade-in rounded-r-lg shadow">
+              <div className="p-6">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                      <div className="flex items-center">
+                          <SuccessIcon className="w-8 h-8 text-green-500 mr-4 flex-shrink-0" />
+                          <h3 className="text-lg font-bold text-green-800">{validationTitleText}</h3>
+                      </div>
+                      <button 
+                          onClick={handleDownload} 
+                          disabled={isGeneratingPdf}
+                          className="flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200 disabled:bg-blue-400 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                          {isGeneratingPdf ? (
+                              <React.Fragment>
+                                  <SpinnerIcon className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
+                                  Generando...
+                              </React.Fragment>
+                          ) : (
+                              <React.Fragment>
+                                  <DownloadIcon className="w-5 h-5 mr-2" />
+                                  Descargar Validación
+                              </React.Fragment>
+                          )}
+                      </button>
+                  </div>
+              </div>
+              <div className="bg-white p-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm rounded-b-lg border-t border-green-200">
+                {Object.entries(displayData).map(([key, value]) => (
+                  value ? (
+                    <div key={key}>
+                      <p className="text-gray-500">{key}</p>
+                      <p className="font-bold text-gray-800 break-words">{String(value).toUpperCase()}</p>
+                    </div>
+                  ) : null
+                ))}
+              </div>
+            </div>
+          );
+        }
+
+        return null;
+      };
+
+      // ============================================================================
+      // MAIN APP
+      // ============================================================================
+      const App = () => {
+        const { useState, useEffect, useCallback } = React;
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
+        const [certificateData, setCertificateData] = useState([]);
+        const [query, setQuery] = useState('');
+        const [validationStatus, setValidationStatus] = useState(ValidationStatus.IDLE);
+        const [validationResult, setValidationResult] = useState(null);
+
+        useEffect(() => {
+          const fetchDatabase = async () => {
+            try {
+              setError(null);
+              setLoading(true);
+              const data = await loadDatabase();
+              setCertificateData(data);
+            } catch (e) {
+              console.error("Error loading database:", e);
+              const errorMessage = e instanceof Error ? e.message : 'Error de red al cargar la base de datos.';
+              setError(errorMessage);
+            } finally {
+              setLoading(false);
+            }
+          };
+          fetchDatabase();
+        }, []);
+
+        const handleSearch = useCallback((searchQuery) => {
+          if (!searchQuery || certificateData.length === 0) {
+            setValidationStatus(ValidationStatus.IDLE);
+            setValidationResult(null);
+            return;
+          }
+          const cleanedQuery = searchQuery.trim().toLowerCase();
+          const result = certificateData.find(record => {
+            const folioValue = getFlexibleProperty(record, POTENTIAL_FOLIO_HEADERS);
+            return folioValue && String(folioValue).trim().toLowerCase() === cleanedQuery;
+          });
+
+          if (result) {
+            setValidationResult(result);
+            setValidationStatus(ValidationStatus.SUCCESS);
+            playSound('beep-success');
+          } else {
+            setValidationResult(null);
+            setValidationStatus(ValidationStatus.NOT_FOUND);
+            playSound('beep-fail');
+            setTimeout(() => playSound('beep-fail'), 300);
+          }
+        }, [certificateData]);
+
+        const handleClear = useCallback(() => {
+          setQuery('');
+          setValidationStatus(ValidationStatus.IDLE);
+          setValidationResult(null);
+        }, []);
+
+        const renderContent = () => {
+          if (loading) return <div className="text-center p-8"><p className="text-gray-600">Cargando base de datos...</p></div>;
+          if (error) return <div className="text-center p-8 text-red-600"><p>{error}</p></div>;
+          if (certificateData.length > 0) {
+            return (
+              <React.Fragment>
+                <SearchForm
+                  query={query}
+                  setQuery={setQuery}
+                  onSearch={handleSearch}
+                  onClear={handleClear}
+                />
+                <ValidationResult status={validationStatus} result={validationResult} />
+              </React.Fragment>
+            );
+          }
+          return <div className="text-center p-8"><p className="text-gray-600">No se pudo cargar la base de datos.</p></div>;
+        };
+
+        return (
+          <div className="min-h-screen bg-slate-100 font-sans text-slate-800 flex flex-col items-center">
+            <Header />
+            <main className="flex-grow container mx-auto p-4 sm:p-6 w-full flex flex-col items-center">
+              {renderContent()}
+            </main>
+            <Footer />
+          </div>
+        );
+      };
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<React.StrictMode><App /></React.StrictMode>);
+    </script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
