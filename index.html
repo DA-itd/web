@@ -5,15 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro de Cursos - ITDurango</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* Franja azul arriba */
+    .hero-header {
+      background-color: #0d2d5e;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    /* Reducir tamaño de letra en footer */
+    footer {
+      font-size: 0.8rem;
+    }
+    .logo {
+      max-height: 120px;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
   <!-- Encabezado -->
-  <div class="hero text-center py-3 bg-light">
-    <img src="logo_itdurango.png" alt="Logo ITDurango" class="logo mb-3" style="max-height:120px">
+  <div class="hero-header">
+    <img src="logo_itdurango.png" alt="Logo ITDurango" class="logo">
     <h2>INSTITUTO TECNOLÓGICO DE DURANGO</h2>
-    <h4>Desarrollo Académico</h4>
-    <h3 class="mt-3">Registro a Curso de Actualización Docente</h3>
+    <h5>Desarrollo Académico</h5>
+    <h4 class="mt-2">Registro a Curso de Actualización Docente</h4>
     <p><strong>Periodo Enero - Junio 2026</strong></p>
   </div>
 
@@ -26,7 +43,8 @@
             <!-- Nombre -->
             <div class="mb-3">
               <label class="form-label">Nombre completo</label>
-              <input type="text" class="form-control text-uppercase" name="nombre" required>
+              <input type="text" class="form-control text-uppercase" name="nombre" list="listaDocentes" required>
+              <datalist id="listaDocentes"></datalist>
             </div>
 
             <!-- CURP -->
@@ -44,9 +62,8 @@
             <!-- Departamento -->
             <div class="mb-3">
               <label class="form-label">Departamento</label>
-              <select class="form-select" name="departamento" required>
-                <option value="">Seleccione...</option>
-              </select>
+              <input type="text" class="form-control" name="departamento" list="listaDepartamentos" required>
+              <datalist id="listaDepartamentos"></datalist>
             </div>
 
             <!-- Género -->
@@ -60,14 +77,8 @@
             <!-- Curso -->
             <div class="mb-3">
               <label class="form-label">Curso</label>
-              <select class="form-select" name="id_curso" id="cursoSelect" required>
-                <option value="">Seleccione un curso...</option>
-              </select>
-            </div>
-
-            <!-- Vista instantánea del curso elegido -->
-            <div class="alert alert-info d-none" id="cursoElegido">
-              <strong>Ha seleccionado:</strong> <span id="cursoTexto"></span>
+              <input type="text" class="form-control" name="id_curso" list="listaCursos" required>
+              <datalist id="listaCursos"></datalist>
             </div>
 
             <!-- Botón Finalizar -->
@@ -79,27 +90,47 @@
   </div>
 
   <!-- Footer -->
-  <footer class="text-center py-4 bg-light mt-4">
+  <footer class="text-center py-3 bg-light">
     <p>© 2026 Registro de cursos de actualización docente. Todos los derechos reservados.</p>
     <p>Desarrollo Académico - Coordinación de Actualización Docente del ITD</p>
   </footer>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // 👉 Reemplaza esta URL con la de tu WebApp desplegado en Google Apps Script
-    const API_URL = "https://script.google.com/a/macros/itdurango.edu.mx/s/AKfycbxx5VcDVhKZZ-O0m9K6SrK-ZuLvViDoYb2ja_QY7BTl4HG6FofUjGKAHWbjKoxnsH8a/exec"; 
+    // 👉 Reemplaza esta URL con la de tu WebApp de Google Apps Script
+    const API_URL = "TU_URL_DEL_WEBAPP"; 
+
+    // Llenar Docentes
+    fetch(API_URL + "?api=docentes")
+      .then(res => res.json())
+      .then(data => {
+        let lista = document.getElementById("listaDocentes");
+        data.forEach(doc => {
+          let option = document.createElement("option");
+          option.value = doc[0]; // Nombre Completo
+          option.setAttribute("data-curp", doc[1]);
+          option.setAttribute("data-email", doc[2]);
+          lista.appendChild(option);
+        });
+
+        // Autocompletar CURP y Email si selecciona docente
+        document.querySelector("input[name='nombre']").addEventListener("input", function() {
+          let opt = [...lista.options].find(o => o.value === this.value);
+          if (opt) {
+            document.querySelector("input[name='curp']").value = opt.getAttribute("data-curp");
+            document.querySelector("input[name='email']").value = opt.getAttribute("data-email");
+          }
+        });
+      });
 
     // Llenar Departamentos
     fetch(API_URL + "?api=departamentos")
       .then(res => res.json())
       .then(data => {
-        let select = document.querySelector("select[name='departamento']");
-        data.forEach(d => {
+        let lista = document.getElementById("listaDepartamentos");
+        data.forEach(dep => {
           let option = document.createElement("option");
-          option.value = d[0];
-          option.textContent = d[0];
-          select.appendChild(option);
+          option.value = dep[0];
+          lista.appendChild(option);
         });
       });
 
@@ -107,40 +138,21 @@
     fetch(API_URL + "?api=cursos")
       .then(res => res.json())
       .then(data => {
-        let select = document.getElementById("cursoSelect");
+        let lista = document.getElementById("listaCursos");
         data.forEach(curso => {
           let option = document.createElement("option");
-          option.value = curso[0];  // ID Curso
-          option.textContent = curso[1]; // Nombre del curso (columna B)
-          option.setAttribute("data-fecha", curso[2]); // FechaVisible
-          option.setAttribute("data-lugar", curso[4]); // Lugar
-          select.appendChild(option);
+          option.value = curso[0] + " - " + curso[1]; // Id_Curso + Nombre curso
+          option.setAttribute("data-fecha", curso[2]);
+          option.setAttribute("data-lugar", curso[4]);
+          lista.appendChild(option);
         });
       });
 
-    // Mostrar curso en tiempo real
-    document.getElementById('cursoSelect').addEventListener('change', function() {
-      let value = this.options[this.selectedIndex].text;
-      let alertBox = document.getElementById('cursoElegido');
-      document.getElementById('cursoTexto').innerText = value;
-      alertBox.classList.remove('d-none');
-    });
-
-    // Enviar Registro
-    document.getElementById('registroForm').addEventListener('submit', function(e) {
+    // Enviar Formulario
+    document.getElementById("registroForm").addEventListener("submit", function(e) {
       e.preventDefault();
       let formData = new FormData(e.target);
       let obj = Object.fromEntries(formData.entries());
-
-      obj.cursoTexto = document.getElementById("cursoSelect").options[
-        document.getElementById("cursoSelect").selectedIndex
-      ].text;
-      obj.fechaVisible = document.getElementById("cursoSelect").options[
-        document.getElementById("cursoSelect").selectedIndex
-      ].getAttribute("data-fecha");
-      obj.lugar = document.getElementById("cursoSelect").options[
-        document.getElementById("cursoSelect").selectedIndex
-      ].getAttribute("data-lugar");
 
       fetch(API_URL, {
         method: "POST",
@@ -152,7 +164,6 @@
         if (r.status === "ok") {
           alert("✅ Registro guardado correctamente en Google Sheets");
           e.target.reset();
-          document.getElementById("cursoElegido").classList.add("d-none");
         } else {
           alert("⚠️ Error: " + r.message);
         }
