@@ -1,0 +1,292 @@
+[
+  {
+    "Id_Curso": "TNM-054-01-2026",
+    "#": "CONOCIENDO REGLAMENTOS Y LINEAMIENTOS: UNA PAUTA PARA EL DESARROLLO DOCENTE Y PERFIL DESEABLE",
+    "FechaVisible": "DEL 13 AL 17 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_1",
+    "Horas": 30,
+    "Lugar": "A4",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Docente"
+  },
+  {
+    "Id_Curso": "TNM-054-02-2026",
+    "#": "PYTHON BÁSICO",
+    "FechaVisible": "DEL 13 AL 17 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_1",
+    "Horas": 30,
+    "Lugar": "Edifcio O",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-03-2026",
+    "#": "MANTENIMIENTO CORRECTIVO FRESA CNC DYNA MYTE",
+    "FechaVisible": "DEL 13 AL 17 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_1",
+    "Horas": 30,
+    "Lugar": "Lab. de Electrica",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-04-2026",
+    "#": "HERRAMIENTAS DE INTELIGENCIA ARTIFICIAL GENERATIVA",
+    "FechaVisible": "DEL 13 AL 17 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_1",
+    "Horas": 30,
+    "Lugar": "Lab. de Elen",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-05-2026",
+    "#": "METODOLOGÍA DE EDUCACIÓN VIRTUAL /ITDED",
+    "FechaVisible": "DEL 13 AL 17 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_1",
+    "Horas": 30,
+    "Lugar": "Centro de Información Sala A",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Docente"
+  },
+  {
+    "Id_Curso": "TNM-054-06-2026",
+    "#": "BÚSQUEDA Y RESCATE",
+    "FechaVisible": "DEL 13 AL 17 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_1",
+    "Horas": 30,
+    "Lugar": "UPIDET",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Docente"
+  },
+  {
+    "Id_Curso": "TNM-054-07-2026",
+    "#": "ESTANDARIZACIÓN DE LOS CURSOS DE LA PLATAFORMA MOODLE DE LA ACADEMIA DE INFORMÁTICA",
+    "FechaVisible": "DEL 13 AL 17 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_1",
+    "Horas": 30,
+    "Lugar": "Centro de Innovación",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-08-2026",
+    "#": "TALLER DE CONSTRUCCIÓN",
+    "FechaVisible": "DEL 13 AL 17 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_1",
+    "Horas": 30,
+    "Lugar": "Ed. Quimica-Bioqumica",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-09-2026",
+    "#": "MARCO DE REFERENCIA CACEI 2025, PARA LA ACREDITACIÓN DE INGENIERÍA QUÍMICA PARTE I",
+    "FechaVisible": "DEL 13 AL 17 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_1",
+    "Horas": 30,
+    "Lugar": "Lab. de Alimentos Funcionales",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Docente"
+  },
+  {
+    "Id_Curso": "TNM-054-10-2026",
+    "#": "MANEJO DE TORNO",
+    "FechaVisible": "DEL 13 AL 17 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_1",
+    "Horas": 30,
+    "Lugar": "A2",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-11-2026",
+    "#": "INGLES BÁSICO",
+    "FechaVisible": "DEL 13 AL 17 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_1",
+    "Horas": 30,
+    "Lugar": "O1",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Docente"
+  },
+  {
+    "Id_Curso": "TNM-054-12-2026",
+    "#": "ACTUALIZACIÓN INTEGRADA DE PRÁCTICAS DE LABORATORIO",
+    "FechaVisible": "DEL 13 AL 17 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_1",
+    "Horas": 30,
+    "Lugar": "T1",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-13-2026",
+    "#": "TALLER PARA AUDITABLES, DIRIGIDO A ALTA DIRECCIÓN Y JEFES DE DEPARTAMENTO",
+    "FechaVisible": "DEL 13 AL 17 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_1",
+    "Horas": 30,
+    "Lugar": "Ed. Sistema y Computacion",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Docente"
+  },
+  {
+    "Id_Curso": "TNM-054-14-2026",
+    "#": "HERRAMIENTAS  DE INTELIGENCIA ARTIFICIAL GENERATIVA CAPITULO 2",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "Lab. de Computo",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-15-2026",
+    "#": "ANÁLISIS DE LA RETÍCULA DE LAS CARRERAS DE SISTEMAS Y COMPUTACIÓN",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "Hemeroteca",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-16-2026",
+    "#": "NUTRICIÓN PARA LA PREVENCIÓN DEL SÍNDROME METABÓLICO",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "A4",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Docente"
+  },
+  {
+    "Id_Curso": "TNM-054-17-2026",
+    "#": "METODOLOGÍA DE EDUCACIÓN VIRTUAL /ITDED I",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "Edifcio O",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Docente"
+  },
+  {
+    "Id_Curso": "TNM-054-18-2026",
+    "#": "INTRODUCCIÓN BIM REVIT ARQUITECTURA",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "Lab. de Electrica",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-19-2026",
+    "#": "ESTRATEGIAS PARA EL DESARROLLO Y MEJORA DEL LABORATORIO DE INGENIERÍA CIVIL",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "Lab. de Elen",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-20-2026",
+    "#": "MARCO DE REFERENCIA CACEI 2025, PARA LA ACREDITACIÓN DE INGENIERÍA QUÍMICA PARTE II",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "Centro de Información Sala A",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-21-2026",
+    "#": "DISEÑO DE PROCESOS TÉRMICOS EN ALIMENTOS DE BAJA ACIDEZ",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "UPIDET",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-22-2026",
+    "#": "INGLES BÁSICO I",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "Centro de Innovación",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Docente"
+  },
+  {
+    "Id_Curso": "TNM-054-23-2026",
+    "#": "DISEÑO DE PLANES DE FORMACIÓN DUAL",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "Ed. Quimica-Bioqumica",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Docente"
+  },
+  {
+    "Id_Curso": "TNM-054-24-2026",
+    "#": "HERRAMIENTAS Y ESTRATEGIAS PARA EL ACOMPAÑAMIENTO ACADÉMICO EN INGENIERÍA MECÁNICA Y MECATRÓNICA",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "Lab. de Alimentos Funcionales",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-25-2026",
+    "#": "ANÁLISIS DE CIRCUITOS CON SIMULINK",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "A2",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-26-2026",
+    "#": "ANÁLISIS ESTADÍSTICO DE DATOS",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2026",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "O1",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-27-2026",
+    "#": "CONFIGURACIÓN DE TARJETA JETSON NANO ORIN PARA EL DESARROLLO DE APLICACIONES DEEP LEARNING CONVOLUCIONAL",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2025",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "T1",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-28-2026",
+    "#": "ANÁLISIS DE SISTEMAS TÉRMICOS MEDIANTE SOFTWARE ESPECIALIZADO",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2025",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "Ed. Sistema y Computacion",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  },
+  {
+    "Id_Curso": "TNM-054-29-2026",
+    "#": "TALLER DE IMPLEMENTACIÓN DE PRÁCTICAS DEL EQUIPO LUCAS-NULLE",
+    "FechaVisible": "DEL 20 AL 24 DE ENERO DEL 2025",
+    "Periodo": "PERIODO_2",
+    "Horas": 30,
+    "Lugar": "Lab. de Computo",
+    "Horario": "9:00 a 15:00 hrs",
+    "Tipo": "Profesional"
+  }
+]

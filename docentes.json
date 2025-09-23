@@ -1,0 +1,2352 @@
+[
+  {
+    "NombreCompleto": "AARÓN CUAUHTÉMOC VARGAS FIERRO",
+    "Curp": "",
+    "Email": "aaron.vargas@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ABRAHAM LERMA HEREDIA",
+    "Curp": "",
+    "Email": "a.lerma@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ADÁN MEDINA NÚÑEZ",
+    "Curp": "MENA800405HDGDXD04",
+    "Email": "adan.medina@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ADOLFO RUIZ SOTO",
+    "Curp": "RUSA781202HDGZTD09",
+    "Email": "adolforuiz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ADRIÁN CALDERÓN FLORES",
+    "Curp": "CAFA410922HDGLLD07",
+    "Email": "adrian.calderon@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ADRIANA ERÉNDIRA MURILLO",
+    "Curp": "MUXA741025MDGRXD08",
+    "Email": "amurillo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ADRIANA ROBLEDO PERALTA",
+    "Curp": "",
+    "Email": "adriana.robledo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ÁGUEDA VÁZQUEZ RUBIO",
+    "Curp": "VARA740417MDGZBG04",
+    "Email": "agueda.vazquez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "AGUSTÍN CASTAÑEDA VELEZ",
+    "Curp": "",
+    "Email": "agustin.castaneda@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "AGUSTÍN CERVANTES GÓMEZ",
+    "Curp": "CEGA610109HDGRMG02",
+    "Email": "acervantes@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "AÍDA ARACELI NÚÑEZ HERNÁNDEZ",
+    "Curp": "NUHA820730MDGXRD08",
+    "Email": "aidanunez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALBERTO AYALA PARTIDA",
+    "Curp": "AAPA640407HDGYRL08",
+    "Email": "aayala@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALBERTO RAMÍREZ MÁRQUEZ",
+    "Curp": "RAMA790821HDGMRL04",
+    "Email": "aramirez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALDO DAVID PORRAS SANDOVAL",
+    "Curp": "POSA800318HDGRNL08",
+    "Email": "aldo.porras@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALDO FRANCISCO TAGLIAPIETRA LOERA",
+    "Curp": "TALA570914HDGGRL00",
+    "Email": "aftagliapietra@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALEJANDRO CALDERÓN RENTERÍA",
+    "Curp": "CARA690425HDGLNL03",
+    "Email": "alejandro.calderon@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALEJANDRO LUNA HURTADO",
+    "Curp": "",
+    "Email": "aluna@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALEJANDRO MENDOZA RAMÍREZ",
+    "Curp": "MERA820509HDGNML05",
+    "Email": "amendoza@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALEJANDRO VALENZUELA SILERIO",
+    "Curp": "VASA900201HDGLLL08",
+    "Email": "avalenzuela@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALFONSO FLORES SALINAS",
+    "Curp": "FOSA501213HDGLLL05",
+    "Email": "alfonso.flores@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALFREDO CÓRDOVA QUIÑONES",
+    "Curp": "COQA691109HDGRXL00",
+    "Email": "alfredocordova@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALFREDO LOZANO MUÑOZ",
+    "Curp": "LOMA590418HDGZXL00",
+    "Email": "alozano@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALFREDO RODRÍGUEZ RAMÍREZ",
+    "Curp": "",
+    "Email": "arodriguez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALICIA JANETH TORRES MERAZ",
+    "Curp": "TOMA920515MDGRRL03",
+    "Email": "torres@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALMA CITLALI VÁSQUEZ MORENO",
+    "Curp": "VAMA620213MDGSRL00",
+    "Email": "alma.vasquez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ALONDRA SOTO CABRAL",
+    "Curp": "SOCA840706MDGTBL06",
+    "Email": "alondra.soto@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "AMELIA SORIA HERNÁNDEZ",
+    "Curp": "SOHA530222MDGRRM01",
+    "Email": "asoriah711@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "AMPARO QUIÑONES PÉREZ",
+    "Curp": "QUPA750503MDGXRM05",
+    "Email": "amparoquinones@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ANA LUISA MOORILLÓN SOTO",
+    "Curp": "MOSA770615MDGRTN03",
+    "Email": "amoorillon@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ANA PATRICIA GALLEGOS FRANCO",
+    "Curp": "GAFA720623MDGLRN06",
+    "Email": "anapaty@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ANAPAULA RIVAS BARRAZA",
+    "Curp": "RIBA780801MDGVRN01",
+    "Email": "arivas@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ANDREA SUSANA MITRE VALDÉS",
+    "Curp": "MIVA851230MDGTLN09",
+    "Email": "andreamitre@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ANGÉLICA MÁRQUEZ BURCIAGA",
+    "Curp": "MABA791016MDGRRN03",
+    "Email": "angelica.marquez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ANÍBAL ROBERTO SAUCEDO ROSALES",
+    "Curp": "SARA760315HZSCSN09",
+    "Email": "asaucedo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ANTONIO ERNESTO RESÉNDIZ CISNEROS",
+    "Curp": "RECA530613HDGSSN01",
+    "Email": "aresendiz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ANTONIO RAMÍREZ RAÚL",
+    "Curp": "RAXR691113HDGMXL09",
+    "Email": "rramirez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ANTONIO SOSA QUIROGA",
+    "Curp": "SOQA610612HDGSRN01",
+    "Email": "antoniososaq@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ARACELI SOLEDAD DOMÍNGUEZ FLORES",
+    "Curp": "DOFA710724MDGMLR06",
+    "Email": "adominguez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ARELLANO HERNÁNDEZ KARLA SELENE",
+    "Curp": "",
+    "Email": "karla.arellano@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ARIANA CLARISA SOTO ALMODÓVAR",
+    "Curp": "SOAA860620MDGTLR06",
+    "Email": "ariana.soto@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ARMANDO ORTÍZ ARAGÓN",
+    "Curp": "OIAA670613HDGRRR07",
+    "Email": "aortiz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ARTEMIO GARCÍA SANTOYO",
+    "Curp": "GASA530112HDGRNR01",
+    "Email": "artemiogarcia@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ARTURO ELISEO RIVERA ARANDA",
+    "Curp": "RIAA521027HDGVRR00",
+    "Email": "arturorivera@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ARTURO MUÑOZ BLANCO",
+    "Curp": "MUBA530408HDGXLR05",
+    "Email": "arturo.blanco@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ARTURO RIVERA CASTAÑEDA",
+    "Curp": "RICA790218HDGVSR06",
+    "Email": "arivera@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ARTURO SOTO CABRAL",
+    "Curp": "SOCA811002HDGTBR05",
+    "Email": "arturo.soto.c@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ARTURO SOTO SOTO",
+    "Curp": "SOSA520901HDGTTR08",
+    "Email": "as@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ARTURO TAVIZÓN SALAZAR",
+    "Curp": "",
+    "Email": "arturo.tavizon@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "AURELIO CASTILLO LIÑÁN",
+    "Curp": "CALA560717HTSSXR05",
+    "Email": "acastillo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "AZENETH DE LUNA GALVÁN",
+    "Curp": "LUGA711016MCLNLZ09",
+    "Email": "azenethdeluna@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "BLANCA ELIZABETH MORALES CONTRERAS",
+    "Curp": "",
+    "Email": "bmorales@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "BLANCA ESTELA GARCÍA CABALLERO",
+    "Curp": "",
+    "Email": "bgarcia@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "BRENDA DE LA LUZ AVITIA ROCHA",
+    "Curp": "AIRB630718MDGVCR04",
+    "Email": "brenda.avitia@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "BRENDA ELIZABETH ALE CRUZ",
+    "Curp": "AECB851226MDGLRR06",
+    "Email": "brenda_ale@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "BRENDA NAYELI HERNÁNDEZ ELÍAS",
+    "Curp": "",
+    "Email": "brenda.hernandez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "BRENDA PALOMA GÓMEZ LOZANO",
+    "Curp": "GOLB831113MDGMZR20",
+    "Email": "bpgomez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "BRISEIDA LARA ORTIZ",
+    "Curp": "LAOB800630MDGRRR18",
+    "Email": "briseidalara@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "BRIZA IMELDA MUÑOZ OCHOA",
+    "Curp": "MUOB820130MDGXCR08",
+    "Email": "brisa.munoz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CAMILO ENRIQUE CONDE LIMON",
+    "Curp": "COLC920528HDGNMM02",
+    "Email": "enrique.conde@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CARLOS ALEJANDRO VÁSQUEZ MARTÍNEZ",
+    "Curp": "VAMC890614HOCSRR07",
+    "Email": "alejandrovasquez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CARLOS DAVID VILLEGAS VILLARREAL",
+    "Curp": "VIVC790809HDGLLR06",
+    "Email": "cvillegas@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CARLOS EDUARDO CALDERÓN PÉREZ",
+    "Curp": "CAPC570216HDGLRR07",
+    "Email": "cecalderon@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CARLOS EDUARDO MERAZ CASTRO",
+    "Curp": "MECC800505HDGRSR09",
+    "Email": "cemeraz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CARLOS ENRIQUE MONTES CASAS",
+    "Curp": "MOCC510819HDGNSR07",
+    "Email": "carlos.montes@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CARLOS FRANCISCO CRUZ FIERRO",
+    "Curp": "CUFC760908HDFRRR15",
+    "Email": "carlosfrancisco.cruz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CARLOS GALEANA DÁVILA",
+    "Curp": "GADC791123HDGLVR09",
+    "Email": "carlos.galeana@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CARLOS JAVIER TELUMBRE ALVARADO",
+    "Curp": "TEAC810415HDGLLR02",
+    "Email": "carlos.telumbre@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CARLOS LEONARDO RUIZ RODRÍGUEZ",
+    "Curp": "RURC700406HDGZDR14",
+    "Email": "carlos.ruiz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CARLOS OMAR RÍOS OROZCO",
+    "Curp": "RIOC821114HDGSRR09",
+    "Email": "omar.rios@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CARLOS ORTEGA GALLARDO",
+    "Curp": "OEGC540913HDFRLR03",
+    "Email": "cortega@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CARLOS QUIÑONES GARCÍA",
+    "Curp": "QUGC650531HDGXRR09",
+    "Email": "charliq@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CARLOS VALENZUELA MARTÍNEZ",
+    "Curp": "VAMC890710HDGLRR02",
+    "Email": "cvalenzuela@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CÉLIDA CÓRDOVA NAVARRO",
+    "Curp": "CONC800801MDGRVL08",
+    "Email": "ccordova@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CÉSAR ALBERTO ZUBIA GONZÁLEZ",
+    "Curp": "ZUGC720811HDGBNS01",
+    "Email": "cesarzubia@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CÉSAR ALFONSO VALDEZ RAMÍREZ",
+    "Curp": "VARC700217HDGLMS00",
+    "Email": "avaldez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CÉSAR ARTURO IBARRA SAMANIEGO",
+    "Curp": "IASC570124HDGBMS01",
+    "Email": "caibarra@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CÉSAR IVÁN BARRAZA CASTAÑEDA",
+    "Curp": "BACC721118HDGRSS05",
+    "Email": "ivanbarraza@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CÉSAR PORFIRIO VARELA RAMÍREZ",
+    "Curp": "VARC610515HDGRMS01",
+    "Email": "cpvarela@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CÉSAR VINICIO SÁENZ RUIZ",
+    "Curp": "SARC650512HDGNZS09",
+    "Email": "vin.saenz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CLAUDIA VIOLETA GARZA NAVA",
+    "Curp": "",
+    "Email": "cgarza@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CONCEPCIÓN MARGARITA MORALES LAVEAGA",
+    "Curp": "MOLC601208MDGRVN03",
+    "Email": "laveaga@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CRISTABEL ARMSTRONG ARÁMBURO",
+    "Curp": "AOAC791230MCHRRR08",
+    "Email": "cristabel@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CRISTINA SALAZAR DE LA PEÑA",
+    "Curp": "SAPC900626MDGLXR08",
+    "Email": "cristina.salazar@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CRISTINA VILLALVAZO CARRILLO",
+    "Curp": "",
+    "Email": "cristina.villalvazo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CRUZ GUERRERO MATRÓN PACHECO",
+    "Curp": "MAPC700503HCHTCR04",
+    "Email": "cruz_matron@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CUAUHTÉMOC SEGOVIA SOTO",
+    "Curp": "SESC540612HDGGTH06",
+    "Email": "cuauhtemoc.segovia@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "CYNTHIA MARLENE TORRES NÚÑEZ",
+    "Curp": "TONC810910MDGRXY09",
+    "Email": "ctorres@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "DAMIÁN REYES JÁQUEZ",
+    "Curp": "REJD811022HDGYQM02",
+    "Email": "damian.reyes@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "DANIEL GERARDO MURO CERVANTES",
+    "Curp": "MUCD890110HDGRRN06",
+    "Email": "daniel.muro@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "DANIEL MONCISVÁIS GONZÁLEZ",
+    "Curp": "MOGD630314HDGNNN07",
+    "Email": "daniel.moncisvais@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "DAVID ALONSO RUVALCABA MORALES",
+    "Curp": "RUMD810809HDGVRV07",
+    "Email": "davidruvalcaba@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "DIANA BERENICE HERNÁNDEZ HERNÁNDEZ",
+    "Curp": "",
+    "Email": "dianahernandez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "DIANA LAURA RICALDAY VENEGAS",
+    "Curp": "RIVD771208MDGCNN04",
+    "Email": "diana.ricalday@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "DIANA VALERIA BARRAZA CASTAÑEDA",
+    "Curp": "BACD820712MDGRSN04",
+    "Email": "diana.barraza@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "DIDIER AMAYA MORALES",
+    "Curp": "AAMD730427HDGMRD05",
+    "Email": "didier.amaya@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "DORA LUZ GONZÁLEZ BAÑALES",
+    "Curp": "GOBD710217MDGNXR02",
+    "Email": "doraglez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "DULCE MARÍA REYES HINOSTROZA",
+    "Curp": "REHD820617MDGYNL01",
+    "Email": "dmreyes@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "DUSTIN ATZAEL MUÑOZ BAYONA",
+    "Curp": "MUBD880506HDGXYS01",
+    "Email": "dustin.bayona@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EDEL PÉREZ ESPARZA",
+    "Curp": "",
+    "Email": "eperez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EDELMIRA BARRAGÁN GALLEGOS",
+    "Curp": "BAGE580718MCHRLD08",
+    "Email": "ebarragan@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EDGAR HIRAM ROSALES CESARETTI",
+    "Curp": "ROCE791026HDGSSD05",
+    "Email": "ehrosales@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EDGAR RENÉ PORRAS MORA",
+    "Curp": "POME730707HDGRRD04",
+    "Email": "rporras@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EDILBERTO ESCALERA GALVÁN",
+    "Curp": "EAGE760723HDGSLD01",
+    "Email": "edilberto.escalera@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EDITH VALDERRAMA VELÁZQUEZ",
+    "Curp": "VAVE760415MDGLLD06",
+    "Email": "edithvalderrama@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EDITH XÓCHITL MIRANDA ESPINOSA",
+    "Curp": "MIEE700824MDGRSD04",
+    "Email": "exmiranda@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EDMUNDO JAVIER SOTO GARCÍA",
+    "Curp": "SOGE790320HDGTRD05",
+    "Email": "ingedmundo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EDNA RAQUEL VILLAFAÑA MONTERO",
+    "Curp": "VIME670609MDGLND05",
+    "Email": "edna.villafana@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EDUARDO CHÁVEZ PÉREZ",
+    "Curp": "CAPE710305HDGHRD00",
+    "Email": "echavez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EDUARDO GAMERO INDA",
+    "Curp": "GAIE590828HDFMND09",
+    "Email": "egamero@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EDUARDO PORRAS BOLÍVAR",
+    "Curp": "POBE510510HDGRLD07",
+    "Email": "eporras@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EFRAÍM CASTELLANOS FRAYRE",
+    "Curp": "CAFE820716HDGSRF00",
+    "Email": "e.castellanos@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EFRÉN MONCISVALLES MARTÍNEZ",
+    "Curp": "MOME830116HDGNRF06",
+    "Email": "emoncisvalles@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EFRÉN MONCISVALLES QUIÑONES",
+    "Curp": "MOQE450609HDGNXF00",
+    "Email": "efren.moncisvalles@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EIRA OLIVIA VILLARREAL RIVOTA",
+    "Curp": "VIRE851202MDGLVR01",
+    "Email": "evillarreal@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ELDA RIVERA SAUCEDO",
+    "Curp": "RISE730908MDGVCL04",
+    "Email": "erivera@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ELIO EDUARDO MONREAL CARRILLO",
+    "Curp": "MOCE760914HDGNRL03",
+    "Email": "emonreal@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ELIZABETH SORAYA VILLARREAL REYES",
+    "Curp": "VIRE810126MDGLYL09",
+    "Email": "evillareal@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ELUARD ARRIETA MATURINO",
+    "Curp": "AIME760515HDGRTL00",
+    "Email": "eluard.arrieta@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ELVA MARCELA CORIA QUIÑONES",
+    "Curp": "COQE600426MDGRXL03",
+    "Email": "e.coria@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ELVIA VÁSQUEZ CRUZ",
+    "Curp": "",
+    "Email": "elviavazquezc@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EMMA LUZ VANEGAS PARRA",
+    "Curp": "VAPE791026MDGNRM01",
+    "Email": "emma.vanegas@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ENRIQUE TORRES JESÚS",
+    "Curp": "TOXJ540717HDGRXS08",
+    "Email": "jesustorres@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ERASMO GALLEGOS DE LA HOYA",
+    "Curp": "GAHE640117HDGLYR08",
+    "Email": "egallegos@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ERIKA YESENIA MUÑOZ SOLÍS",
+    "Curp": "MUSE840513MDGXLR06",
+    "Email": "erika.solis@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ESTEBAN BERMÚDEZ RAMÍREZ",
+    "Curp": "BERE801226HDGRMS08",
+    "Email": "esteban.bermudez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ESTEBAN LUJÁN MESTA",
+    "Curp": "LUME820516HDGJSS05",
+    "Email": "elujan@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ESTHER SOTO GARCÍA",
+    "Curp": "SOGE640905MBCTRS03",
+    "Email": "e.soto@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EUSEBIO MUÑOZ RÍOS",
+    "Curp": "MURE620814HDGXSS09",
+    "Email": "eusebio.munoz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EUSTOLIA NÁJERA JÁQUEZ",
+    "Curp": "NAJE530419MDGJQS05",
+    "Email": "enajera@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "EVARISTO ÁLVAREZ MENDOZA",
+    "Curp": "AAME500114HDGLNV05",
+    "Email": "evaristo.alvarez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FABIÁN REYES AGUILERA",
+    "Curp": "REAF781223HDGYGB05",
+    "Email": "fabian.reyes@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FABIOLA MARGARITA SALAZAR MUÑOZ",
+    "Curp": "",
+    "Email": "fabiola.salazar@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FÁTIMA JANETH GARCÍA CURIEL",
+    "Curp": "GACF860704MDGRRT07",
+    "Email": "fatimagarcia@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FELIPE ALANÍS GONZÁLEZ",
+    "Curp": "AAGF610309HCLLNL02",
+    "Email": "falanis@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FELIPE SAMUEL HERNÁNDEZ RODARTE",
+    "Curp": "HERF670409HDGRDL05",
+    "Email": "shernandez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FERMÍN AGUSTÍN ÁLVAREZ MARTÍNEZ",
+    "Curp": "AAMF460707HDGLRR13",
+    "Email": "fermin.alvarez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FERNANDO AYALA PARTIDA",
+    "Curp": "AAPF740906HDGYRR02",
+    "Email": "fayala@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FERNANDO BLANCO CASTAÑEDA",
+    "Curp": "BACF780219HDGLSR02",
+    "Email": "fernando.blancoc@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FLOR CELILIA CALDERÓN HERRERA",
+    "Curp": "",
+    "Email": "fcalderon@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FRANCISCA MARÍA SANDOVAL HIPÓLITO",
+    "Curp": "SAHF830118MDGNPR01",
+    "Email": "msandoval@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FRANCISCO ALBERTO BARRENA RODRÍGUEZ",
+    "Curp": "BARF770803HDGRDR06",
+    "Email": "fbarrena@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FRANCISCO JAVIER CALDERÓN",
+    "Curp": "",
+    "Email": "fxklderon@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FRANCISCO JAVIER GARCÍA LÓPEZ",
+    "Curp": "GALF461004HDGRPR08",
+    "Email": "fcogarcialopez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FRANCISCO JAVIER GODÍNEZ GARCÍA",
+    "Curp": "GOGF581009HDGDRR05",
+    "Email": "fgodinez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FRANCISCO PALACIOS RODRÍGUEZ",
+    "Curp": "PARF640404HDGLDR09",
+    "Email": "fpalacios@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FRANCISCO PARDO LIZÁRRAGA",
+    "Curp": "PALF601015HSLRZR07",
+    "Email": "francisco.pardo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "FRANCISCO PORRAS ROBLES",
+    "Curp": "",
+    "Email": "francisco.porras@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GABRIEL ARTURO LUGO MORALES",
+    "Curp": "LUMG700725HDGGRB05",
+    "Email": "alugo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GABRIELA BERMÚDEZ QUIÑONES",
+    "Curp": "BEQG820116MDGRXB07",
+    "Email": "gbermudez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GEORGE WILLIAM GUTIÉRREZ LÓPEZ",
+    "Curp": "",
+    "Email": "george.gutierrez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GEORGINA ALEJANDRA QUIÑONES NÚÑEZ",
+    "Curp": "QUNG821117MDGXXR02",
+    "Email": "georgina.quiones@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GERARDINA DE LAS MARAVILLAS GONZÁLEZ VALENCIANO",
+    "Curp": "GOVG660114MDGNLR00",
+    "Email": "gerardinagonzalez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GERARDO MAR PADRÓN",
+    "Curp": "",
+    "Email": "gerardo.padron@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GERARDO RAFAEL ÁLVAREZ ALVARADO",
+    "Curp": "AAAG691106HDGLLR06",
+    "Email": "galvarez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GERARDO RAFAEL SOLANO SALAZAR",
+    "Curp": "SOSG591208HDGLLR00",
+    "Email": "gsolano@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GILDA FERNÁNDEZ VÁZQUEZ",
+    "Curp": "FEVG810605MDGRZL04",
+    "Email": "gfernandez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GILDA HERMILA MARTÍNEZ FREYRE",
+    "Curp": "MAFG590113MDGRRL01",
+    "Email": "ghmartinez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GONZALO CORRAL JÁQUEZ",
+    "Curp": "COJG540203HDGRQN04",
+    "Email": "gcorral@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GONZALO VILLARREAL CHÁVEZ",
+    "Curp": "VICG580110HDGLHN06",
+    "Email": "gvillarreal@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GRACIELA ENRÍQUEZ FLORES",
+    "Curp": "EIFG700324MDGNLR09",
+    "Email": "graciela.enriquez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GRACIELA HERRERA VÁZQUEZ",
+    "Curp": "HEVG640918MDGRZR06",
+    "Email": "graciela.herrera@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GREGORIO LAURO SOLÍS QUIÑONES",
+    "Curp": "SOQG480818HDGLXR03",
+    "Email": "glsolis@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GUILLERMO DE ANDA RODRÍGUEZ",
+    "Curp": "AARG711010HDGNDL06",
+    "Email": "guillermo.dr@reynosa.tecnm.mx"
+  },
+  {
+    "NombreCompleto": "GUILLERMO FLORES DE LA HOYA",
+    "Curp": "FOHG630119HDGLYL07",
+    "Email": "gflores@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GUILLERMO GONZÁLEZ TREVIÑO",
+    "Curp": "",
+    "Email": "guillermogt@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GUILLERMO ROSALES PÉREZ",
+    "Curp": "ROPG750625HCLSRL05",
+    "Email": "guillermo.rosales@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GUSTAVO FABIÁN SOLANO ROSALES",
+    "Curp": "SORG710826HDGLSS01",
+    "Email": "gustavosolano@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GUSTAVO FAUSTO DOMÍNGUEZ REYES",
+    "Curp": "DORG690501HDGMYS08",
+    "Email": "gdominguez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GUSTAVO MORÁN ROMERO",
+    "Curp": "MORG550923HDGRMS02",
+    "Email": "gustavo.moran@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "GUSTAVO MORÁN SOTO",
+    "Curp": "MOSG830923HDGRTS08",
+    "Email": "gmoran@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "HARAT ISAÍ MUÑOZ BAYONA",
+    "Curp": "",
+    "Email": "dep.haratbayona@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "HÉCTOR ALONSO FILETO PÉREZ",
+    "Curp": "FIPH780404HDGLRC05",
+    "Email": "hfileto@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "HÉCTOR ALONSO RESÉNDIZ ORTIZ",
+    "Curp": "REOH790829HDGSRC03",
+    "Email": "hresendiz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "HÉCTOR ANTONIO FLORES CABRAL",
+    "Curp": "FOCH800613HDGLBC05",
+    "Email": "hflores@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "HÉCTOR GARCÍA CAMACHO",
+    "Curp": "GACH630731HDGRMC09",
+    "Email": "hgarcia@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "HÉCTOR GERARDO RODRÍGUEZ GÁNDARA",
+    "Curp": "",
+    "Email": "hector.rodriguez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "HÉCTOR MARTÍNEZ ARGÁIZ",
+    "Curp": "MAAH620909HSPRRC06",
+    "Email": "hmartinez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "HÉCTOR RAMÓN RUANO ESQUIVEL",
+    "Curp": "RUEH840716HDGNSC05",
+    "Email": "hruano@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "HÉCTOR SOLÍS FLORES",
+    "Curp": "SOFH790310HDGLLC02",
+    "Email": "hsolis@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "HILDA VERÓNICA GARCÍA ROJAS",
+    "Curp": "GARH820205MDGRJL02",
+    "Email": "hvgr_13@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "HILDA YOLANDA AYALA CARMONA",
+    "Curp": "AACH650307MZSYRL06",
+    "Email": "hayala@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "HIRAM MEDRANO ROLDÁN",
+    "Curp": "MERH440312HDGDLR08",
+    "Email": "hmedrano@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "HUGO ANTONIO RÁNGEL MONTELONGO",
+    "Curp": "RAMH690317HDGNNG04",
+    "Email": "hrangel@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "HUMBERTO DE LA PAZ GONZÁLEZ",
+    "Curp": "PAGH580622HDGZNM02",
+    "Email": "hde@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "IBETH ZAHARAÍ LÓPEZ GÓMEZ",
+    "Curp": "LOGI870120MDGPMB03",
+    "Email": "opim@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "IMELDA ARMIDA VALLES LOERA",
+    "Curp": "VALI650129MDGLRM01",
+    "Email": "ivalles@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "IRMA ÁNGELICA ALARCÓN VALLE",
+    "Curp": "AAVI910416MDGLLR05",
+    "Email": "aalarcon@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "IRMA SELENE HERNÁNDEZ CARRILLO",
+    "Curp": "HECI690416MDGRRR06",
+    "Email": "hselene@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ISAAC MEJÍA HERNÁNDEZ",
+    "Curp": "MEHI620721HDGJRS01",
+    "Email": "isaac.mejia@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ISAÍAS MEDINA BELTRÁN",
+    "Curp": "MEBI830521HDGDLS06",
+    "Email": "isaias.medina@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ISELA FLORES MONTENEGRO",
+    "Curp": "FOMI720201MDGLMS01",
+    "Email": "iflores@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ISIDRO AMARO RODRÍGUEZ",
+    "Curp": "AARI820406HDGMDS04",
+    "Email": "iamaro@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ISMAEL VÁZQUEZ QUIÑONES",
+    "Curp": "VAQI720411HDGZXS09",
+    "Email": "ismael.vazquez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "IVÁN GONZÁLEZ LAZALDE",
+    "Curp": "GOLI741219HDGNZV08",
+    "Email": "igonzalez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "IVÁN SANTOS CASTRO",
+    "Curp": "SACI780831HDGNSV07",
+    "Email": "ivan.santos@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "IVONNE TORRES IBARRA",
+    "Curp": "TOII830422MDGRBV01",
+    "Email": "ivonneti@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "J GUADALUPE RUIZ CARRETE",
+    "Curp": "RUCG671029HDGZRD05",
+    "Email": "jruizcarrete@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JACOBO FLORES UNZUETA",
+    "Curp": "FOUJ750504HDGLNC04",
+    "Email": "jacobo.flores@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JAIME ANUAR SELEME OCAMPO",
+    "Curp": "SEOJ821019HDGLCM02",
+    "Email": "anuarseleme@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JAIME RUIZ ARELLANO",
+    "Curp": "RUAJ740525HDFZRM09",
+    "Email": "jaime.ruiz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JAIME SÁNCHEZ CASTILLO",
+    "Curp": "SACJ470827HPLNSM02",
+    "Email": "jaimescastillo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JANETTE AGUIRRE FILETO",
+    "Curp": "AUFJ760217MDGGLN01",
+    "Email": "janette.aguirre@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JARED RÍOS QUIÑONES",
+    "Curp": "RIQJ800715HDGSXR01",
+    "Email": "jrios@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JAVIER CALDERÓN FRANCISCO",
+    "Curp": "CAXF511027HDGLXR09",
+    "Email": "fxklderon@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JAVIER LÓPEZ MIRANDA",
+    "Curp": "LOMJ511203HMCPRV14",
+    "Email": "jlopez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JEORGINA CALZADA TERRONES",
+    "Curp": "CATJ670423MDGLRR09",
+    "Email": "jcalzada@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JESSICA BERNARDETTE MOLINA ESCALIER",
+    "Curp": "MOEJ851021MDGLSS01",
+    "Email": "jessicamolina@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JESÚS ADRIÁN MARTÍNEZ CAMPUZANO",
+    "Curp": "MACJ801123HDGRMS07",
+    "Email": "ja_mtzc@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JESÚS BERNARDO PÁEZ LERMA",
+    "Curp": "PALJ770601HDGZRS05",
+    "Email": "jpaez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JESÚS CELIS PORRAS",
+    "Curp": "CEPJ600409HDGLRS09",
+    "Email": "jcelis@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JESÚS ENRIQUE AYALA SANTANA",
+    "Curp": "AASJ810825HZSYNS07",
+    "Email": "jayala@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JESÚS GERARDO HERNÁNDEZ BURCIAGA",
+    "Curp": "",
+    "Email": "jghernadez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JESÚS GUADALUPE RUBIO URQUIJO",
+    "Curp": "RUUJ660511HSLBRS03",
+    "Email": "jesus.rubio@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JESÚS GUILLERMO LAZALDE MARTÍNEZ",
+    "Curp": "LAMJ811221HDGZRS05",
+    "Email": "jesus.lazalde@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JESÚS JOB REZA LUNA",
+    "Curp": "RELJ680512HDGZNS04",
+    "Email": "jesusjob.reza@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JESÚS NEFTALÍ MORONES ESQUIVEL",
+    "Curp": "MOEJ810417HDGRSS02",
+    "Email": "jmorones@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JESÚS RAMÓN GERARDO MORENO",
+    "Curp": "GEMJ590421HSLRRS03",
+    "Email": "jrgerardo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JESÚS ROBERTO ROBLES ZAPATA",
+    "Curp": "ROZJ581127HDGBPS19",
+    "Email": "jesus.roblesz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JESÚS RUVALCABA GONZÁLEZ",
+    "Curp": "RUGJ510925HDGVNS09",
+    "Email": "jesusruvalcaba@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JETZABEL CONDE OLGUÍN",
+    "Curp": "COOJ800206MDGNLT04",
+    "Email": "jconde@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JORGE QUIÑONES OLGUIN",
+    "Curp": "QUOJ790828MDGNRS00",
+    "Email": "jorge.quinones@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JORGE SIFUENTES DE LA HOYA",
+    "Curp": "SIHJ680205HDGFYR08",
+    "Email": "jorge.sifuentes@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ ALBERTO CÓRDOVA QUIÑONES",
+    "Curp": "COQA550109HDGRXL08",
+    "Email": "jacordova@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ ALBERTO GALLEGOS INFANTE",
+    "Curp": "GAIA670408HSPLNL08",
+    "Email": "agallegos@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ ALEJANDRO ALE BURGOS",
+    "Curp": "AEBA600923HDGLRL03",
+    "Email": "aleburgos@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ ALFREDO SERRANO SALAZAR",
+    "Curp": "SESA571217HDGRLL08",
+    "Email": "jserrano@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ ANTONIO DÍAZ GUTIÉRREZ",
+    "Curp": "DIGA511203HDGZTN08",
+    "Email": "diazgja@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ ANTONIO GUTIÉRREZ REYES",
+    "Curp": "GURA670903HDGTYN04",
+    "Email": "agutierrez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ ANTONIO JIMÉNEZ VELÁZQUEZ",
+    "Curp": "JIVA721003HDGMLN01",
+    "Email": "ajmz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ ANTONIO MARTÍNEZ LÓPEZ",
+    "Curp": "MALA610912HDGRPN08",
+    "Email": "jantoniomtzl@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ ANTONIO MARTÍNEZ RIVERA",
+    "Curp": "MARA690422HDGRVN03",
+    "Email": "jamartinez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ ANTONIO MEDINA AZCONA",
+    "Curp": "MEAA530831HDGDZN09",
+    "Email": "jamedina@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ ARTURO PÉREZ MARTÍNEZ",
+    "Curp": "PEMA770812HDGRRR08",
+    "Email": "jose.perez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ CARLOS VARGAS ROSALES",
+    "Curp": "VARC511230HDGRSR06",
+    "Email": "cvargas@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ DE LEÓN SOTO GARCÍA",
+    "Curp": "SOGL540218HDGTRN02",
+    "Email": "leon.soto@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ DE LOS RÍOS RÍOS",
+    "Curp": "RIRJ510806HDGSSS01",
+    "Email": "jose_delosrios@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ DEMETRIO VELÁZQUEZ PIEDRA",
+    "Curp": "VEPD610520HDGLDM07",
+    "Email": "jose.velazquez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ DOMINGO POPE SOLÍS",
+    "Curp": "POSD550319HCLPLM03",
+    "Email": "jdpope@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ GABRIEL RODRÍGUEZ RIVAS",
+    "Curp": "RORG720914HDGDVB05",
+    "Email": "gabriel.rodriguez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ GERARDO IGNACIO GÓMEZ ROMERO",
+    "Curp": "",
+    "Email": "gerardo.gomez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ IGNACIO CASAS ESPINO",
+    "Curp": "",
+    "Email": "i.espino@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ INOCENTE ÁLVAREZ HERRERA",
+    "Curp": "AAHI601228HDGLRN09",
+    "Email": "jose.alvarez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ LAURO SOLÍS GALLEGOS",
+    "Curp": "SOGL690904HDGLLR00",
+    "Email": "jlsolis@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ LUIS ÁLVAREZ PEÑA",
+    "Curp": "AAPL570605HDFLXS02",
+    "Email": "jlalvarezp@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ LUIS CUAUHTÉMOC GARCÍA RODRÍGUEZ",
+    "Curp": "GARL640920HDGRDS00",
+    "Email": "ktmoc@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ LUIS MARCELINO FLORES ESQUIVEL",
+    "Curp": "FOEL430109HGTLSS03",
+    "Email": "joseflores@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ MANUEL CARRILLO HERNÁNDEZ",
+    "Curp": "CAHM671104HDGRRN04",
+    "Email": "jose.carrillo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ MANUEL MARTÍNEZ VÁZQUEZ",
+    "Curp": "MAVM790614HDGRZN09",
+    "Email": "josemartinez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ MANUEL PENSABEN ESQUIVEL",
+    "Curp": "PEEM490306HMNNSN02",
+    "Email": "mpensaben@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ MAURO DE LA BARRERA FRAYRE",
+    "Curp": "BAFM501121HDGRRR01",
+    "Email": "j.delabarrera@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ RAMÓN TORRECILLAS RODRÍGUEZ",
+    "Curp": "TORR431120HDGRDM08",
+    "Email": "rtorrecillas@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ RAMÓN VALDEZ GUTIÉRREZ",
+    "Curp": "VAGR720219HDFLTM03",
+    "Email": "jramonvaldez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ ROBERTO LÓPEZ QUIÑONES",
+    "Curp": "LOQR841213HDGPXB08",
+    "Email": "rlopez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ SALINAS MEZA",
+    "Curp": "SAMJ820413HDGLZS03",
+    "Email": "jose.salinas@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSÉ TRINIDAD MARTÍNEZ REYNA",
+    "Curp": "MART550605HDGRYR03",
+    "Email": "marrj@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JOSUÉ ORTIZ MEDINA",
+    "Curp": "",
+    "Email": "j.ortiz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN ALEXANDER ANDERSON HUERTA",
+    "Curp": "AEHJ670824HDGLRN07",
+    "Email": "jalexander@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN ANTONIO ESCOBEDO CARREÓN",
+    "Curp": "EOCJ830912HDGSRN09",
+    "Email": "juan.escobedo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN ANTONIO ROJAS CONTRERAS",
+    "Curp": "ROCJ790801HDGJNN03",
+    "Email": "jrojas@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN CARLOS NAVARRETE SOTO",
+    "Curp": "NASJ821228HDGVTN01",
+    "Email": "juan.navarrete@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN DE DIOS CASTAÑEDA CASTRELLÓN",
+    "Curp": "CACJ570515HDGSSN03",
+    "Email": "jdcastaneda@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN DE LA CRUZ LERMA MORENO",
+    "Curp": "",
+    "Email": "jcruz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN EDUARDO GONZÁLEZ MUÑOZ",
+    "Curp": "GOMJ761013HDGNXN02",
+    "Email": "juan.gonzalez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN FRANCISCO ARELLANO RIVAS",
+    "Curp": "",
+    "Email": "juan.arellano@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN GAMBOA GARCÍA",
+    "Curp": "GAGJ550302HDGMRN01",
+    "Email": "juan.gamboa@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN GAVIOTA RAMOS DOMÍNGUEZ",
+    "Curp": "RADJ820331HDGMMN03",
+    "Email": "juan.ramos@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN MANUEL HIDALGO GONZÁLEZ",
+    "Curp": "HIGJ590309HDGDNN07",
+    "Email": "jhidalgo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN MANUEL PEÑA CONTRERAS",
+    "Curp": "PECJ480814HDGXNN09",
+    "Email": "juanmap@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN MIGUEL TORRES VALDÉS",
+    "Curp": "",
+    "Email": "juan.torres@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN PABLO LERMA SÁNCHEZ",
+    "Curp": "LESJ761231HDGRNN02",
+    "Email": "juan.lerma@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN PAULO MARTÍN GARCÍA LEAL",
+    "Curp": "GALJ681105HDGRLN09",
+    "Email": "juan.garcia@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN RAMÓN CHAPARRO MERAZ",
+    "Curp": "CAMJ581219HDGHRN09",
+    "Email": "jr.chaparro@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUAN VANEGAS RENTERÍA",
+    "Curp": "VARJ580513HDGNNN06",
+    "Email": "jvanegas@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JUDITH ELIZABETH POPE CORTÉS",
+    "Curp": "POCJ970704MDGPRD06",
+    "Email": "judith.pope@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JULIA SABEL HERNÁNDEZ CARRILLO",
+    "Curp": "HECJ730102MDGRRL05",
+    "Email": "jshernandez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JULIANA MORALES CASTRO",
+    "Curp": "MOCJ610418MDGRSL07",
+    "Email": "jmoralesit@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "JULIO DÁMASO MEDINA PACHECO",
+    "Curp": "MEPJ721211HDGDCL09",
+    "Email": "jmedina@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "KAREN DEYANIRA MALDONADO ROCHA",
+    "Curp": "MARK880601MJCLCR07",
+    "Email": "karen.maldonado@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "KAREN MARLENNE HERRERA ROCHA",
+    "Curp": "",
+    "Email": "kherrera@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "KARLA MARÍA MARTÍNEZ GONZÁLEZ",
+    "Curp": "MAGK780618MDGRNR09",
+    "Email": "kmartinez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "KARLA VALENTINA PEÑA IBARRA",
+    "Curp": "",
+    "Email": "karlap@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "KARLA VIANEY ARRIETA CABRALES",
+    "Curp": "AICK790104MDGRBR09",
+    "Email": "k.arrieta@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LAURA GUADALUPE BUTZMANN ÁLVAREZ",
+    "Curp": "BUAL630307MDGTLR00",
+    "Email": "butzmannitd@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LAURA LUCRECIA VEGA MARTICORENA",
+    "Curp": "VEML760924MDGGRR09",
+    "Email": "lauravega@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LEONARDO HERNÁNDEZ CAMARGO",
+    "Curp": "HECL610421HDGRMN09",
+    "Email": "lhernandez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LEONEL HUGO FAVILA HERRERA",
+    "Curp": "FAHL570829HDGVRN09",
+    "Email": "leonel.favila@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LEONEL SALVADOR LERMA ROJAS",
+    "Curp": "LERL500410HDGRJN09",
+    "Email": "llerma@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LEONEL VÁZQUEZ AGUIRRE",
+    "Curp": "VAAL740622HDGZGN09",
+    "Email": "leonel@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LEOPOLDO CAMPOS CARRILLO",
+    "Curp": "CACL720725HDGMRP08",
+    "Email": "leocampos@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LILIANA EGURE TOVALÍN",
+    "Curp": "EUTL781105MDGGVL02",
+    "Email": "legure@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LILIANA LARA MORALES",
+    "Curp": "LAML750726MDGRRL03",
+    "Email": "liliana.lara@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LILIANA MARGARITA MUÑOZ ESTRADA",
+    "Curp": "MUEL880801MDGXSL03",
+    "Email": "lilime@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LINDA MIRIAM SILERIO HERNÁNDEZ",
+    "Curp": "SIHL640726MNLLRN09",
+    "Email": "linda.silerio@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LIVORIO ALBA TORRES",
+    "Curp": "AATL410917HDGLRB01",
+    "Email": "livorio.alba@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LIZ MARGARITA QUINTERO ROBLES",
+    "Curp": "QURL820102MDGNBZ07",
+    "Email": "lizquintero@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LORENA DE LA BARRERA RIVAS",
+    "Curp": "BARL731027MDGRVR02",
+    "Email": "lorenadelabarrera@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUIS ALEJANDRO RUIZ SOTO",
+    "Curp": "RUSL840107HDGZTS02",
+    "Email": "alexruiz@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUIS ALFONSO ESPINOZA BARRERO",
+    "Curp": "EIBL500619HDGSRS07",
+    "Email": "lespinoza@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUIS ARMANDO DE LA PEÑA ARELLANO",
+    "Curp": "PEAL631213HDGXRS03",
+    "Email": "aparellano@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUIS ARMANDO MARTÍNEZ NÁJERA",
+    "Curp": "",
+    "Email": "lmartinez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUIS ARMANDO QUIÑONES TINOCO",
+    "Curp": "QUTL511105HDGXNS09",
+    "Email": "armando.quiones@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUIS CAMPA GALINDO",
+    "Curp": "CAGL860701HDGMLS11",
+    "Email": "lcampa@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUIS CARLOS QUIÑONES MARTÍNEZ",
+    "Curp": "QUML830728HDGXRS08",
+    "Email": "lcquinones@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUIS CRISTÓBAL RAMOS CARRASCO",
+    "Curp": "RACL910906HDGMRS05",
+    "Email": "luis.ramos@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUIS FERNANDO GALINDO VARGAS",
+    "Curp": "GAVL800623HDGLRS03",
+    "Email": "lgalindo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUIS GABRIEL MONTOYA AYÓN",
+    "Curp": "MOAL580225HDGNYS08",
+    "Email": "lmontoya@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUIS GUSTAVO REYES MARTÍNEZ",
+    "Curp": "",
+    "Email": "luisreyes@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUIS ROSALES PÉREZ",
+    "Curp": "ROPL691013HDGSRS03",
+    "Email": "lrosales@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUISA EUGENIA GANDARILLA CASTRUITA",
+    "Curp": "GACL700216MDGNSS00",
+    "Email": "legandarilla@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUZ ALEJANDRA DE ANDA NEVÁREZ",
+    "Curp": "",
+    "Email": "luz.nevarez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUZ ARACELI OCHOA MARTÍNEZ",
+    "Curp": "OOML590415MDGCRZ09",
+    "Email": "aochoa@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUZ ELENA GONZÁLEZ LAZALDE",
+    "Curp": "GOLL711213MDGNZZ04",
+    "Email": "luz.gonzalez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUZ EUGENIA TORRECILLAS GUTIÉRREZ",
+    "Curp": "TOGL740206MDGRTZ07",
+    "Email": "luz.torrecillas@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "LUZ MARÍA MEJÍA DÍAZ",
+    "Curp": "MEDL710606MDGJZZ02",
+    "Email": "luzmejia@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MA. ANTONIA CASTILLO MARRUFO",
+    "Curp": "CAMA610613MDGSRN03",
+    "Email": "mcastillom@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MANUEL AGUSTÍN PÉREZ RICÁRDEZ",
+    "Curp": "PERM630429HDFRCN04",
+    "Email": "manuel.perez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MANUEL ALEJANDRO PACHECO CALDERÓN",
+    "Curp": "PACM840225HDGCLN03",
+    "Email": "manuel_pacheco@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MANUEL ALEJANDRO SÁNCHEZ CARROLA",
+    "Curp": "SACM810303HDGNRN02",
+    "Email": "alejandrosanchezc@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MANUEL DE JESÚS ALDRETE MARTÍNEZ",
+    "Curp": "AEMM530810HDGLRN04",
+    "Email": "manuel.aldrete@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MANUEL ROCHA FUENTES",
+    "Curp": "ROFM630628HDGCNN06",
+    "Email": "mrocha@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MANUEL VILLARREAL MARTÍNEZ",
+    "Curp": "VIMM510829HDGLRN05",
+    "Email": "mvillarrealm@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARCELA IBARRA ALVARADO",
+    "Curp": "",
+    "Email": "marcela.ibarra@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARCO ANTONIO LÓPEZ RAMOS",
+    "Curp": "LORM670314HDGPMR00",
+    "Email": "marco.lopez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARCO ANTONIO RODRÍGUEZ ZÚÑIGA",
+    "Curp": "ROZM781218HDGDXR09",
+    "Email": "mrodriguez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARCO ANTONIO SALAZAR LÓPEZ",
+    "Curp": "",
+    "Email": "masalazar@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARCO SANTIAGO GONZÁLEZ",
+    "Curp": "",
+    "Email": "msantiago@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARGARITA CARRILLO ARMSTRONG",
+    "Curp": "CAAM690624MDGRRR02",
+    "Email": "margarita.armstrong@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA ADRIANA MARTÍNEZ PRADO",
+    "Curp": "MAPA590912MDGRRD00",
+    "Email": "adriana.martinezprado@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA CRISTINA VÁZQUEZ OLVERA",
+    "Curp": "VAOC790526MDGZLR09",
+    "Email": "mvazquez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA DE LA LUZ TORRES VALLES",
+    "Curp": "TOVL610520MDGRLZ01",
+    "Email": "maria.torres@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA DE LOS ÁNGELES RODRÍGUEZ ÁNGEL",
+    "Curp": "ROAA541002MDGDNN00",
+    "Email": "leo.rodriguez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA DE LOURDES GUERRERO SIMENTAL",
+    "Curp": "GUSL590205MDGRMR07",
+    "Email": "marial.guerrero@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA DE LOURDES VALDEZ HERNÁNDEZ",
+    "Curp": "VAHL840923MDGLRR03",
+    "Email": "mvaldez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA DEL PILAR COVARRUBIAS RAMÍREZ",
+    "Curp": "CORP610323MDGVML00",
+    "Email": "pcovarrubias@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA DEL PILAR REYES SIERRA",
+    "Curp": "RESP580322MDGYRL06",
+    "Email": "mariapilareyes@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA DEL RAYO ZAMORA LERMA",
+    "Curp": "",
+    "Email": "mrlerma@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA DOLORES JOSEFINA RODRÍGUEZ ROSALES",
+    "Curp": "RORD580328MDGDSL02",
+    "Email": "mdjoserr@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA ESTHER HERNÁNDEZ ESPINO",
+    "Curp": "",
+    "Email": "esther.hernandez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA FERNANDA SOLANO BARRAZA",
+    "Curp": "",
+    "Email": "mfsolano@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA GUADALUPE CARRILLO HERRERA",
+    "Curp": "CAHG800508MDGRRD09",
+    "Email": "mgcarrillo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA INÉS GUERRA ROSAS",
+    "Curp": "",
+    "Email": "m.guerra@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA ISABEL PORRAS SANDOVAL",
+    "Curp": "POSI770914MDGRNS07",
+    "Email": "isabel.porras@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA LOURDES DEL CARMEN GRACIA FAVELA",
+    "Curp": "GAFL500208MDGRVR08",
+    "Email": "maria.gracia@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA LUISA ORTIZ PARGA",
+    "Curp": "OIPL700925MDGRRS09",
+    "Email": "malop@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA NINFA CABADA CARRERA",
+    "Curp": "CACN581119MDGBRN03",
+    "Email": "maria.cabadac@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA QUETZALCIHUATL GALVÁN ISMAEL",
+    "Curp": "GAIQ750122MDGLST03",
+    "Email": "qgalvan@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARÍA TOMASA GALLEGOS SALAS",
+    "Curp": "GAST680913MDGLLM06",
+    "Email": "mgallegos@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARICELA GUERRA FRANCO",
+    "Curp": "GUFM670902MDGRRR04",
+    "Email": "maricela.guerra@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARICELA MÓJICA VARGAS",
+    "Curp": "MOVM640402MDGJRR05",
+    "Email": "maricelamojica@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARICELA VELÁZQUEZ PEÑA",
+    "Curp": "VEPM730625MDGLXR04",
+    "Email": "maricela.velazquez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARIO ALBERTO LÓPEZ GURROLA",
+    "Curp": "LOGM700408HDGPRR08",
+    "Email": "mariolopez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARIO GABRIEL ZAMORA LERMA",
+    "Curp": "ZALM550119HDGMRR00",
+    "Email": "mzamora@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARIO GERARDO HERNÁNDEZ MARINES",
+    "Curp": "HEMM600419HDGRRR06",
+    "Email": "mghernandez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARIO VALDERRAMA VELA",
+    "Curp": "VAVM540321HDGLLR02",
+    "Email": "mario.valderrama@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARTHA ANGÉLICA CORDERO TRISTÁN",
+    "Curp": "COTM750825MDGRRR04",
+    "Email": "marthacordero@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARTHA PATRICIA SORIA LEAÑOS",
+    "Curp": "SOLM730502MDGRXR04",
+    "Email": "mpsoria@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARTHA ROCÍO MORENO JIMÉNEZ",
+    "Curp": "MOJM800429MDGRMR03",
+    "Email": "mrmoreno@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARTÍN ÁVILA OROZCO",
+    "Curp": "AIOM511112HCHVRR02",
+    "Email": "avilao.martin@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARTÍN CORRAL ARROYO",
+    "Curp": "COAM650101HDGRRR01",
+    "Email": "martin.corral@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MARTÍN GUSTAVO LEYVA ALANÍS",
+    "Curp": "LEAM710609HDGYLR00",
+    "Email": "mleyva@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ÓSCAR MARTÍN MARTÍNEZ",
+    "Curp": "",
+    "Email": "oscarmartin@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MAYELA DEL RAYO LECHUGA NEVÁREZ",
+    "Curp": "LENM680106MDGCVY07",
+    "Email": "mlechuga@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MAYELA YORYET CABRAL GUERRERO",
+    "Curp": "",
+    "Email": "mayela.cabral@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MIGUEL ÁNGEL AGUILAR ARAGÓN",
+    "Curp": "AUAM710315HDGGRG01",
+    "Email": "miguel.angel@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MIGUEL ÁNGEL ÁVILA GASCA",
+    "Curp": "AIGM590522HDGVSG01",
+    "Email": "mavila@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MIGUEL ÁNGEL GALLEGOS SIFUENTES",
+    "Curp": "GASM750901HDGLFG01",
+    "Email": "miguel.gallegos@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MIGUEL ÁNGEL HERNÁNDEZ SAUCEDO",
+    "Curp": "HESM640611HDGRCG02",
+    "Email": "mhernandez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MIGUEL ÁNGEL ORNELAS VÁZQUEZ",
+    "Curp": "OEVM590930HDGRZG09",
+    "Email": "mornelas@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MIGUEL ÁNGEL RUTEAGA MARTÍNEZ",
+    "Curp": "RUMM581122HDGTRG09",
+    "Email": "rumtzcivil@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MIGUEL ÁNGEL SALAZAR LOZANO",
+    "Curp": "SALM601009HDGLZG05",
+    "Email": "miguel.salazar@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MIGUEL ÁNGEL SEGOVIA SOTO",
+    "Curp": "SESM530108HDGGTG03",
+    "Email": "masegovia@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MÓNICA ROSALES PÉREZ",
+    "Curp": "ROPM710524MDGSRN04",
+    "Email": "mrosales@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "MYRNA GUADALUPE CARDOZA MARTÍNEZ",
+    "Curp": "CAMM851023MDGRRY06",
+    "Email": "mcardoza@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "NATALLI CAROLINA SALAZAR FIERRO",
+    "Curp": "SAFN930907MDGLRT06",
+    "Email": "natalli.salazar@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "NELLIE CECILIA SALAZAR CANO",
+    "Curp": "SACN790704MDGLNL00",
+    "Email": "nelliesalazar@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "NICOLÁS ÓSCAR SOTO CRUZ",
+    "Curp": "SOCN671209HHGTRC07",
+    "Email": "nsoto@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "NILTZA IRACEMA GONZÁLEZ GARCÍA",
+    "Curp": "GOGN800827MDGNRL00",
+    "Email": "iracema.gonzalez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "NOEL RODRÍGUEZ ARÍSTEGUI",
+    "Curp": "ROAN570719HDGDRL04",
+    "Email": "no57elitd@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "NOEL RODRÍGUEZ MARTÍNEZ",
+    "Curp": "ROMN930629HDGDRL09",
+    "Email": "noel.rodriguez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "NORMA ALICIA GARCÍA VIDAÑA",
+    "Curp": "GAVN721218MDGRDR06",
+    "Email": "norma.garcia@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "NORMA PATRICIA SARMIENTO ACOSTA",
+    "Curp": "SAAN830607MDGRCR08",
+    "Email": "norma.sarmiento@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "NURIA ELIZABETH ROCHA GUZMÁN",
+    "Curp": "ROGN690228MDGCZR04",
+    "Email": "cei@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "OBED ANTONIO GARCÍA CANO",
+    "Curp": "GACO821016HDGRNB03",
+    "Email": "obedgarciac@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "OCTAVIO SERGIO MARTÍNEZ REYES",
+    "Curp": "MARO600915HDGRYC04",
+    "Email": "omartinez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "OLGA MIRIAM RUTIAGA QUIÑONES",
+    "Curp": "RUQO750216MDGTXL01",
+    "Email": "omrutiaga@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "OLIVIA GARCÍA LÓPEZ",
+    "Curp": "GALO670519MDGRPL00",
+    "Email": "ogarcia@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "OMAR CASTAÑEDA ORTIZ",
+    "Curp": "CAOO850504HDGSRM05",
+    "Email": "ocastaneda@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "OMAR OSVALDO RENTERÍA RAMOS",
+    "Curp": "RERO801217HDGNMM04",
+    "Email": "omar.renteria@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ÓSCAR ALFREDO LARA RODRÍGUEZ",
+    "Curp": "LARO510112HDGRDS05",
+    "Email": "oalara@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ÓSCAR FERNANDO PORRAS ORTIZ",
+    "Curp": "POOO630525HDGRRS07",
+    "Email": "oporras@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ÓSCAR GERARDO SOTO GARCÍA",
+    "Curp": "SOGO561114HDGTRS03",
+    "Email": "oscargsotog@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ÓSCAR HERNÁNDEZ NEVÁREZ",
+    "Curp": "HENO550928HDGRVS09",
+    "Email": "ohernandez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "OSCAR MARTÍN MARTÍNEZ",
+    "Curp": "MAXO700318HDGRXS06",
+    "Email": "oscarmartin@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ÓSCAR OMAR RÍOS JIMÉNEZ",
+    "Curp": "RIJO811231HDGSMS00",
+    "Email": "oriosj@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "OSWALDO RAMÓN RODRÍGUEZ AYALA",
+    "Curp": "",
+    "Email": "oswaldoayala@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "OTILIA ISABEL DIAZLEAL ORNELAS",
+    "Curp": "DIOO601213MCHZRT14",
+    "Email": "otilia.diazleal@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "PAOLA ELVIRA MEDRANO ÁVILA",
+    "Curp": "MEAP800113MDGDVL07",
+    "Email": "paola.medrano@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "PAULINA ELIZABETH SOSA ORONA",
+    "Curp": "SOOP870611MDGSRL02",
+    "Email": "paulinasosa@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "PAULINA VALLES LOERA",
+    "Curp": "",
+    "Email": "pvalles@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "PEDRO ANTONIO VELÁZQUEZ VENTURA",
+    "Curp": "VEVP630228HDGLND08",
+    "Email": "pvelazquez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "PEDRO LUIS LERMA GARCÍA",
+    "Curp": "LEGP771020HDGRRD03",
+    "Email": "pedro.lerma@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "PERLA GUADALUPE VÁZQUEZ ORTEGA",
+    "Curp": "",
+    "Email": "pvazquez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RAFAEL ALEJANDRO VALLES GUERECA",
+    "Curp": "VAGR781006HDGLRF05",
+    "Email": "rvalles@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RAFAEL MARTÍNEZ SAAVEDRA",
+    "Curp": "MASR680413HDGRVF05",
+    "Email": "ramasa@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RAMIRO ESCAJEDA ARCE",
+    "Curp": "EAAR610309HDGSRM01",
+    "Email": "rescajeda@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RAMÓN ELEAZAR ÁVALOS LIRA",
+    "Curp": "AALR510222HDGVRM00",
+    "Email": "ramon.avalos@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RAÚL AMADOR VÁZQUEZ",
+    "Curp": "AAVR820603HDGMZL15",
+    "Email": "raul.amador@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RAÚL NAVAR SAUCEDO",
+    "Curp": "NASR621021HTSVCL00",
+    "Email": "raul.navar@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RAÚL VELÁZQUEZ VENTURA",
+    "Curp": "VEVR580114HDGLNL00",
+    "Email": "raul.ventura@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "REBECA BRECEDA GONZÁLEZ",
+    "Curp": "BEGR600705MDGRNB04",
+    "Email": "rebecabreceda@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "REBECA IDALY RINCÓN MONTERO",
+    "Curp": "RIMR771118MDGNNB01",
+    "Email": "rrincon@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "REFUGIO DEL PILAR ALMAGUER DÍAZ",
+    "Curp": "AADR691109MDGLZF00",
+    "Email": "pilaralmaguer@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "REFUGIO MUÑOZ RÍOS",
+    "Curp": "MURR580216HDGXSF05",
+    "Email": "rmrios@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RENATO ARTURO GODOY MÓJICA",
+    "Curp": "",
+    "Email": "renato.godoy@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RENÉ MANUEL DE LA TORRE BURGOS",
+    "Curp": "TOBR980921HDGRRN07",
+    "Email": "mdelatorre@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RICARDO CABRERA MARTÍNEZ",
+    "Curp": "CAMR760410HTCBRC01",
+    "Email": "ricardo.cabrera@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ROBERTO ARAGÓN SANABRIA",
+    "Curp": "AASR480513HDGRNB06",
+    "Email": "roberto.aragon@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ROBERTO ARELLANO RIVAS",
+    "Curp": "AERR550707HDGRVB05",
+    "Email": "roberto.arellano@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ROBERTO ROJERO JIMÉNEZ",
+    "Curp": "ROJR800122HDGJMB07",
+    "Email": "rrojero@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ROCÍO MARGARITA LÓPEZ TORRES",
+    "Curp": "LOTR741021MDGPRC05",
+    "Email": "rmlopez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ROCÍO VALADEZ ACOSTA",
+    "Curp": "VAAR680114MDGLCC07",
+    "Email": "rvaladez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ROCÍO VALLES ROSALES",
+    "Curp": "VARR671031MDGLSC00",
+    "Email": "rocio.valles@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RODRIGO GERARDO QUEVEDO HERNÁNDEZ",
+    "Curp": "QUHR740717HDGVRD01",
+    "Email": "gquevedo@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ROSA ELVA RODARTE LÓPEZ",
+    "Curp": "",
+    "Email": "rosa.rodarte@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ROSALÍA CARDONA GARCÍA",
+    "Curp": "CAGR570924MDFRRS06",
+    "Email": "rcardona@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ROSENDA PEYRO VALLES",
+    "Curp": "PEVR670808MDGYLS08",
+    "Email": "rosenda.peyro@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ROSSANA FAVIOLA ZÚÑIGA MERAZ",
+    "Curp": "ZUMR741118MDGXRS06",
+    "Email": "fzuniga@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RUBÉN BRETADO AGUIRRE",
+    "Curp": "BEAR531118HDGRGB00",
+    "Email": "rbretado@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RUBÉN FRANCISCO GONZÁLEZ LAREDO",
+    "Curp": "GOLR560415HDGNRB01",
+    "Email": "rubenfgl@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RUBÉN GUERRERO RIVERA",
+    "Curp": "GURR710508HDGRVB05",
+    "Email": "rubenfgl@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RUBÉN PIZARRO GURROLA",
+    "Curp": "PIGR691106HDGZRB04",
+    "Email": "rpizarro@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "RUBÉN ROSALES DÍAZ",
+    "Curp": "RODR500124HDGSZB01",
+    "Email": "rrosales@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SALVADOR DAVIS RODRÍGUEZ",
+    "Curp": "DARS540510HDGVDL08",
+    "Email": "sal_davisr@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SALVADOR RAMOS COLLINS",
+    "Curp": "RACS580111HDGMLL05",
+    "Email": "sal_davisr@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SAMUEL DE LA LUZ RIVERA SANTILLÁN",
+    "Curp": "RISS650602HDGVNM07",
+    "Email": "samuel.rivera@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SANDRA GABRIELA SALAZAR BUTZMANN",
+    "Curp": "SABS860731MDGLTN12",
+    "Email": "sandrasalazar@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SANDRA NALLELY RUEDA GÓMEZ",
+    "Curp": "RUGS900213MDGDMN08",
+    "Email": "sandrarueda@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SERGIO BURGOS FUENTES",
+    "Curp": "BUFS530418HDGRNR06",
+    "Email": "sergio.burgos@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SERGIO BUSTAMANTE ALVARADO",
+    "Curp": "NUAS591123HDGSLR07",
+    "Email": "sbustamante@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SERGIO GUSTAVO BERMÚDEZ ALANÍS",
+    "Curp": "BEAS500514HDGRLR07",
+    "Email": "sbemudeza@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SERGIO PARRA DÍAZ",
+    "Curp": "PADS630416HDGRZR07",
+    "Email": "sparra@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SERGIO SALAZAR LÓPEZ",
+    "Curp": "SALS580711HDGLPR01",
+    "Email": "chicho58@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SERGIO VALDEZ GURROLA",
+    "Curp": "VAGS460320HDGLRR02",
+    "Email": "svaldezg@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SERGIO VALDEZ HERNÁNDEZ",
+    "Curp": "VAHS711129HDGLRR08",
+    "Email": "svaldez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SERGIO VALLE CERVANTES",
+    "Curp": "VACS571007HCLLRR04",
+    "Email": "svalle@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SILVIA MARINA GONZÁLEZ HERRERA",
+    "Curp": "GOHS560113MDGNRL01",
+    "Email": "sgonzalez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SONIA LORENA SICSIK ARÉVALO",
+    "Curp": "SIAS711010MDGCRN00",
+    "Email": "sonia.sicsik@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SUSANA CRISTINA ROSALES AGUILERA",
+    "Curp": "ROAS630312MDGSGS03",
+    "Email": "srosales@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "SUSANA ELIZABETH MONTES MARRERO",
+    "Curp": "",
+    "Email": "smontes@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "TANIA EDITH MARTÍNEZ BAYONA",
+    "Curp": "MABT790806MDGRYN09",
+    "Email": "tmartinez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "TANIA ELENA LOZANO MUÑOZ",
+    "Curp": "LOMT830128MDGZXN03",
+    "Email": "tania.lozano@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "TANIA MONTOYA GARCÍA",
+    "Curp": "MOGT761227MDGNRN01",
+    "Email": "tania.montoya@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "TOMÁS REYES OJEDA",
+    "Curp": "REOT701223HDGYJM09",
+    "Email": "treyes@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "VALENTÍN ARAGÓN RAFAEL",
+    "Curp": "AAXR680214HDGRXF14",
+    "Email": "rafaelaragon@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "VERÓNICA CERVANTES CARDOZA",
+    "Curp": "CECV790831MDGRRR03",
+    "Email": "veronica.cervantes@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "VERÓNICA ROMO VIGGERS",
+    "Curp": "ROVV661006MDGMGR00",
+    "Email": "vrviggers@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "VIANEY VELÁZQUEZ LUNA",
+    "Curp": "",
+    "Email": "vvelazquez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "VÍCTOR CAMPA MENDOZA",
+    "Curp": "CAMV420728HDGMNC00",
+    "Email": "vcampa@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "VÍCTOR HUGO DE LA HOYA DUARTE",
+    "Curp": "HODV810703HDGYRC06",
+    "Email": "vdelahoya@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "VICTOR JESÚS MARTÍNEZ GÓMEZ",
+    "Curp": "",
+    "Email": "victor.martinez@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "VÍCTOR MANUEL CANALES SAUCEDO",
+    "Curp": "CASV661230HSRNCC08",
+    "Email": "victor.canales@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "VÍCTOR MANUEL DERAS SANDOVAL",
+    "Curp": "DESV540323HDGRNC01",
+    "Email": "victorderas@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "VÍCTOR MANUEL FÁBILA HERNÁNDEZ",
+    "Curp": "FAHV620107HDFBRC04",
+    "Email": "fabilav@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "VÍCTOR MANUEL REVELES CASTAÑEDA",
+    "Curp": "",
+    "Email": "victor.reveles@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "VÍCTOR MANUEL RIVERA SÁNCHEZ",
+    "Curp": "RISV730513HDGVNC06",
+    "Email": "vrivera@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "VIRNA DENICE MENA GONZÁLEZ",
+    "Curp": "MEGV740316MDGNNR09",
+    "Email": "virnamena@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "WALFRED ROSAS FLORES",
+    "Curp": "ROFW821103HMSSLL02",
+    "Email": "wrosas@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "YOLOCUAUHTLI SALAZAR MUÑOZ",
+    "Curp": "SAMY780202MDGLXL02",
+    "Email": "ysalazar@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "YUREXIA DEL ÁNGEL SALAZAR",
+    "Curp": "AESY860814MDGNLR03",
+    "Email": "yurexia.angel@itdurango.edu.mx"
+  },
+  {
+    "NombreCompleto": "ZAYDA MABEL VALENZUELA MENA",
+    "Curp": "VAMZ800108MDGLNY02",
+    "Email": "zmvalenzuela@itdurango.edu.mx"
+  }
+]
