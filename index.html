@@ -1,131 +1,121 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Cursos ITD</title>
-    <!-- Incluye Tailwind CSS para un diseño moderno y responsive -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Cursos - ITDurango</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    body { background-color: #f5f6fa; }
+    .hero {
+      background: #002855; /* Azul institucional */
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    .form-card {
+      background: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+    }
+    .logo {
+      width: 120px;
+      margin-bottom: 15px;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<body>
+  <!-- Encabezado -->
+  <div class="hero">
+    <img src="logo_itdurango.png" alt="Logo ITDurango" class="logo">
+    <h2>INSTITUTO TECNOLÓGICO DE DURANGO</h2>
+    <h4>Desarrollo Académico</h4>
+    <h3 class="mt-3">Registro a Curso de Actualización Docente</h3>
+    <p><strong>Periodo Enero - Junio 2026</strong></p>
+  </div>
 
-    <!-- Contenedor principal del formulario -->
-    <div class="bg-white p-8 md:p-12 rounded-2xl shadow-2xl w-full max-w-2xl border border-gray-200">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Registro de Cursos ITD</h1>
-            <p class="mt-2 text-gray-600">Por favor, completa el formulario para inscribirte.</p>
+  <!-- Formulario -->
+  <div class="container my-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="form-card">
+          <form id="registroForm">
+            <!-- Nombre -->
+            <div class="mb-3">
+              <label class="form-label">Nombre completo</label>
+              <input type="text" class="form-control text-uppercase" name="nombre" required>
+            </div>
+
+            <!-- CURP -->
+            <div class="mb-3">
+              <label class="form-label">CURP</label>
+              <input type="text" class="form-control text-uppercase" name="curp" required>
+            </div>
+
+            <!-- Departamento -->
+            <div class="mb-3">
+              <label class="form-label">Departamento</label>
+              <select class="form-select" name="departamento" required>
+                <option value="">Seleccione...</option>
+                <option>DEPARTAMENTO DE SISTEMAS Y COMPUTACIÓN</option>
+                <option>DEPARTAMENTO DE INGENIERÍA ELÉCTRICA Y ELECTRÓNICA</option>
+                <option>CIENCIAS ECONÓMICO-ADMINISTRATIVAS</option>
+                <!-- Dinámicamente desde hoja Departamentos -->
+              </select>
+            </div>
+
+            <!-- Género -->
+            <div class="mb-3">
+              <label class="form-label">Género</label><br>
+              <input type="radio" name="genero" value="Mujer" required> Mujer
+              <input type="radio" name="genero" value="Hombre"> Hombre
+              <input type="radio" name="genero" value="Otro"> Otro
+            </div>
+
+            <!-- Curso -->
+            <div class="mb-3">
+              <label class="form-label">Curso</label>
+              <select class="form-select" name="curso" id="cursoSelect" required>
+                <option value="">Seleccione un curso...</option>
+                <!-- Se cargan dinámicamente -->
+              </select>
+            </div>
+
+            <!-- Vista instantánea del curso elegido -->
+            <div class="alert alert-info d-none" id="cursoElegido">
+              <strong>Ha seleccionado:</strong> <span id="cursoTexto"></span>
+            </div>
+
+            <!-- Botón Finalizar -->
+            <button type="submit" class="btn btn-primary w-100">Terminar Registro</button>
+          </form>
         </div>
-        
-        <form id="registroForm" class="space-y-6" action="https://script.google.com/macros/s/AKfycbyxWZVL33x5pXJQ1jb6wLzWHEQ01Bug4ALTVT43xSSBzoZr1D5A58wlU4Tnvxj9AomY/exec" method="POST">
-            <!-- Campo: Nombre Completo -->
-            <div>
-                <label for="nombreCompleto" class="block text-sm font-medium text-gray-700">Nombre Completo</label>
-                <input type="text" id="nombreCompleto" name="nombreCompleto" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-
-            <!-- Campo: CURP -->
-            <div>
-                <label for="curp" class="block text-sm font-medium text-gray-700">CURP</label>
-                <input type="text" id="curp" name="curp" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-
-            <!-- Campo: Email -->
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-                <input type="email" id="email" name="email" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="usuario@itdurango.eu.mx o usuario@gmail.com">
-            </div>
-
-            <!-- Campo: Género -->
-            <div>
-                <label for="genero" class="block text-sm font-medium text-gray-700">Género</label>
-                <select id="genero" name="genero" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Selecciona tu género</option>
-                    <option value="Femenino">Femenino</option>
-                    <option value="Masculino">Masculino</option>
-                    <option value="Otro">Otro</option>
-                </select>
-            </div>
-
-            <!-- Campo: Departamento -->
-            <div>
-                <label for="departamento" class="block text-sm font-medium text-gray-700">Departamento</label>
-                <select id="departamento" name="departamento" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Selecciona un departamento</option>
-                    <option value="DEPARTAMENTO DE SISTEMAS Y COMPUTACION">DEPARTAMENTO DE SISTEMAS Y COMPUTACION</option>
-                    <option value="DEPARTAMENTO DE INGENIERÍA ELÉCTRICA Y ELECTRÓNICA">DEPARTAMENTO DE INGENIERÍA ELÉCTRICA Y ELECTRÓNICA</option>
-                    <option value="DEPARTAMENTO DE CIENCIAS ECONOMICO-ADMINISTRATIVAS">DEPARTAMENTO DE CIENCIAS ECONOMICO-ADMINISTRATIVAS</option>
-                    <option value="ADMINISTRATIVO">ADMINISTRATIVO</option>
-                    <option value="EXTERNO">EXTERNO</option>
-                </select>
-            </div>
-
-            <!-- Campo: Curso Seleccionado -->
-            <div>
-                <label for="curso" class="block text-sm font-medium text-gray-700">Curso a inscribir</label>
-                <select id="curso" name="cursoSeleccionado" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Selecciona un curso</option>
-                    <option value="PYTHON BÁSICO">PYTHON BÁSICO</option>
-                    <option value="HERRAMIENTAS DE INTELIGENCIA ARTIFICIAL GENERATIVA">HERRAMIENTAS DE INTELIGENCIA ARTIFICIAL GENERATIVA</option>
-                    <option value="INGLES BÁSICO I">INGLES BÁSICO I</option>
-                </select>
-            </div>
-
-            <!-- Campo: Fecha Visible -->
-            <div>
-                <label for="fechaVisible" class="block text-sm font-medium text-gray-700">Fecha Visible del Curso</label>
-                <input type="text" id="fechaVisible" name="fechaVisible" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            
-            <!-- Campo: Lugar -->
-            <div>
-                <label for="lugar" class="block text-sm font-medium text-gray-700">Lugar del Curso</label>
-                <input type="text" id="lugar" name="lugar" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-
-            <!-- Botón de Envío -->
-            <div>
-                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300 ease-in-out transform hover:scale-105">
-                    Enviar Registro
-                </button>
-            </div>
-        </form>
-
-        <!-- Mensaje de éxito -->
-        <div id="successMessage" class="mt-6 p-4 bg-green-100 text-green-800 rounded-xl hidden">
-            <p class="font-semibold">¡Formulario enviado con éxito!</p>
-            <p class="mt-1 text-sm">Los datos se han registrado. Revisa la consola del navegador para ver la información capturada.</p>
-        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Script de JavaScript para simular el envío -->
-    <script>
-        document.getElementById('registroForm').addEventListener('submit', function(event) {
-            // Evita que el formulario se envíe de la forma tradicional (recargando la página)
-            event.preventDefault();
+  <!-- Pie institucional -->
+  <footer class="text-center py-4 bg-light">
+    <p><strong>2026 Registro de cursos de actualización docente. Todos los derechos reservados.</strong></p>
+    <p>Desarrollo Académico - Coordinación de Actualización Docente del ITD</p>
+    <p style="font-size: 14px;">M.C. Alejandro Calderón Rentería</p>
+  </footer>
 
-            // Oculta cualquier mensaje anterior
-            document.getElementById('successMessage').classList.add('hidden');
+  <script>
+    // Mostrar curso en tiempo real
+    document.getElementById('cursoSelect').addEventListener('change', function() {
+      let value = this.options[this.selectedIndex].text;
+      let alert = document.getElementById('cursoElegido');
+      document.getElementById('cursoTexto').innerText = value;
+      alert.classList.remove('d-none');
+    });
 
-            // Captura los datos del formulario en un objeto
-            const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData.entries());
-
-            // Muestra los datos capturados en la consola del navegador (para simulación)
-            console.log("Datos del formulario capturados:", data);
-
-            // Muestra el mensaje de éxito
-            document.getElementById('successMessage').classList.remove('hidden');
-        });
-    </script>
-
+    // Manejo del formulario (solo demo, luego conectamos Apps Script)
+    document.getElementById('registroForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert("Registro completado. Se enviará confirmación a su correo institucional.");
+    });
+  </script>
 </body>
 </html>
