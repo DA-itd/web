@@ -7,14 +7,14 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
   <style>
-    /* Franja azul arriba */
+    /* Franja azul encabezado */
     .hero-header {
       background-color: #0d2d5e;
       color: white;
       padding: 20px;
       text-align: center;
     }
-    /* Reducir tamaño de letra en footer */
+    /* Footer más discreto */
     footer {
       font-size: 0.8rem;
     }
@@ -40,6 +40,7 @@
       <div class="col-md-8">
         <div class="card shadow p-4">
           <form id="registroForm">
+            
             <!-- Nombre -->
             <div class="mb-3">
               <label class="form-label">Nombre completo</label>
@@ -96,63 +97,75 @@
   </footer>
 
   <script>
-    // 👉 Reemplaza esta URL con la de tu WebApp de Google Apps Script
-    const API_URL = "https://script.google.com/a/macros/itdurango.edu.mx/s/AKfycbyzgZBj2Hw87VdnuEzqvzFWOWvxYG5LN2Z-tiutXdH0PrDMLR65qEN51XW4nX3YkOmb/exec"; 
+    // 👉 API_URL de tu WebApp publicado en Apps Script
+    const API_URL = "https://script.google.com/macros/s/AKfycbwP7tzS0uXeFJhX5TPMS2rBtVDM31-VG2V9kB03Cokr_Ife59qvi0YW-5u9T4OhZZLH/exec";
 
-    // Llenar Docentes
+    // === DOCENTES ===
     fetch(API_URL + "?api=docentes")
       .then(res => res.json())
       .then(data => {
         let lista = document.getElementById("listaDocentes");
         data.forEach(doc => {
           let option = document.createElement("option");
-          option.value = doc[0]; // Nombre Completo
+          option.value = doc[0]; // Nombre
           option.setAttribute("data-curp", doc[1]);
           option.setAttribute("data-email", doc[2]);
           lista.appendChild(option);
         });
 
-        // Autocompletar CURP y Email si selecciona docente
-        document.querySelector("input[name='nombre']").addEventListener("input", function() {
+        // Autorrellenar al seleccionar nombre
+        document.querySelector("input[name='nombre']").addEventListener("change", function() {
           let opt = [...lista.options].find(o => o.value === this.value);
           if (opt) {
             document.querySelector("input[name='curp']").value = opt.getAttribute("data-curp");
             document.querySelector("input[name='email']").value = opt.getAttribute("data-email");
           }
         });
-      });
+      })
+      .catch(err => alert("❌ Error cargando docentes: " + err));
 
-    // Llenar Departamentos
+    // === DEPARTAMENTOS ===
     fetch(API_URL + "?api=departamentos")
       .then(res => res.json())
       .then(data => {
         let lista = document.getElementById("listaDepartamentos");
         data.forEach(dep => {
           let option = document.createElement("option");
-          option.value = dep[0];
+          option.value = dep[0]; // cada fila viene como ["DEPARTAMENTO ..."]
           lista.appendChild(option);
         });
-      });
+      })
+      .catch(err => alert("❌ Error cargando departamentos: " + err));
 
-    // Llenar Cursos
+    // === CURSOS ===
     fetch(API_URL + "?api=cursos")
       .then(res => res.json())
       .then(data => {
         let lista = document.getElementById("listaCursos");
         data.forEach(curso => {
           let option = document.createElement("option");
-          option.value = curso[0] + " - " + curso[1]; // Id_Curso + Nombre curso
-          option.setAttribute("data-fecha", curso[2]);
-          option.setAttribute("data-lugar", curso[4]);
+          option.value = curso[0] + " - " + curso[1]; // ID + Nombre
+          option.setAttribute("data-fecha", curso[2]); // FechaVisible
+          option.setAttribute("data-lugar", curso[4]); // Lugar
           lista.appendChild(option);
         });
-      });
+      })
+      .catch(err => alert("❌ Error cargando cursos: " + err));
 
-    // Enviar Formulario
+    // === ENVIAR REGISTRO ===
     document.getElementById("registroForm").addEventListener("submit", function(e) {
       e.preventDefault();
       let formData = new FormData(e.target);
       let obj = Object.fromEntries(formData.entries());
+
+      // extraemos curso visible
+      let cursoSeleccionado = document.querySelector("input[name='id_curso']").value;
+      let opt = [...document.getElementById("listaCursos").options].find(o => cursoSeleccionado.startsWith(o.value));
+      if (opt) {
+        obj.cursoTexto = opt.value;
+        obj.fechaVisible = opt.getAttribute("data-fecha");
+        obj.lugar = opt.getAttribute("data-lugar");
+      }
 
       fetch(API_URL, {
         method: "POST",
@@ -162,13 +175,13 @@
       .then(res => res.json())
       .then(r => {
         if (r.status === "ok") {
-          alert("✅ Registro guardado correctamente en Google Sheets");
+          alert("✅ Registro guardado en Google Sheets");
           e.target.reset();
         } else {
           alert("⚠️ Error: " + r.message);
         }
       })
-      .catch(err => alert("❌ Error de conexión"));
+      .catch(err => alert("❌ Error de conexión con el servidor"));
     });
   </script>
 </body>
