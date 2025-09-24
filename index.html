@@ -101,7 +101,7 @@
   <!-- Script -->
   <script>
     // === DOCENTES ===
-    fetch("data/docentes.json")
+    fetch("docentes.json")
       .then(res => res.json())
       .then(data => {
         let select = document.getElementById("docenteSelect");
@@ -119,10 +119,11 @@
           document.querySelector("input[name='curp']").value = opt.getAttribute("data-curp");
           document.querySelector("input[name='email']").value = opt.getAttribute("data-email");
         });
-      });
+      })
+      .catch(err => console.error("Error cargando docentes:", err));
 
     // === DEPARTAMENTOS ===
-    fetch("data/departamentos.json")
+    fetch("departamento.json")
       .then(res => res.json())
       .then(data => {
         let select = document.getElementById("departamentoSelect");
@@ -132,10 +133,11 @@
           option.textContent = dep;
           select.appendChild(option);
         });
-      });
+      })
+      .catch(err => console.error("Error cargando departamentos:", err));
 
     // === CURSOS ===
-    fetch("data/cursos.json")
+    fetch("cursos.json")
       .then(res => res.json())
       .then(data => {
         let select = document.getElementById("cursoSelect");
@@ -148,7 +150,8 @@
           option.setAttribute("data-lugar", curso.lugar);
           select.appendChild(option);
         });
-      });
+      })
+      .catch(err => console.error("Error cargando cursos:", err));
 
     // === ENVIAR REGISTRO ===
     document.getElementById("registroForm").addEventListener("submit", function(e) {
@@ -164,7 +167,7 @@
         obj.lugar = cursoOpt.getAttribute("data-lugar");
       }
 
-      // Por ahora mostramos en consola (a futuro: Firebase/Google Sheets)
+      // Por ahora mostramos en consola (a futuro guardar en BD)
       console.log("📌 Registro capturado:", obj);
       alert("✅ Registro capturado (pendiente guardar en BD)\nRevisa la consola del navegador");
 
