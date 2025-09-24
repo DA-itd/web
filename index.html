@@ -43,27 +43,29 @@
             <!-- Nombre -->
             <div class="mb-3">
               <label class="form-label">Nombre completo</label>
-              <input type="text" class="form-control text-uppercase" name="nombre" list="listaDocentes" required>
-              <datalist id="listaDocentes"></datalist>
+              <select class="form-select" id="docenteSelect" name="nombre" required>
+                <option value="">Seleccione un docente...</option>
+              </select>
             </div>
 
             <!-- CURP -->
             <div class="mb-3">
               <label class="form-label">CURP</label>
-              <input type="text" class="form-control text-uppercase" name="curp" required>
+              <input type="text" class="form-control text-uppercase" name="curp" readonly>
             </div>
 
             <!-- Email -->
             <div class="mb-3">
               <label class="form-label">Correo electrónico</label>
-              <input type="email" class="form-control" name="email" required>
+              <input type="email" class="form-control" name="email" readonly>
             </div>
 
             <!-- Departamento -->
             <div class="mb-3">
               <label class="form-label">Departamento</label>
-              <input type="text" class="form-control" name="departamento" list="listaDepartamentos" required>
-              <datalist id="listaDepartamentos"></datalist>
+              <select class="form-select" id="departamentoSelect" name="departamento" required>
+                <option value="">Seleccione un departamento...</option>
+              </select>
             </div>
 
             <!-- Género -->
@@ -77,8 +79,9 @@
             <!-- Curso -->
             <div class="mb-3">
               <label class="form-label">Curso</label>
-              <input type="text" class="form-control" name="id_curso" list="listaCursos" required>
-              <datalist id="listaCursos"></datalist>
+              <select class="form-select" id="cursoSelect" name="id_curso" required>
+                <option value="">Seleccione un curso...</option>
+              </select>
             </div>
 
             <!-- Botón Finalizar -->
@@ -95,28 +98,26 @@
     <p>Desarrollo Académico - Coordinación de Actualización Docente del ITD</p>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Script -->
   <script>
     // === DOCENTES ===
     fetch("data/docentes.json")
       .then(res => res.json())
       .then(data => {
-        let lista = document.getElementById("listaDocentes");
+        let select = document.getElementById("docenteSelect");
         data.forEach(doc => {
           let option = document.createElement("option");
           option.value = doc.nombre;
+          option.textContent = doc.nombre;
           option.setAttribute("data-curp", doc.curp);
           option.setAttribute("data-email", doc.email);
-          lista.appendChild(option);
+          select.appendChild(option);
         });
-
-        // Autorelleno de curp/email al elegir nombre
-        document.querySelector("input[name='nombre']").addEventListener("change", function() {
-          let opt = [...lista.options].find(o => o.value === this.value);
-          if (opt) {
-            document.querySelector("input[name='curp']").value = opt.getAttribute("data-curp");
-            document.querySelector("input[name='email']").value = opt.getAttribute("data-email");
-          }
+        // Autorelleno de curp/email
+        select.addEventListener("change", function() {
+          let opt = select.selectedOptions[0];
+          document.querySelector("input[name='curp']").value = opt.getAttribute("data-curp");
+          document.querySelector("input[name='email']").value = opt.getAttribute("data-email");
         });
       });
 
@@ -124,11 +125,12 @@
     fetch("data/departamentos.json")
       .then(res => res.json())
       .then(data => {
-        let lista = document.getElementById("listaDepartamentos");
+        let select = document.getElementById("departamentoSelect");
         data.forEach(dep => {
           let option = document.createElement("option");
           option.value = dep;
-          lista.appendChild(option);
+          option.textContent = dep;
+          select.appendChild(option);
         });
       });
 
@@ -136,13 +138,15 @@
     fetch("data/cursos.json")
       .then(res => res.json())
       .then(data => {
-        let lista = document.getElementById("listaCursos");
+        let select = document.getElementById("cursoSelect");
         data.forEach(curso => {
           let option = document.createElement("option");
-          option.value = curso.id + " - " + curso.nombre;
+          option.value = curso.id;
+          option.textContent = curso.nombre + " (" + curso.fecha + " - " + curso.lugar + ")";
+          option.setAttribute("data-nombre", curso.nombre);
           option.setAttribute("data-fecha", curso.fecha);
           option.setAttribute("data-lugar", curso.lugar);
-          lista.appendChild(option);
+          select.appendChild(option);
         });
       });
 
@@ -152,9 +156,17 @@
       let formData = new FormData(e.target);
       let obj = Object.fromEntries(formData.entries());
 
-      // Mostrar lo que se captura (por ahora solo consola)
-      console.log("Registro capturado:", obj);
-      alert("📌 Registro capturado (💾 pendiente guardar en BD)\nRevisa la consola del navegador");
+      // Guardamos información extra del curso seleccionado
+      let cursoOpt = document.getElementById("cursoSelect").selectedOptions[0];
+      if (cursoOpt) {
+        obj.cursoTexto = cursoOpt.getAttribute("data-nombre");
+        obj.fechaVisible = cursoOpt.getAttribute("data-fecha");
+        obj.lugar = cursoOpt.getAttribute("data-lugar");
+      }
+
+      // Por ahora mostramos en consola (a futuro: Firebase/Google Sheets)
+      console.log("📌 Registro capturado:", obj);
+      alert("✅ Registro capturado (pendiente guardar en BD)\nRevisa la consola del navegador");
 
       e.target.reset();
     });
