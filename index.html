@@ -6,12 +6,7 @@
   <title>Registro de Cursos - ITDurango</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <style>
-    .hero-header {
-      background-color: #0d2d5e;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
+    .hero-header { background-color: #0d2d5e; color: white; padding: 20px; text-align: center; }
     .logo { max-height: 120px; margin-bottom: 10px; }
     footer { font-size: 0.8rem; }
   </style>
@@ -95,10 +90,36 @@
 
   <!-- Script -->
   <script>
+    // === CONFIG: URLs de tus hojas (cambia ID y gid por los tuyos) ===
+    const SHEET_ID     = "TU_ID_DE_SPREADSHEET"; 
+    const URL_DOCENTES = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=206109211`; 
+    const URL_DEPTO    = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=155992397`; 
+    const URL_CURSOS   = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=893676265`; 
+
+    // === URL de tu WebApp Apps Script (modifica esta) ===
+    const WEBAPP_URL   = "https://script.google.com/macros/s/AKfycbyD8Q8yzFfHWgqXDqnJ1L-WtwCfAP1jvottpLKm9YFcvSpnGesY8tJY3kqT5EMM9AlN/exec";
+
+    // === Convertir CSV a JSON ===
+    function csvToJson(csv) {
+      const lines = csv.split("\n").filter(l => l.trim() !== "");
+      const headers = lines[0].split(",");
+      const result = [];
+      for (let i = 1; i < lines.length; i++) {
+        let obj = {};
+        let currentline = lines[i].split(",");
+        headers.forEach((h, j) => {
+          obj[h.trim()] = currentline[j] ? currentline[j].trim() : "";
+        });
+        result.push(obj);
+      }
+      return result;
+    }
+
     // === DOCENTES ===
-    fetch("docentes.json")
-      .then(res => res.json())
-      .then(data => {
+    fetch(URL_DOCENTES)
+      .then(r => r.text())
+      .then(csv => {
+        let data = csvToJson(csv);
         let lista = document.getElementById("listaDocentes");
         data.forEach(doc => {
           let option = document.createElement("option");
@@ -121,9 +142,10 @@
       });
 
     // === DEPARTAMENTOS ===
-    fetch("departamento.json")
-      .then(res => res.json())
-      .then(data => {
+    fetch(URL_DEPTO)
+      .then(r => r.text())
+      .then(csv => {
+        let data = csvToJson(csv);
         let select = document.getElementById("departamentoSelect");
         data.forEach(dep => {
           let option = document.createElement("option");
@@ -133,29 +155,46 @@
         });
       });
 
-    // === FUNCIÓN PARA CARGAR CURSOS EN UN SELECT ===
+    // === FUNCION PARA CARGAR CURSOS CON OPTGROUP POR FECHA ===
     function cargarCursos(select) {
-      fetch("cursos.json")
-        .then(res => res.json())
-        .then(data => {
+      fetch(URL_CURSOS)
+        .then(r => r.text())
+        .then(csv => {
+          let data = csvToJson(csv);
+
+          let grupos = {};
           data.forEach(curso => {
-            let option = document.createElement("option");
-            option.value = curso.Id_Curso;
-            option.textContent = curso["#"] + " (" + curso.FechaVisible + " - " + curso.Lugar + ")";
-            option.setAttribute("data-nombre", curso["#"]);
-            option.setAttribute("data-fecha", curso.FechaVisible);
-            option.setAttribute("data-lugar", curso.Lugar);
-            option.setAttribute("data-horario", curso.Horario);
-            option.setAttribute("data-tipo", curso.Tipo);
-            select.appendChild(option);
+            if (!grupos[curso.FechaVisible]) {
+              grupos[curso.FechaVisible] = [];
+            }
+            grupos[curso.FechaVisible].push(curso);
+          });
+
+          Object.keys(grupos).forEach(fecha => {
+            let optgroup = document.createElement("optgroup");
+            optgroup.label = fecha;
+
+            grupos[fecha].forEach(curso => {
+              let option = document.createElement("option");
+              option.value = curso.Id_Curso;
+              option.textContent = curso["#"] + " — " + curso.Lugar;
+              option.setAttribute("data-nombre", curso["#"]);
+              option.setAttribute("data-fecha", curso.FechaVisible);
+              option.setAttribute("data-lugar", curso.Lugar);
+              option.setAttribute("data-horario", curso.Horario);
+              option.setAttribute("data-tipo", curso.Tipo);
+              optgroup.appendChild(option);
+            });
+
+            select.appendChild(optgroup);
           });
         });
     }
 
-    // Inicial: cargar el primer select curso
+    // Inicial: carga el primer select curso
     cargarCursos(document.querySelector(".cursoSelect"));
 
-    // Botón ➕ para añadir dinámicamente otro curso
+    // Botón ➕ agregar curso
     document.getElementById("addCursoBtn").addEventListener("click", function() {
       let container = document.getElementById("cursosContainer");
       let div = document.createElement("div");
@@ -168,7 +207,7 @@
       cargarCursos(select);
     });
 
-    // === ENVIAR REGISTRO ===
+    // === ENVIAR REGISTRO AL WEBSERVICE DE GOOGLE APPS SCRIPT ===
     document.getElementById("registroForm").addEventListener("submit", function(e) {
       e.preventDefault();
       let formData = new FormData(e.target);
@@ -191,20 +230,32 @@
       });
       obj.cursosSeleccionados = cursos;
 
-      console.log("📌 Registro completo:", obj);
-      alert("✅ Registro guardado con " + cursos.length + " curso(s). Ver consola (F12)");
-
-      // Resetear y volver a dejar un curso vacío
-      e.target.reset();
-      document.getElementById("cursosContainer").innerHTML = `
-        <label class="form-label">Cursos</label>
-        <div class="curso-item mb-2">
-          <select class="form-select cursoSelect" required>
-            <option value="">Seleccione un curso...</option>
-          </select>
-        </div>
-      `;
-      cargarCursos(document.querySelector(".cursoSelect"));
+      // 🚀 Enviar al Apps Script
+      fetch(WEBAPP_URL, {
+        method: "POST",
+        body: JSON.stringify(obj),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => res.json())
+      .then(resp => {
+        if (resp.status === "ok") {
+          alert("✅ Registro guardado correctamente en Inscripciones");
+          e.target.reset();
+          // Reiniciar contenedor de cursos
+          document.getElementById("cursosContainer").innerHTML = `
+            <label class="form-label">Cursos</label>
+            <div class="curso-item mb-2">
+              <select class="form-select cursoSelect" required>
+                <option value="">Seleccione un curso...</option>
+              </select>
+            </div>
+          `;
+          cargarCursos(document.querySelector(".cursoSelect"));
+        } else {
+          alert("⚠️ Error: " + resp.message);
+        }
+      })
+      .catch(err => alert("❌ No se pudo conectar con el servidor: " + err));
     });
   </script>
 </body>
