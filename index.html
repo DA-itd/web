@@ -12,13 +12,8 @@
       padding: 20px;
       text-align: center;
     }
-    .logo {
-      max-height: 120px;
-      margin-bottom: 10px;
-    }
-    footer {
-      font-size: 0.8rem;
-    }
+    .logo { max-height: 120px; margin-bottom: 10px; }
+    footer { font-size: 0.8rem; }
   </style>
 </head>
 <body>
@@ -104,26 +99,23 @@
         let lista = document.getElementById("listaDocentes");
         data.forEach(doc => {
           let option = document.createElement("option");
-          option.value = doc.nombre;
-          option.setAttribute("data-curp", doc.curp);
-          option.setAttribute("data-email", doc.email);
+          option.value = doc.NombreCompleto; // coincide con JSON
+          option.setAttribute("data-curp", doc.Curp);
+          option.setAttribute("data-email", doc.Email);
           lista.appendChild(option);
         });
 
-        // Autocompletar si escogen un docente exacto de la lista
         document.querySelector("input[name='nombre']").addEventListener("change", function() {
           let opt = [...lista.options].find(o => o.value === this.value);
           if (opt) {
             document.querySelector("input[name='curp']").value = opt.getAttribute("data-curp");
             document.querySelector("input[name='email']").value = opt.getAttribute("data-email");
           } else {
-            // Si es docente nuevo, dejamos los campos vacíos para llenar
             document.querySelector("input[name='curp']").value = "";
             document.querySelector("input[name='email']").value = "";
           }
         });
-      })
-      .catch(err => console.error("Error cargando docentes:", err));
+      });
 
     // === DEPARTAMENTOS ===
     fetch("departamento.json")
@@ -132,12 +124,11 @@
         let select = document.getElementById("departamentoSelect");
         data.forEach(dep => {
           let option = document.createElement("option");
-          option.value = dep;
-          option.textContent = dep;
+          option.value = dep.NombreDepartamento;
+          option.textContent = dep.NombreDepartamento;
           select.appendChild(option);
         });
-      })
-      .catch(err => console.error("Error cargando departamentos:", err));
+      });
 
     // === CURSOS ===
     fetch("cursos.json")
@@ -146,32 +137,34 @@
         let select = document.getElementById("cursoSelect");
         data.forEach(curso => {
           let option = document.createElement("option");
-          option.value = curso.id;
-          option.textContent = curso.nombre + " (" + curso.fecha + " - " + curso.lugar + ")";
-          option.setAttribute("data-nombre", curso.nombre);
-          option.setAttribute("data-fecha", curso.fecha);
-          option.setAttribute("data-lugar", curso.lugar);
+          option.value = curso.Id_Curso;
+          option.textContent = curso["#"] + " (" + curso.FechaVisible + " - " + curso.Lugar + ")";
+          option.setAttribute("data-nombre", curso["#"]);
+          option.setAttribute("data-fecha", curso.FechaVisible);
+          option.setAttribute("data-lugar", curso.Lugar);
+          option.setAttribute("data-horario", curso.Horario);
+          option.setAttribute("data-tipo", curso.Tipo);
           select.appendChild(option);
         });
-      })
-      .catch(err => console.error("Error cargando cursos:", err));
+      });
 
-    // === ENVIAR REGISTRO == (por ahora solo consola)
+    // === ENVIAR REGISTRO (solo consola de momento) ===
     document.getElementById("registroForm").addEventListener("submit", function(e) {
       e.preventDefault();
       let formData = new FormData(e.target);
       let obj = Object.fromEntries(formData.entries());
 
-      // Información adicional del curso
       let cursoOpt = document.getElementById("cursoSelect").selectedOptions[0];
       if (cursoOpt) {
         obj.cursoTexto = cursoOpt.getAttribute("data-nombre");
         obj.fechaVisible = cursoOpt.getAttribute("data-fecha");
         obj.lugar = cursoOpt.getAttribute("data-lugar");
+        obj.horario = cursoOpt.getAttribute("data-horario");
+        obj.tipo = cursoOpt.getAttribute("data-tipo");
       }
 
       console.log("📌 Registro capturado:", obj);
-      alert("✅ Registro capturado (por ahora solo en consola; luego lo conectamos a Firebase/Sheets)");
+      alert("✅ Registro capturado (ver en consola con F12)");
 
       e.target.reset();
     });
