@@ -68,13 +68,16 @@
               <input type="radio" name="genero" value="Otro"> Otro
             </div>
 
-            <!-- Curso -->
-            <div class="mb-3">
-              <label class="form-label">Curso</label>
-              <select class="form-select" id="cursoSelect" name="id_curso" required>
-                <option value="">Seleccione un curso...</option>
-              </select>
+            <!-- Cursos dinámicos -->
+            <div class="mb-3" id="cursosContainer">
+              <label class="form-label">Cursos</label>
+              <div class="curso-item mb-2">
+                <select class="form-select cursoSelect" required>
+                  <option value="">Seleccione un curso...</option>
+                </select>
+              </div>
             </div>
+            <button type="button" id="addCursoBtn" class="btn btn-secondary btn-sm mb-3">➕ Agregar otro curso</button>
 
             <!-- Botón Finalizar -->
             <button type="submit" class="btn btn-primary w-100">Terminar Registro</button>
@@ -99,7 +102,7 @@
         let lista = document.getElementById("listaDocentes");
         data.forEach(doc => {
           let option = document.createElement("option");
-          option.value = doc.NombreCompleto; // coincide con JSON
+          option.value = doc.NombreCompleto;
           option.setAttribute("data-curp", doc.Curp);
           option.setAttribute("data-email", doc.Email);
           lista.appendChild(option);
@@ -130,43 +133,78 @@
         });
       });
 
-    // === CURSOS ===
-    fetch("cursos.json")
-      .then(res => res.json())
-      .then(data => {
-        let select = document.getElementById("cursoSelect");
-        data.forEach(curso => {
-          let option = document.createElement("option");
-          option.value = curso.Id_Curso;
-          option.textContent = curso["#"] + " (" + curso.FechaVisible + " - " + curso.Lugar + ")";
-          option.setAttribute("data-nombre", curso["#"]);
-          option.setAttribute("data-fecha", curso.FechaVisible);
-          option.setAttribute("data-lugar", curso.Lugar);
-          option.setAttribute("data-horario", curso.Horario);
-          option.setAttribute("data-tipo", curso.Tipo);
-          select.appendChild(option);
+    // === FUNCIÓN PARA CARGAR CURSOS EN UN SELECT ===
+    function cargarCursos(select) {
+      fetch("cursos.json")
+        .then(res => res.json())
+        .then(data => {
+          data.forEach(curso => {
+            let option = document.createElement("option");
+            option.value = curso.Id_Curso;
+            option.textContent = curso["#"] + " (" + curso.FechaVisible + " - " + curso.Lugar + ")";
+            option.setAttribute("data-nombre", curso["#"]);
+            option.setAttribute("data-fecha", curso.FechaVisible);
+            option.setAttribute("data-lugar", curso.Lugar);
+            option.setAttribute("data-horario", curso.Horario);
+            option.setAttribute("data-tipo", curso.Tipo);
+            select.appendChild(option);
+          });
         });
-      });
+    }
 
-    // === ENVIAR REGISTRO (solo consola de momento) ===
+    // Inicial: cargar el primer select curso
+    cargarCursos(document.querySelector(".cursoSelect"));
+
+    // Botón ➕ para añadir dinámicamente otro curso
+    document.getElementById("addCursoBtn").addEventListener("click", function() {
+      let container = document.getElementById("cursosContainer");
+      let div = document.createElement("div");
+      div.classList.add("curso-item","mb-2");
+      let select = document.createElement("select");
+      select.classList.add("form-select","cursoSelect");
+      select.innerHTML = "<option value=''>Seleccione un curso...</option>";
+      div.appendChild(select);
+      container.appendChild(div);
+      cargarCursos(select);
+    });
+
+    // === ENVIAR REGISTRO ===
     document.getElementById("registroForm").addEventListener("submit", function(e) {
       e.preventDefault();
       let formData = new FormData(e.target);
       let obj = Object.fromEntries(formData.entries());
 
-      let cursoOpt = document.getElementById("cursoSelect").selectedOptions[0];
-      if (cursoOpt) {
-        obj.cursoTexto = cursoOpt.getAttribute("data-nombre");
-        obj.fechaVisible = cursoOpt.getAttribute("data-fecha");
-        obj.lugar = cursoOpt.getAttribute("data-lugar");
-        obj.horario = cursoOpt.getAttribute("data-horario");
-        obj.tipo = cursoOpt.getAttribute("data-tipo");
-      }
+      // Recolectar todos los cursos seleccionados
+      let cursos = [];
+      document.querySelectorAll(".cursoSelect").forEach(sel => {
+        if (sel.value) {
+          let opt = sel.selectedOptions[0];
+          cursos.push({
+            id: sel.value,
+            nombre: opt.getAttribute("data-nombre"),
+            fecha: opt.getAttribute("data-fecha"),
+            lugar: opt.getAttribute("data-lugar"),
+            horario: opt.getAttribute("data-horario"),
+            tipo: opt.getAttribute("data-tipo")
+          });
+        }
+      });
+      obj.cursosSeleccionados = cursos;
 
-      console.log("📌 Registro capturado:", obj);
-      alert("✅ Registro capturado (ver en consola con F12)");
+      console.log("📌 Registro completo:", obj);
+      alert("✅ Registro guardado con " + cursos.length + " curso(s). Ver consola (F12)");
 
+      // Resetear y volver a dejar un curso vacío
       e.target.reset();
+      document.getElementById("cursosContainer").innerHTML = `
+        <label class="form-label">Cursos</label>
+        <div class="curso-item mb-2">
+          <select class="form-select cursoSelect" required>
+            <option value="">Seleccione un curso...</option>
+          </select>
+        </div>
+      `;
+      cargarCursos(document.querySelector(".cursoSelect"));
     });
   </script>
 </body>
