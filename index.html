@@ -12,8 +12,13 @@
       padding: 20px;
       text-align: center;
     }
-    .logo { max-height: 120px; margin-bottom: 10px; }
-    footer { font-size: 0.8rem; }
+    .logo {
+      max-height: 120px;
+      margin-bottom: 10px;
+    }
+    footer {
+      font-size: 0.8rem;
+    }
   </style>
 </head>
 <body>
@@ -32,7 +37,7 @@
       <div class="col-md-8">
         <div class="card shadow p-4">
           <form id="registroForm">
-            
+
             <!-- Nombre -->
             <div class="mb-3">
               <label class="form-label">Nombre completo</label>
@@ -90,8 +95,9 @@
     <p>Desarrollo Académico - Coordinación de Actualización Docente del ITD</p>
   </footer>
 
+  <!-- Script -->
   <script>
-    // === DOCENTES === (con datalist, libre o autocompletar)
+    // === DOCENTES ===
     fetch("docentes.json")
       .then(res => res.json())
       .then(data => {
@@ -104,19 +110,20 @@
           lista.appendChild(option);
         });
 
-        // Autocompletar si escogen uno exacto
+        // Autocompletar si escogen un docente exacto de la lista
         document.querySelector("input[name='nombre']").addEventListener("change", function() {
           let opt = [...lista.options].find(o => o.value === this.value);
           if (opt) {
             document.querySelector("input[name='curp']").value = opt.getAttribute("data-curp");
             document.querySelector("input[name='email']").value = opt.getAttribute("data-email");
           } else {
-            // Si es un docente nuevo, dejar campos libres para llenar
+            // Si es docente nuevo, dejamos los campos vacíos para llenar
             document.querySelector("input[name='curp']").value = "";
             document.querySelector("input[name='email']").value = "";
           }
         });
-      });
+      })
+      .catch(err => console.error("Error cargando docentes:", err));
 
     // === DEPARTAMENTOS ===
     fetch("departamento.json")
@@ -129,7 +136,8 @@
           option.textContent = dep;
           select.appendChild(option);
         });
-      });
+      })
+      .catch(err => console.error("Error cargando departamentos:", err));
 
     // === CURSOS ===
     fetch("cursos.json")
@@ -145,15 +153,16 @@
           option.setAttribute("data-lugar", curso.lugar);
           select.appendChild(option);
         });
-      });
+      })
+      .catch(err => console.error("Error cargando cursos:", err));
 
-    // === ENVIAR REGISTRO ===
+    // === ENVIAR REGISTRO == (por ahora solo consola)
     document.getElementById("registroForm").addEventListener("submit", function(e) {
       e.preventDefault();
       let formData = new FormData(e.target);
       let obj = Object.fromEntries(formData.entries());
 
-      // Guardar info adicional del curso
+      // Información adicional del curso
       let cursoOpt = document.getElementById("cursoSelect").selectedOptions[0];
       if (cursoOpt) {
         obj.cursoTexto = cursoOpt.getAttribute("data-nombre");
@@ -161,9 +170,8 @@
         obj.lugar = cursoOpt.getAttribute("data-lugar");
       }
 
-      // Mostrar resultado
       console.log("📌 Registro capturado:", obj);
-      alert("✅ Registro capturado (pendiente guardar en BD)\nRevisa la consola");
+      alert("✅ Registro capturado (por ahora solo en consola; luego lo conectamos a Firebase/Sheets)");
 
       e.target.reset();
     });
