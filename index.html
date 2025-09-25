@@ -34,6 +34,22 @@
             <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
         </div>
 
+        <div id="searchView" class="view hidden p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg mt-10">
+            <h2 class="text-3xl font-bold mb-6 text-center">Búsqueda de Docente</h2>
+            <form id="searchForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="searchCURP">Ingresa tu CURP</label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="searchCURP" type="text" placeholder="CURP" required minlength="18" maxlength="18">
+                </div>
+                <div class="flex items-center justify-between">
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline transition duration-300 transform hover:scale-105" type="submit">
+                        Buscar
+                    </button>
+                </div>
+                <div id="searchMessage" class="mt-4 p-3 rounded text-center font-bold hidden"></div>
+            </form>
+        </div>
+
         <div id="authView" class="view hidden p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg mt-10">
             <h2 class="text-3xl font-bold mb-6 text-center">Inicia Sesión</h2>
             <form id="loginForm">
@@ -58,17 +74,13 @@
         <div id="registerView" class="view hidden p-6 max-w-xl mx-auto bg-white rounded-xl shadow-lg mt-10">
             <h2 class="text-3xl font-bold mb-6 text-center">Registro de Docente</h2>
             <form id="registerForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="md:col-span-2">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="registerEmail">Correo Electrónico</label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerEmail" type="email" placeholder="email@itdurango.edu.mx" required>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="registerCURP">CURP</label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 cursor-not-allowed" id="registerCURP" type="text" placeholder="CURP" required minlength="18" maxlength="18" readonly>
                 </div>
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="registerName">Nombre Completo</label>
                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerName" type="text" placeholder="Nombre completo" required>
-                </div>
-                <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="registerCURP">CURP</label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerCURP" type="text" placeholder="CURP" required minlength="18" maxlength="18">
                 </div>
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="registerGender">Género</label>
@@ -83,6 +95,10 @@
                     <select class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerDepartment" required>
                         <option value="">Cargando departamentos...</option>
                     </select>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="registerEmail">Correo Electrónico</label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerEmail" type="email" placeholder="email@itdurango.edu.mx" required>
                 </div>
                 <div class="md:col-span-2 flex items-center justify-between mt-4">
                     <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline transition duration-300 transform hover:scale-105" type="submit">
@@ -124,7 +140,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <!-- Script de la aplicación -->
@@ -162,6 +177,7 @@
         const showLoginFormBtn = document.getElementById('showLoginForm');
         const loginForm = document.getElementById('loginForm');
         const registerForm = document.getElementById('registerForm');
+        const searchForm = document.getElementById('searchForm');
         const coursesGrid = document.getElementById('coursesGrid');
         const myCoursesGrid = document.getElementById('myCoursesGrid');
         const registerDepartmentSelect = document.getElementById('registerDepartment');
@@ -206,7 +222,7 @@
         });
 
         // =================================================================
-        // AUTENTICACIÓN
+        // AUTENTICACIÓN Y BÚSQUEDA
         // =================================================================
         auth.onAuthStateChanged(user => {
             currentUser = user;
@@ -217,10 +233,43 @@
                 loadMisCursos();
                 showView('coursesView');
             } else {
-                showView('authView');
+                showView('searchView'); // Muestra la vista de búsqueda de CURP
             }
         });
 
+        searchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const curp = searchForm.searchCURP.value.toUpperCase();
+            const messageEl = document.getElementById('searchMessage');
+            messageEl.textContent = '';
+            
+            try {
+                const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
+                if (!docenteSnapshot.empty) {
+                    const docenteData = docenteSnapshot.docs[0].data();
+                    // Autocompletar campos en el formulario de registro
+                    document.getElementById('registerCURP').value = docenteData.curp;
+                    document.getElementById('registerName').value = docenteData.nombre;
+                    document.getElementById('registerGender').value = docenteData.genero;
+                    document.getElementById('registerDepartment').value = docenteData.departamento;
+                    document.getElementById('registerEmail').value = docenteData.email;
+                    
+                    showMessage(messageEl, 'CURP encontrado. Rellena tu correo para iniciar sesión o registrarte.', 'bg-green-200 text-green-800');
+                    loadDepartamentos();
+                    showView('registerView');
+                    
+                } else {
+                    showMessage(messageEl, 'CURP no encontrado. Por favor, completa todos los campos para registrarte.', 'bg-yellow-200 text-yellow-800');
+                    document.getElementById('registerCURP').value = curp;
+                    loadDepartamentos();
+                    showView('registerView');
+                }
+            } catch (error) {
+                console.error("Error al buscar CURP: ", error);
+                showMessage(messageEl, 'Ocurrió un error al buscar el CURP. Inténtalo de nuevo.', 'bg-red-200 text-red-800');
+            }
+        });
+        
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = loginForm.loginEmail.value;
@@ -275,32 +324,42 @@
             }
 
             try {
-                // Validar unicidad de CURP y email en Firestore
-                const docentesSnapshot = await docentesRef.where('curp', '==', curp).get();
-                if (!docentesSnapshot.empty) {
-                    showMessage(messageEl, 'El CURP ya está registrado.', 'bg-red-200 text-red-800');
-                    return;
-                }
-                const emailSnapshot = await docentesRef.where('email', '==', email).get();
-                if (!emailSnapshot.empty) {
-                    showMessage(messageEl, 'El correo electrónico ya está registrado.', 'bg-red-200 text-red-800');
-                    return;
-                }
+                // Buscar si el CURP ya existe en la base de datos de docentes
+                const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
+                let userCredential;
 
-                // Crear usuario en Firebase Auth y perfil en Firestore
-                const userCredential = await auth.createUserWithEmailAndPassword(email, curp); // Usar CURP como contraseña inicial
-                const user = userCredential.user;
+                if (!docenteSnapshot.empty) {
+                    // Si el docente existe en Firestore, intenta autenticarlo con el email
+                    const docenteData = docenteSnapshot.docs[0].data();
+                    if (docenteData.email) {
+                       // Si ya tiene email, significa que ya está registrado en auth
+                       showModal('Error', 'Ya tienes una cuenta. Por favor, inicia sesión.');
+                       return;
+                    }
+
+                    // Intenta crear la cuenta de usuario en Firebase Auth
+                    userCredential = await auth.createUserWithEmailAndPassword(email, curp);
+                    // Actualiza el documento en Firestore con el email
+                    await docentesRef.doc(docenteSnapshot.docs[0].id).update({
+                        email: email,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                } else {
+                    // Si no existe, crea un nuevo usuario y un nuevo documento en Firestore
+                    userCredential = await auth.createUserWithEmailAndPassword(email, curp);
+                    const user = userCredential.user;
+                    await docentesRef.doc(user.uid).set({
+                        nombre: name,
+                        curp: curp,
+                        email: email,
+                        genero: gender,
+                        departamento: department,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
                 
-                await docentesRef.doc(user.uid).set({
-                    nombre: name,
-                    curp: curp,
-                    email: email,
-                    genero: gender,
-                    departamento: department,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                showMessage(messageEl, '¡Registro exitoso! Inicia sesión para continuar.', 'bg-green-200 text-green-800');
+                showMessage(messageEl, '¡Registro exitoso! Ya puedes iniciar sesión.', 'bg-green-200 text-green-800');
                 showView('authView');
 
             } catch (error) {
@@ -324,7 +383,7 @@
         showRegisterFormBtn.addEventListener('click', (e) => {
             e.preventDefault();
             loadDepartamentos();
-            showView('registerView');
+            showView('searchView');
         });
         
         showLoginFormBtn.addEventListener('click', (e) => {
