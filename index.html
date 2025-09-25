@@ -640,7 +640,8 @@
                         return;
                     }
                     
-                    const fetchCursoData = async (inscripcion) => {
+                    const promises = snapshot.docs.map(async doc => {
+                        const inscripcion = doc.data();
                         const cursoDoc = await cursosRef.doc(inscripcion.cursoId).get();
                         if (cursoDoc.exists) {
                             const curso = cursoDoc.data();
@@ -659,9 +660,8 @@
                             `;
                             myCoursesGrid.appendChild(card);
                         }
-                    };
+                    });
                     
-                    const promises = snapshot.docs.map(doc => fetchCursoData(doc.data()));
                     await Promise.all(promises);
 
                     document.querySelectorAll('.unenroll-btn').forEach(button => {
@@ -688,7 +688,6 @@
                     confirmBtn.textContent = 'Confirmar';
                     confirmBtn.className = 'px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 mt-2';
                     
-                    // Asegurar que no haya botones de confirmación duplicados
                     const existingConfirmBtn = modal.querySelector('.items-center button:last-child');
                     if (existingConfirmBtn && existingConfirmBtn.textContent === 'Confirmar') {
                         existingConfirmBtn.remove();
