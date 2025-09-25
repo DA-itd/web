@@ -234,7 +234,6 @@
             
             searchForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                console.log('Formulario de búsqueda enviado.');
                 
                 showView('loadingView');
 
@@ -243,7 +242,7 @@
                 try {
                     const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
                     
-                    // Asegúrate de cargar los departamentos ANTES de mostrar la vista de registro
+                    // Aquí se carga la lista de departamentos antes de cualquier manipulación de la vista
                     await loadDepartamentos();
                     
                     if (!docenteSnapshot.empty) {
@@ -259,8 +258,6 @@
                         showView('registerView');
                         
                     } else {
-                        // LA CORRECCIÓN ESTÁ AQUÍ
-                        // Si no se encuentra un docente, mostrar el formulario de registro directamente
                         console.log('CURP no encontrado. Moviendo al formulario de registro.');
                         
                         document.getElementById('registerCURP').value = curp;
@@ -269,6 +266,8 @@
                         document.getElementById('registerDepartment').value = '';
                         document.getElementById('registerEmail').value = '';
 
+                        // La corrección está aquí:
+                        // Si no se encuentra un docente, mostrar el formulario de registro directamente
                         showView('registerView');
                     }
                 } catch (error) {
