@@ -10,9 +10,18 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore-compat.js"></script>
+    <style>
+        .view {
+            transition: opacity 0.5s ease-in-out;
+            opacity: 1;
+        }
+        .view.hidden {
+            opacity: 0;
+            display: none;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal text-gray-800">
-
     <!-- Navbar -->
     <nav class="bg-white p-4 shadow-md flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center space-x-4">
@@ -25,13 +34,12 @@
             <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-lg hidden">Salir</button>
         </div>
     </nav>
-
     <div class="container mx-auto p-6">
         <!-- Vistas de la aplicación -->
         <div id="loadingView" class="view flex justify-center items-center h-screen hidden">
             <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
         </div>
-
+        <!-- Search View -->
         <div id="searchView" class="view p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg mt-10">
             <h2 class="text-3xl font-bold mb-6 text-center">Búsqueda de Docente</h2>
             <form id="searchForm">
@@ -39,7 +47,7 @@
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="searchName">Ingresa tu Nombre Completo</label>
                     <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="searchName" type="text" placeholder="NOMBRE COMPLETO" required>
                     <p class="text-red-600 text-sm mt-2 text-center font-semibold">
-                        IMPORTANTE: Asegúrate de escribir tu nombre completo tal y como deseas que aparezca en tus constancias, incluyendo acentos y en mayúsculas.
+                        IMPORTANTE: Asegúrate de escribir tu nombre completo en MAYÚSCULAS y con acentos.
                     </p>
                 </div>
                 <div class="flex items-center justify-between">
@@ -50,7 +58,7 @@
                 <div id="searchMessage" class="mt-4 p-3 rounded text-center font-bold hidden"></div>
             </form>
         </div>
-
+        <!-- Login View -->
         <div id="authView" class="view hidden p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg mt-10">
             <h2 class="text-3xl font-bold mb-6 text-center">Inicia Sesión</h2>
             <form id="loginForm">
@@ -66,12 +74,12 @@
                     <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline transition duration-300 transform hover:scale-105" type="submit">
                         Iniciar Sesión
                     </button>
-                    <a href="#" id="showRegisterForm" class="inline-block align-baseline font-bold text-sm text-blue-600 hover:text-blue-800">¿No tienes cuenta? Regístrate aquí</a>
+                    <a href="#" id="showRegisterFormBtn" class="inline-block align-baseline font-bold text-sm text-blue-600 hover:text-blue-800">¿No tienes cuenta? Regístrate aquí</a>
                 </div>
                 <div id="loginMessage" class="mt-4 p-3 rounded text-center font-bold hidden"></div>
             </form>
         </div>
-
+        <!-- Register View -->
         <div id="registerView" class="view hidden p-6 max-w-xl mx-auto bg-white rounded-xl shadow-lg mt-10">
             <h2 class="text-3xl font-bold mb-6 text-center">Registro de Docente</h2>
             <form id="registerForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -105,27 +113,26 @@
                     <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline transition duration-300 transform hover:scale-105" type="submit">
                         Registrarse
                     </button>
-                    <a href="#" id="showLoginForm" class="inline-block align-baseline font-bold text-sm text-green-600 hover:text-green-800">¿Ya tienes cuenta? Inicia sesión aquí</a>
+                    <a href="#" id="showLoginFormBtn" class="inline-block align-baseline font-bold text-sm text-green-600 hover:text-green-800">¿Ya tienes cuenta? Inicia sesión aquí</a>
                 </div>
                 <div id="registerMessage" class="md:col-span-2 mt-4 p-3 rounded text-center font-bold hidden"></div>
             </form>
         </div>
-
+        <!-- Courses Catalog View -->
         <div id="coursesView" class="view hidden p-6">
             <h2 class="text-3xl font-bold mb-6 text-center">Catálogo de Cursos</h2>
             <div id="coursesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Tarjetas de cursos se insertarán aquí -->
             </div>
         </div>
-        
+        <!-- My Courses View -->
         <div id="myCoursesView" class="view hidden p-6">
             <h2 class="text-3xl font-bold mb-6 text-center">Mis Cursos Inscritos</h2>
             <div id="myCoursesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Tarjetas de mis cursos se insertarán aquí -->
             </div>
         </div>
-
-        <!-- Modal para mensajes -->
+        <!-- Modal for messages -->
         <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
             <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
                 <div class="mt-3 text-center">
@@ -142,8 +149,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Script de la aplicación -->
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             // =================================================================
@@ -151,44 +156,38 @@
             // =================================================================
             const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        
             // Inicializar Firebase
             if (Object.keys(firebaseConfig).length > 0) {
                 firebase.initializeApp(firebaseConfig);
+                firebase.firestore.setLogLevel('debug');
             } else {
                 console.error("Firebase no está configurado. La aplicación no funcionará correctamente.");
             }
-            
             const auth = firebase.auth();
             const db = firebase.firestore();
-
             // Referencias a colecciones de Firestore
             const docentesRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('docentes');
             const departamentosRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('departamentos');
             const cursosRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('cursos');
             const getInscripcionesRef = (uid) => db.collection('artifacts').doc(appId).collection('users').doc(uid).collection('inscripciones');
-
             // Referencias a los elementos del DOM
             const views = document.querySelectorAll('.view');
             const viewCoursesBtn = document.getElementById('viewCoursesBtn');
             const viewMyCoursesBtn = document.getElementById('viewMyCoursesBtn');
             const logoutBtn = document.getElementById('logoutBtn');
-            const showRegisterFormBtn = document.getElementById('showRegisterForm');
-            const showLoginFormBtn = document.getElementById('showLoginForm');
+            const showRegisterFormBtn = document.getElementById('showRegisterFormBtn');
+            const showLoginFormBtn = document.getElementById('showLoginFormBtn');
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
             const searchForm = document.getElementById('searchForm');
             const coursesGrid = document.getElementById('coursesGrid');
             const myCoursesGrid = document.getElementById('myCoursesGrid');
             const registerDepartmentSelect = document.getElementById('registerDepartment');
-
             const modal = document.getElementById('modal');
             const modalTitle = document.getElementById('modalTitle');
             const modalMessage = document.getElementById('modalMessage');
             const modalCloseBtn = document.getElementById('modalCloseBtn');
-            
             let currentUser = null;
-
             // =================================================================
             // MANEJO DE VISTAS
             // =================================================================
@@ -198,7 +197,6 @@
                 });
                 document.getElementById(viewId).classList.remove('hidden');
             }
-            
             function updateNavbar(isLoggedIn) {
                 if (isLoggedIn) {
                     viewCoursesBtn.classList.remove('hidden');
@@ -210,70 +208,55 @@
                     logoutBtn.classList.add('hidden');
                 }
             }
-            
             function showModal(title, message) {
                 modalTitle.textContent = title;
                 modalMessage.textContent = message;
                 modal.classList.remove('hidden');
             }
-            
             modalCloseBtn.addEventListener('click', () => {
                 modal.classList.add('hidden');
             });
-
             // =================================================================
             // AUTENTICACIÓN Y BÚSQUEDA
             // =================================================================
-            
-            await loadDepartamentos();
-
             auth.onAuthStateChanged(user => {
                 currentUser = user;
                 if (user) {
+                    console.log("Usuario autenticado:", user.uid);
                     updateNavbar(true);
                     showView('coursesView');
                 } else {
+                    console.log("Usuario no autenticado.");
                     updateNavbar(false);
                     showView('searchView');
                 }
             });
-            
             searchForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                
                 showView('loadingView');
-                
-                // Buscar por nombre
                 const name = searchForm.searchName.value.toUpperCase();
-                
                 try {
                     const docenteSnapshot = await docentesRef.where('nombre', '==', name).limit(1).get();
-                    
                     if (!docenteSnapshot.empty) {
-                        console.log('Nombre encontrado en la base de datos.');
                         const docenteData = docenteSnapshot.docs[0].data();
-                        
                         document.getElementById('registerName').value = docenteData.nombre;
-                        document.getElementById('registerName').setAttribute('readonly', 'true'); // Hacer el campo de solo lectura
+                        document.getElementById('registerName').setAttribute('readonly', 'true');
                         document.getElementById('registerName').classList.add('bg-gray-200');
                         document.getElementById('registerCURP').value = docenteData.curp || '';
-                        document.getElementById('registerGender').value = docenteData.genero;
-                        document.getElementById('registerDepartment').value = docenteData.departamento;
+                        document.getElementById('registerGender').value = docenteData.genero || '';
+                        document.getElementById('registerDepartment').value = docenteData.departamento || '';
                         document.getElementById('registerEmail').value = docenteData.email || '';
-                        
+                        await loadDepartamentos();
                         showView('registerView');
-                        
                     } else {
-                        console.log('Nombre no encontrado. Moviendo al formulario de registro.');
-                        
                         document.getElementById('registerName').value = name;
-                        document.getElementById('registerName').removeAttribute('readonly'); // Asegurarse de que sea editable
+                        document.getElementById('registerName').removeAttribute('readonly');
                         document.getElementById('registerName').classList.remove('bg-gray-200');
                         document.getElementById('registerCURP').value = '';
                         document.getElementById('registerGender').value = '';
                         document.getElementById('registerDepartment').value = '';
                         document.getElementById('registerEmail').value = '';
-
+                        await loadDepartamentos();
                         showView('registerView');
                     }
                 } catch (error) {
@@ -282,7 +265,6 @@
                     showView('searchView'); 
                 }
             });
-            
             loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const email = loginForm.loginEmail.value;
@@ -290,14 +272,12 @@
                 const messageEl = document.getElementById('loginMessage');
                 messageEl.textContent = '';
                 messageEl.className = 'mt-4 p-3 rounded-lg text-center font-bold hidden';
-                
                 const validDomains = ['itdurango.edu.mx', 'gmail.com'];
                 const domain = email.split('@')[1];
                 if (!validDomains.includes(domain)) {
                     showMessage(messageEl, 'Dominio de correo no válido. Solo se aceptan @itdurango.edu.mx y @gmail.com.', 'bg-red-200 text-red-800');
                     return;
                 }
-
                 try {
                     await auth.signInWithEmailAndPassword(email, password);
                 } catch (error) {
@@ -311,33 +291,28 @@
                     showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
                 }
             });
-            
             function showMessage(element, text, className) {
                 element.textContent = text;
                 element.className = `${className} mt-4 p-3 rounded-lg text-center font-bold`;
                 element.style.display = 'block';
             }
-
             registerForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const email = registerForm.registerEmail.value;
-                const name = registerForm.registerName.value.toUpperCase(); // Convertir a mayúsculas
+                const name = registerForm.registerName.value.toUpperCase();
                 const curp = registerForm.registerCURP.value.toUpperCase();
                 const gender = registerForm.registerGender.value;
                 const department = registerForm.registerDepartment.value;
                 const messageEl = document.getElementById('registerMessage');
-                
                 const validDomains = ['itdurango.edu.mx', 'gmail.com'];
                 const domain = email.split('@')[1];
                 if (!validDomains.includes(domain)) {
                     showMessage(messageEl, 'Dominio de correo no válido. Solo se aceptan @itdurango.edu.mx y @gmail.com.', 'bg-red-200 text-red-800');
                     return;
                 }
-
                 try {
                     const docenteSnapshot = await docentesRef.where('nombre', '==', name).limit(1).get();
                     let userCredential;
-
                     if (!docenteSnapshot.empty) {
                         const docenteDoc = docenteSnapshot.docs[0];
                         const docenteData = docenteDoc.data();
@@ -350,7 +325,6 @@
                             email: email,
                             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                         });
-                        
                     } else {
                         userCredential = await auth.createUserWithEmailAndPassword(email, curp);
                         await docentesRef.doc(userCredential.user.uid).set({
@@ -362,10 +336,8 @@
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                         });
                     }
-                    
                     showModal('Registro Exitoso', 'Tu cuenta ha sido creada. Ahora puedes iniciar sesión.');
                     showView('authView');
-
                 } catch (error) {
                     console.error("Error al registrar: ", error);
                     let errorMessage = "Error al registrar. Inténtalo de nuevo.";
@@ -379,36 +351,31 @@
                     showModal('Error de Registro', errorMessage);
                 }
             });
-
             logoutBtn.addEventListener('click', async () => {
                 await auth.signOut();
             });
-            
             viewCoursesBtn.addEventListener('click', () => {
                 showView('coursesView');
-                // Aquí se cargaría la lista completa de cursos
+                // Lógica para cargar el catálogo de cursos
             });
-
             viewMyCoursesBtn.addEventListener('click', () => {
                 showView('myCoursesView');
-                // Aquí se cargarían los cursos en los que el usuario está inscrito
+                // Lógica para cargar los cursos del usuario
             });
-            
             showRegisterFormBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 showView('searchView');
             });
-            
             showLoginFormBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 showView('authView');
             });
-
             // =================================================================
             // GESTIÓN DE CURSOS
             // =================================================================
             async function loadDepartamentos() {
                 try {
+                    console.log("Cargando departamentos...");
                     const snapshot = await departamentosRef.get();
                     registerDepartmentSelect.innerHTML = '<option value="">Selecciona tu departamento</option>';
                     snapshot.forEach(doc => {
