@@ -249,13 +249,20 @@
             
             searchForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                console.log('Formulario de búsqueda enviado.');
+                
+                // Mostrar el spinner de carga para dar feedback visual
+                showView('loadingView');
+
                 const curp = searchForm.searchCURP.value.toUpperCase();
                 const messageEl = document.getElementById('searchMessage');
                 messageEl.textContent = '';
                 
                 try {
                     const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
+                    
                     if (!docenteSnapshot.empty) {
+                        console.log('CURP encontrado en la base de datos.');
                         const docenteData = docenteSnapshot.docs[0].data();
                         document.getElementById('registerCURP').value = docenteData.curp;
                         document.getElementById('registerName').value = docenteData.nombre;
@@ -263,18 +270,22 @@
                         document.getElementById('registerDepartment').value = docenteData.departamento;
                         document.getElementById('registerEmail').value = docenteData.email || '';
                         
-                        loadDepartamentos();
+                        await loadDepartamentos(); // Esperar a que los departamentos se carguen
                         showView('registerView');
                         
                     } else {
-                        showMessage(messageEl, 'CURP no encontrado. Por favor, completa todos los campos para registrarte.', 'bg-yellow-200 text-yellow-800');
+                        console.log('CURP no encontrado. Moviendo al formulario de registro.');
+                        // Elimina este mensaje, ya que el usuario pasará a otra vista.
+                        // showMessage(messageEl, 'CURP no encontrado. Por favor, completa todos los campos para registrarte.', 'bg-yellow-200 text-yellow-800');
                         document.getElementById('registerCURP').value = curp;
-                        loadDepartamentos();
+                        await loadDepartamentos(); // Esperar a que los departamentos se carguen
                         showView('registerView');
                     }
                 } catch (error) {
                     console.error("Error al buscar CURP: ", error);
-                    showMessage(messageEl, 'Ocurrió un error al buscar el CURP. Inténtalo de nuevo.', 'bg-red-200 text-red-800');
+                    // Muestra un mensaje de error más claro y regresa a la vista de búsqueda
+                    showModal('Error al Buscar CURP', 'Ocurrió un error inesperado al buscar tu CURP. Por favor, intenta de nuevo o revisa la consola para más detalles.');
+                    showView('searchView'); 
                 }
             });
             
