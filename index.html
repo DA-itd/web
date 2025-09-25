@@ -18,7 +18,7 @@
     <!-- Navbar -->
     <nav class="bg-white p-4 shadow-md flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center space-x-4">
-            <img src="https://i.ibb.co/6y4Y01Z/logo-itd.png" alt="Logo ITD" class="h-10">
+            <img src="https://i.ibb.co/6y4Y01Z/logo-itd.png" alt="Logo ITD" class="h-10 rounded-full">
             <span class="text-xl font-bold text-gray-900">Registro de Cursos ITD</span>
         </div>
         <div class="space-x-4 flex items-center">
@@ -40,7 +40,7 @@
             <form id="searchForm">
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="searchCURP">Ingresa tu CURP</label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="searchCURP" type="text" placeholder="CURP" required minlength="18" maxlength="18">
+                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="searchCURP" type="text" placeholder="CURP" required minlength="18" maxlength="18">
                 </div>
                 <div class="flex items-center justify-between">
                     <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline transition duration-300 transform hover:scale-105" type="submit">
@@ -56,11 +56,11 @@
             <form id="loginForm">
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="loginEmail">Correo Electrónico</label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="loginEmail" type="email" placeholder="email@itdurango.edu.mx" required>
+                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="loginEmail" type="email" placeholder="email@itdurango.edu.mx" required>
                 </div>
                 <div class="mb-6">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="loginPassword">Contraseña</label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="loginPassword" type="password" placeholder="********" required>
+                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="loginPassword" type="password" placeholder="********" required>
                 </div>
                 <div class="flex items-center justify-between">
                     <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline transition duration-300 transform hover:scale-105" type="submit">
@@ -77,15 +77,15 @@
             <form id="registerForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="registerCURP">CURP</label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 cursor-not-allowed" id="registerCURP" type="text" placeholder="CURP" required minlength="18" maxlength="18" readonly>
+                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 cursor-not-allowed" id="registerCURP" type="text" placeholder="CURP" required minlength="18" maxlength="18" readonly>
                 </div>
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="registerName">Nombre Completo</label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerName" type="text" placeholder="Nombre completo" required>
+                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerName" type="text" placeholder="Nombre completo" required>
                 </div>
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="registerGender">Género</label>
-                    <select class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerGender" required>
+                    <select class="shadow border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerGender" required>
                         <option value="">Selecciona tu género</option>
                         <option value="Masculino">Masculino</option>
                         <option value="Femenino">Femenino</option>
@@ -93,13 +93,13 @@
                 </div>
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="registerDepartment">Departamento</label>
-                    <select class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerDepartment" required>
+                    <select class="shadow border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerDepartment" required>
                         <option value="">Cargando departamentos...</option>
                     </select>
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="registerEmail">Correo Electrónico</label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerEmail" type="email" placeholder="email@itdurango.edu.mx" required>
+                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerEmail" type="email" placeholder="email@itdurango.edu.mx" required>
                 </div>
                 <div class="md:col-span-2 flex items-center justify-between mt-4">
                     <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline transition duration-300 transform hover:scale-105" type="submit">
@@ -126,7 +126,7 @@
         </div>
 
         <!-- Modal para mensajes -->
-        <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
             <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
                 <div class="mt-3 text-center">
                     <h3 class="text-lg leading-6 font-medium text-gray-900" id="modalTitle"></h3>
@@ -145,576 +145,602 @@
 
     <!-- Script de la aplicación -->
     <script>
-        // =================================================================
-        // TU CONFIGURACIÓN DE FIREBASE
-        // =================================================================
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-    
-        // Inicializar Firebase
-        if (Object.keys(firebaseConfig).length > 0) {
-            firebase.initializeApp(firebaseConfig);
-        } else {
-            console.error("Firebase no está configurado. La aplicación no funcionará correctamente.");
-        }
+        window.onload = function() {
+            // =================================================================
+            // TU CONFIGURACIÓN DE FIREBASE
+            // =================================================================
+            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
         
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+            // Inicializar Firebase
+            if (Object.keys(firebaseConfig).length > 0) {
+                firebase.initializeApp(firebaseConfig);
+            } else {
+                console.error("Firebase no está configurado. La aplicación no funcionará correctamente.");
+            }
+            
+            const auth = firebase.auth();
+            const db = firebase.firestore();
 
-        // Referencias a colecciones de Firestore utilizando la ruta correcta
-        const docentesRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('docentes');
-        const departamentosRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('departamentos');
-        const cursosRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('cursos');
-        const getInscripcionesRef = (uid) => db.collection('artifacts').doc(appId).collection('users').doc(uid).collection('inscripciones');
+            // Referencias a colecciones de Firestore utilizando la ruta correcta
+            const docentesRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('docentes');
+            const departamentosRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('departamentos');
+            const cursosRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('cursos');
+            const getInscripcionesRef = (uid) => db.collection('artifacts').doc(appId).collection('users').doc(uid).collection('inscripciones');
 
-        // Referencias a los elementos del DOM
-        const views = document.querySelectorAll('.view');
-        const viewCoursesBtn = document.getElementById('viewCoursesBtn');
-        const viewMyCoursesBtn = document.getElementById('viewMyCoursesBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const showRegisterFormBtn = document.getElementById('showRegisterForm');
-        const showLoginFormBtn = document.getElementById('showLoginForm');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const searchForm = document.getElementById('searchForm');
-        const coursesGrid = document.getElementById('coursesGrid');
-        const myCoursesGrid = document.getElementById('myCoursesGrid');
-        const registerDepartmentSelect = document.getElementById('registerDepartment');
-        const importDataBtn = document.getElementById('importDataBtn');
+            // Referencias a los elementos del DOM
+            const views = document.querySelectorAll('.view');
+            const viewCoursesBtn = document.getElementById('viewCoursesBtn');
+            const viewMyCoursesBtn = document.getElementById('viewMyCoursesBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const showRegisterFormBtn = document.getElementById('showRegisterForm');
+            const showLoginFormBtn = document.getElementById('showLoginForm');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const searchForm = document.getElementById('searchForm');
+            const coursesGrid = document.getElementById('coursesGrid');
+            const myCoursesGrid = document.getElementById('myCoursesGrid');
+            const registerDepartmentSelect = document.getElementById('registerDepartment');
+            const importDataBtn = document.getElementById('importDataBtn');
 
-        const modal = document.getElementById('modal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalMessage = document.getElementById('modalMessage');
-        const modalCloseBtn = document.getElementById('modalCloseBtn');
-        
-        let currentUser = null;
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalCloseBtn = document.getElementById('modalCloseBtn');
+            
+            let currentUser = null;
 
-        // =================================================================
-        // MANEJO DE DATOS DE PRUEBA
-        // =================================================================
-        const testData = {
-            departamentos: [
-                { NombreDepartamento: "Ingeniería en Sistemas" },
-                { NombreDepartamento: "Ingeniería en Electrónica" },
-                { NombreDepartamento: "Ingeniería en Mecánica" },
-                { NombreDepartamento: "Ciencias Económico-Administrativas" },
-                { NombreDepartamento: "Metal-Mecánica" }
-            ],
-            cursos: [
-                {
-                    "Id_Curso": 1,
-                    "Curso": "Aprovechamiento Didáctico del Entorno de Aprendizaje Virtual",
-                    "Tipo": "Actualización Docente",
-                    "Horario": "16:00 a 20:00 hrs",
-                    "FechaVisible": "26 al 28 de mayo",
-                    "Cupo": 30
-                },
-                {
-                    "Id_Curso": 2,
-                    "Curso": "Desarrollo de Competencias Laborales en Ambientes Industriales",
-                    "Tipo": "Especialización Profesional",
-                    "Horario": "10:00 a 14:00 hrs",
-                    "FechaVisible": "1 al 3 de junio",
-                    "Cupo": 30
-                },
-                {
-                    "Id_Curso": 3,
-                    "Curso": "Metodología de la Investigación Científica",
-                    "Tipo": "Actualización Docente",
-                    "Horario": "09:00 a 13:00 hrs",
-                    "FechaVisible": "10 al 12 de junio",
-                    "Cupo": 30
+            // =================================================================
+            // MANEJO DE DATOS DE PRUEBA
+            // =================================================================
+            const testData = {
+                departamentos: [
+                    { NombreDepartamento: "Ingeniería en Sistemas" },
+                    { NombreDepartamento: "Ingeniería en Electrónica" },
+                    { NombreDepartamento: "Ingeniería en Mecánica" },
+                    { NombreDepartamento: "Ciencias Económico-Administrativas" },
+                    { NombreDepartamento: "Metal-Mecánica" }
+                ],
+                cursos: [
+                    {
+                        "Id_Curso": 1,
+                        "Curso": "Aprovechamiento Didáctico del Entorno de Aprendizaje Virtual",
+                        "Tipo": "Actualización Docente",
+                        "Horario": "16:00 a 20:00 hrs",
+                        "FechaVisible": "26 al 28 de mayo",
+                        "Cupo": 30
+                    },
+                    {
+                        "Id_Curso": 2,
+                        "Curso": "Desarrollo de Competencias Laborales en Ambientes Industriales",
+                        "Tipo": "Especialización Profesional",
+                        "Horario": "10:00 a 14:00 hrs",
+                        "FechaVisible": "1 al 3 de junio",
+                        "Cupo": 30
+                    },
+                    {
+                        "Id_Curso": 3,
+                        "Curso": "Metodología de la Investigación Científica",
+                        "Tipo": "Actualización Docente",
+                        "Horario": "09:00 a 13:00 hrs",
+                        "FechaVisible": "10 al 12 de junio",
+                        "Cupo": 30
+                    }
+                ],
+                docentes: [
+                    {
+                        "curp": "GARC000101HDFLMNR0",
+                        "nombre": "Ricardo García",
+                        "genero": "Masculino",
+                        "departamento": "Ingeniería en Sistemas"
+                    },
+                    {
+                        "curp": "LOPE990505MDFLMNR0",
+                        "nombre": "Ana López",
+                        "genero": "Femenino",
+                        "departamento": "Ciencias Económico-Administrativas"
+                    }
+                ]
+            };
+            
+            async function importTestData() {
+                showModal('Importando Datos', 'Por favor, espera mientras importamos los datos de prueba...');
+                try {
+                    // Borrar colecciones existentes para evitar duplicados
+                    await Promise.all([
+                        clearCollection(departamentosRef),
+                        clearCollection(cursosRef),
+                        clearCollection(docentesRef)
+                    ]);
+
+                    // Importar nuevos datos
+                    const departmentsPromises = testData.departamentos.map(data => departamentosRef.add(data));
+                    const coursesPromises = testData.cursos.map(data => cursosRef.add(data));
+                    const docentesPromises = testData.docentes.map(data => docentesRef.add(data));
+                    await Promise.all([...departmentsPromises, ...coursesPromises, ...docentesPromises]);
+                    
+                    showModal('Éxito', 'Los datos de prueba se han importado correctamente.');
+                    
+                    // Recargar la vista para reflejar los cambios
+                    if (currentUser) {
+                        loadCursos();
+                        loadMisCursos();
+                    } else {
+                        loadDepartamentos();
+                    }
+
+                } catch (error) {
+                    console.error("Error al importar datos de prueba:", error);
+                    showModal('Error', 'Ocurrió un error al importar los datos de prueba. Revisa la consola para más detalles.');
                 }
-            ],
-            docentes: [
-                {
-                    "curp": "GARC000101HDFLMNR0",
-                    "nombre": "Ricardo García",
-                    "genero": "Masculino",
-                    "departamento": "Ingeniería en Sistemas"
-                },
-                {
-                    "curp": "LOPE990505MDFLMNR0",
-                    "nombre": "Ana López",
-                    "genero": "Femenino",
-                    "departamento": "Ciencias Económico-Administrativas"
-                }
-            ]
-        };
-        
-        async function importTestData() {
-            showModal('Importando Datos', 'Por favor, espera mientras importamos los datos de prueba...');
-            try {
-                // Borrar colecciones existentes para evitar duplicados
-                await Promise.all([
-                    clearCollection(departamentosRef),
-                    clearCollection(cursosRef),
-                    clearCollection(docentesRef)
-                ]);
+            }
+            
+            async function clearCollection(collectionRef) {
+                const snapshot = await collectionRef.get();
+                const batch = db.batch();
+                snapshot.docs.forEach(doc => {
+                    batch.delete(doc.ref);
+                });
+                await batch.commit();
+            }
 
-                // Importar nuevos datos
-                await Promise.all([
-                    ...testData.departamentos.map(data => departamentosRef.add(data)),
-                    ...testData.cursos.map(data => cursosRef.add(data)),
-                    ...testData.docentes.map(data => docentesRef.add(data))
-                ]);
-                
-                showModal('Éxito', 'Los datos de prueba se han importado correctamente.');
-                
-                // Recargar la vista para reflejar los cambios
-                if (currentUser) {
+            importDataBtn.addEventListener('click', importTestData);
+
+            // =================================================================
+            // MANEJO DE VISTAS
+            // =================================================================
+            function showView(viewId) {
+                views.forEach(view => {
+                    view.style.display = 'none';
+                });
+                document.getElementById(viewId).style.display = 'block';
+            }
+            
+            function updateNavbar(isLoggedIn) {
+                if (isLoggedIn) {
+                    viewCoursesBtn.style.display = 'block';
+                    viewMyCoursesBtn.style.display = 'block';
+                    logoutBtn.style.display = 'block';
+                } else {
+                    viewCoursesBtn.style.display = 'none';
+                    viewMyCoursesBtn.style.display = 'none';
+                    logoutBtn.style.display = 'none';
+                }
+            }
+            
+            function showModal(title, message) {
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                modal.style.display = 'block';
+            }
+            
+            modalCloseBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            // =================================================================
+            // AUTENTICACIÓN Y BÚSQUEDA
+            // =================================================================
+            auth.onAuthStateChanged(user => {
+                currentUser = user;
+                updateNavbar(!!user);
+                if (user) {
                     loadCursos();
                     loadMisCursos();
+                    showView('coursesView');
                 } else {
-                    loadDepartamentos();
+                    showView('searchView');
                 }
-
-            } catch (error) {
-                console.error("Error al importar datos de prueba:", error);
-                showModal('Error', 'Ocurrió un error al importar los datos de prueba. Revisa la consola para más detalles.');
-            }
-        }
-        
-        async function clearCollection(collectionRef) {
-            const snapshot = await collectionRef.get();
-            const batch = db.batch();
-            snapshot.docs.forEach(doc => {
-                batch.delete(doc.ref);
             });
-            await batch.commit();
-        }
-
-        importDataBtn.addEventListener('click', importTestData);
-
-        // =================================================================
-        // MANEJO DE VISTAS
-        // =================================================================
-        function showView(viewId) {
-            views.forEach(view => {
-                view.style.display = 'none';
-            });
-            document.getElementById(viewId).style.display = 'block';
-        }
-        
-        function updateNavbar(isLoggedIn) {
-            if (isLoggedIn) {
-                viewCoursesBtn.style.display = 'block';
-                viewMyCoursesBtn.style.display = 'block';
-                logoutBtn.style.display = 'block';
+            
+            // Autenticación con el token inicial para desarrollo
+            if (initialAuthToken) {
+                auth.signInWithCustomToken(initialAuthToken).catch(error => {
+                    console.error("Error al autenticar con token inicial:", error);
+                    // Si falla el token, mostramos la vista de búsqueda
+                    showView('searchView');
+                });
             } else {
-                viewCoursesBtn.style.display = 'none';
-                viewMyCoursesBtn.style.display = 'none';
-                logoutBtn.style.display = 'none';
-            }
-        }
-        
-        function showModal(title, message) {
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-            modal.style.display = 'block';
-        }
-        
-        modalCloseBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-
-        // =================================================================
-        // AUTENTICACIÓN Y BÚSQUEDA
-        // =================================================================
-        auth.onAuthStateChanged(user => {
-            currentUser = user;
-            updateNavbar(!!user);
-            if (user) {
-                // Si el usuario está autenticado, carga el catálogo de cursos
-                loadCursos();
-                loadMisCursos();
-                showView('coursesView');
-            } else {
-                showView('searchView'); // Muestra la vista de búsqueda de CURP
-            }
-        });
-
-        searchForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const curp = searchForm.searchCURP.value.toUpperCase();
-            const messageEl = document.getElementById('searchMessage');
-            messageEl.textContent = '';
-            
-            try {
-                const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
-                if (!docenteSnapshot.empty) {
-                    const docenteData = docenteSnapshot.docs[0].data();
-                    // Autocompletar campos en el formulario de registro
-                    document.getElementById('registerCURP').value = docenteData.curp;
-                    document.getElementById('registerName').value = docenteData.nombre;
-                    document.getElementById('registerGender').value = docenteData.genero;
-                    document.getElementById('registerDepartment').value = docenteData.departamento;
-                    document.getElementById('registerEmail').value = docenteData.email;
-                    
-                    showMessage(messageEl, 'CURP encontrado. Rellena tu correo para iniciar sesión o registrarte.', 'bg-green-200 text-green-800');
-                    loadDepartamentos();
-                    showView('registerView');
-                    
-                } else {
-                    showMessage(messageEl, 'CURP no encontrado. Por favor, completa todos los campos para registrarte.', 'bg-yellow-200 text-yellow-800');
-                    document.getElementById('registerCURP').value = curp;
-                    loadDepartamentos();
-                    showView('registerView');
-                }
-            } catch (error) {
-                console.error("Error al buscar CURP: ", error);
-                showMessage(messageEl, 'Ocurrió un error al buscar el CURP. Inténtalo de nuevo.', 'bg-red-200 text-red-800');
-            }
-        });
-        
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = loginForm.loginEmail.value;
-            const password = loginForm.loginPassword.value;
-            const messageEl = document.getElementById('loginMessage');
-            messageEl.textContent = '';
-            messageEl.className = 'mt-4 p-3 rounded text-center font-bold hidden';
-            
-            // Validar dominio
-            const validDomains = ['itdurango.edu.mx', 'gmail.com'];
-            const domain = email.split('@')[1];
-            if (!validDomains.includes(domain)) {
-                showMessage(messageEl, 'Dominio de correo no válido. Solo se aceptan @itdurango.edu.mx y @gmail.com.', 'bg-red-200 text-red-800');
-                return;
+                // Si no hay token, mostramos la vista de búsqueda
+                showView('searchView');
             }
 
-            try {
-                await auth.signInWithEmailAndPassword(email, password);
-            } catch (error) {
-                console.error(error);
-                let errorMessage = "Error al iniciar sesión. Verifica tu correo y contraseña.";
-                if (error.code === 'auth/user-not-found') {
-                    errorMessage = "No se encontró un usuario con ese correo.";
-                } else if (error.code === 'auth/wrong-password') {
-                    errorMessage = "Contraseña incorrecta.";
-                }
-                showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
-            }
-        });
-        
-        function showMessage(element, text, className) {
-            element.textContent = text;
-            element.className = `${className} mt-4 p-3 rounded text-center font-bold`;
-            element.style.display = 'block';
-        }
 
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = registerForm.registerEmail.value;
-            const name = registerForm.registerName.value;
-            const curp = registerForm.registerCURP.value.toUpperCase();
-            const gender = registerForm.registerGender.value;
-            const department = registerForm.registerDepartment.value;
-            const messageEl = document.getElementById('registerMessage');
-            
-            // Validar dominio
-            const validDomains = ['itdurango.edu.mx', 'gmail.com'];
-            const domain = email.split('@')[1];
-            if (!validDomains.includes(domain)) {
-                showMessage(messageEl, 'Dominio de correo no válido. Solo se aceptan @itdurango.edu.mx y @gmail.com.', 'bg-red-200 text-red-800');
-                return;
-            }
-
-            try {
-                const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
-                let userCredential;
-
-                if (!docenteSnapshot.empty) {
-                    const docenteDoc = docenteSnapshot.docs[0];
-                    const docenteData = docenteDoc.data();
-                    if (docenteData.email) {
-                       showModal('Error', 'Ya tienes una cuenta. Por favor, inicia sesión.');
-                       return;
+            searchForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const curp = searchForm.searchCURP.value.toUpperCase();
+                const messageEl = document.getElementById('searchMessage');
+                messageEl.textContent = '';
+                
+                try {
+                    const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
+                    if (!docenteSnapshot.empty) {
+                        const docenteData = docenteSnapshot.docs[0].data();
+                        document.getElementById('registerCURP').value = docenteData.curp;
+                        document.getElementById('registerName').value = docenteData.nombre;
+                        document.getElementById('registerGender').value = docenteData.genero;
+                        document.getElementById('registerDepartment').value = docenteData.departamento;
+                        document.getElementById('registerEmail').value = docenteData.email;
+                        
+                        showMessage(messageEl, 'CURP encontrado. Rellena tu correo para iniciar sesión o registrarte.', 'bg-green-200 text-green-800');
+                        loadDepartamentos();
+                        showView('registerView');
+                        
+                    } else {
+                        showMessage(messageEl, 'CURP no encontrado. Por favor, completa todos los campos para registrarte.', 'bg-yellow-200 text-yellow-800');
+                        document.getElementById('registerCURP').value = curp;
+                        loadDepartamentos();
+                        showView('registerView');
                     }
-                    userCredential = await auth.createUserWithEmailAndPassword(email, curp);
-                    await docentesRef.doc(docenteDoc.id).update({
-                        email: email,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                } else {
-                    userCredential = await auth.createUserWithEmailAndPassword(email, curp);
-                    await docentesRef.doc(userCredential.user.uid).set({
-                        nombre: name,
-                        curp: curp,
-                        email: email,
-                        genero: gender,
-                        departamento: department,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
+                } catch (error) {
+                    console.error("Error al buscar CURP: ", error);
+                    showMessage(messageEl, 'Ocurrió un error al buscar el CURP. Inténtalo de nuevo.', 'bg-red-200 text-red-800');
                 }
+            });
+            
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = loginForm.loginEmail.value;
+                const password = loginForm.loginPassword.value;
+                const messageEl = document.getElementById('loginMessage');
+                messageEl.textContent = '';
+                messageEl.className = 'mt-4 p-3 rounded-lg text-center font-bold hidden';
                 
-                showMessage(messageEl, '¡Registro exitoso! Ya puedes iniciar sesión.', 'bg-green-200 text-green-800');
+                // Validar dominio
+                const validDomains = ['itdurango.edu.mx', 'gmail.com'];
+                const domain = email.split('@')[1];
+                if (!validDomains.includes(domain)) {
+                    showMessage(messageEl, 'Dominio de correo no válido. Solo se aceptan @itdurango.edu.mx y @gmail.com.', 'bg-red-200 text-red-800');
+                    return;
+                }
+
+                try {
+                    await auth.signInWithEmailAndPassword(email, password);
+                } catch (error) {
+                    console.error(error);
+                    let errorMessage = "Error al iniciar sesión. Verifica tu correo y contraseña.";
+                    if (error.code === 'auth/user-not-found') {
+                        errorMessage = "No se encontró un usuario con ese correo.";
+                    } else if (error.code === 'auth/wrong-password') {
+                        errorMessage = "Contraseña incorrecta.";
+                    }
+                    showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
+                }
+            });
+            
+            function showMessage(element, text, className) {
+                element.textContent = text;
+                element.className = `${className} mt-4 p-3 rounded-lg text-center font-bold`;
+                element.style.display = 'block';
+            }
+
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = registerForm.registerEmail.value;
+                const name = registerForm.registerName.value;
+                const curp = registerForm.registerCURP.value.toUpperCase();
+                const gender = registerForm.registerGender.value;
+                const department = registerForm.registerDepartment.value;
+                const messageEl = document.getElementById('registerMessage');
+                
+                // Validar dominio
+                const validDomains = ['itdurango.edu.mx', 'gmail.com'];
+                const domain = email.split('@')[1];
+                if (!validDomains.includes(domain)) {
+                    showMessage(messageEl, 'Dominio de correo no válido. Solo se aceptan @itdurango.edu.mx y @gmail.com.', 'bg-red-200 text-red-800');
+                    return;
+                }
+
+                try {
+                    const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
+                    let userCredential;
+
+                    if (!docenteSnapshot.empty) {
+                        const docenteDoc = docenteSnapshot.docs[0];
+                        const docenteData = docenteDoc.data();
+                        if (docenteData.email) {
+                           showModal('Error', 'Ya tienes una cuenta. Por favor, inicia sesión.');
+                           return;
+                        }
+                        userCredential = await auth.createUserWithEmailAndPassword(email, curp);
+                        await docentesRef.doc(docenteDoc.id).update({
+                            email: email,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        
+                    } else {
+                        userCredential = await auth.createUserWithEmailAndPassword(email, curp);
+                        await docentesRef.doc(userCredential.user.uid).set({
+                            nombre: name,
+                            curp: curp,
+                            email: email,
+                            genero: gender,
+                            departamento: department,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                    
+                    showMessage(messageEl, '¡Registro exitoso! Ya puedes iniciar sesión.', 'bg-green-200 text-green-800');
+                    showView('authView');
+
+                } catch (error) {
+                    console.error("Error al registrar: ", error);
+                    let errorMessage = "Error al registrar. Inténtalo de nuevo.";
+                    if (error.code === 'auth/email-already-in-use') {
+                        errorMessage = "El correo ya está en uso.";
+                    } else if (error.code === 'auth/invalid-email') {
+                        errorMessage = "El correo no es válido.";
+                    } else if (error.code === 'auth/weak-password') {
+                         errorMessage = "La contraseña es muy débil (usa el CURP).";
+                    }
+                    showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
+                }
+            });
+
+            logoutBtn.addEventListener('click', async () => {
+                await auth.signOut();
+            });
+            
+            showRegisterFormBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadDepartamentos();
+                showView('searchView');
+            });
+            
+            showLoginFormBtn.addEventListener('click', (e) => {
+                e.preventDefault();
                 showView('authView');
+            });
 
-            } catch (error) {
-                console.error("Error al registrar: ", error);
-                let errorMessage = "Error al registrar. Inténtalo de nuevo.";
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMessage = "El correo ya está en uso.";
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = "El correo no es válido.";
-                } else if (error.code === 'auth/weak-password') {
-                     errorMessage = "La contraseña es muy débil (usa el CURP).";
-                }
-                showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
-            }
-        });
-
-        logoutBtn.addEventListener('click', async () => {
-            await auth.signOut();
-        });
-        
-        showRegisterFormBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            loadDepartamentos();
-            showView('searchView');
-        });
-        
-        showLoginFormBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            showView('authView');
-        });
-
-        // =================================================================
-        // GESTIÓN DE CURSOS
-        // =================================================================
-        async function loadDepartamentos() {
-            try {
-                const snapshot = await departamentosRef.get();
-                registerDepartmentSelect.innerHTML = '<option value="">Selecciona tu departamento</option>';
-                snapshot.forEach(doc => {
-                    const depto = doc.data();
-                    const option = document.createElement('option');
-                    option.value = depto.NombreDepartamento;
-                    option.textContent = depto.NombreDepartamento;
-                    registerDepartmentSelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error("Error al cargar departamentos: ", error);
-                showModal('Error', 'No se pudieron cargar los departamentos. Por favor, intenta de nuevo.');
-            }
-        }
-        
-        async function loadCursos() {
-            try {
-                const cursosSnapshot = await cursosRef.get();
-                coursesGrid.innerHTML = '';
-                
-                const inscripcionesCounts = {};
-                // Cargar todas las inscripciones para contar el cupo
-                const allUsersSnapshot = await db.collection('artifacts').doc(appId).collection('users').get();
-                for (const userDoc of allUsersSnapshot.docs) {
-                    const inscripcionesRef = getInscripcionesRef(userDoc.id);
-                    const inscripcionesSnapshot = await inscripcionesRef.get();
-                    inscripcionesSnapshot.forEach(doc => {
-                        const cursoId = doc.data().cursoId;
-                        inscripcionesCounts[cursoId] = (inscripcionesCounts[cursoId] || 0) + 1;
+            // =================================================================
+            // GESTIÓN DE CURSOS
+            // =================================================================
+            async function loadDepartamentos() {
+                try {
+                    const snapshot = await departamentosRef.get();
+                    registerDepartmentSelect.innerHTML = '<option value="">Selecciona tu departamento</option>';
+                    snapshot.forEach(doc => {
+                        const depto = doc.data();
+                        const option = document.createElement('option');
+                        option.value = depto.NombreDepartamento;
+                        option.textContent = depto.NombreDepartamento;
+                        registerDepartmentSelect.appendChild(option);
                     });
+                } catch (error) {
+                    console.error("Error al cargar departamentos: ", error);
+                    showModal('Error', 'No se pudieron cargar los departamentos. Por favor, intenta de nuevo.');
                 }
-                
-                cursosSnapshot.forEach(doc => {
-                    const curso = doc.data();
-                    const cupoActual = inscripcionesCounts[doc.id] || 0;
-                    const isFull = cupoActual >= 30;
+            }
+            
+            async function loadCursos() {
+                try {
+                    const cursosSnapshot = await cursosRef.get();
+                    coursesGrid.innerHTML = '';
                     
-                    const card = document.createElement('div');
-                    card.className = `bg-white rounded-lg shadow-lg p-6 flex flex-col justify-between ${isFull ? 'opacity-60' : ''}`;
-                    card.innerHTML = `
-                        <div>
-                            <h3 class="text-2xl font-bold mb-2">${curso.Curso}</h3>
-                            <p class="text-gray-600 mb-2">**Tipo:** ${curso.Tipo}</p>
-                            <p class="text-gray-600 mb-2">**Fecha:** ${curso.FechaVisible}</p>
-                            <p class="text-gray-600 mb-4">**Horario:** ${curso.Horario}</p>
-                            <p class="text-sm text-gray-500">Cupo: ${cupoActual}/30</p>
-                        </div>
-                        <button class="enroll-btn mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105" data-curso-id="${doc.id}" ${isFull ? 'disabled' : ''}>
-                            ${isFull ? 'Cupo Lleno' : 'Inscribirse'}
-                        </button>
-                    `;
-                    coursesGrid.appendChild(card);
-                });
-                
-                document.querySelectorAll('.enroll-btn').forEach(button => {
-                    button.addEventListener('click', handleEnrollment);
-                });
-                
-            } catch (error) {
-                console.error("Error al cargar cursos: ", error);
-                showModal('Error', 'No se pudieron cargar los cursos. Intenta de nuevo.');
-            }
-        }
-        
-        async function handleEnrollment(e) {
-            if (!currentUser) {
-                showModal('Error', 'Debes iniciar sesión para inscribirte en un curso.');
-                return;
-            }
-            
-            const cursoId = e.target.dataset.cursoId;
-            const inscripcionesRef = getInscripcionesRef(currentUser.uid);
-            
-            try {
-                // Verificar límite de inscripciones del docente
-                const myInscriptionsSnapshot = await inscripcionesRef.get();
-                if (myInscriptionsSnapshot.size >= 3) {
-                    showModal('Error', 'Has alcanzado el límite de 3 cursos inscritos.');
-                    return;
-                }
-                
-                // Verificar si ya está inscrito en este curso
-                const alreadyEnrolled = myInscriptionsSnapshot.docs.some(doc => doc.data().cursoId === cursoId);
-                if (alreadyEnrolled) {
-                    showModal('Error', 'Ya estás inscrito en este curso.');
-                    return;
-                }
-                
-                // Verificar cupo del curso
-                // Se debe contar las inscripciones de todos los usuarios
-                let cursoEnrollmentCount = 0;
-                const allUsersSnapshot = await db.collection('artifacts').doc(appId).collection('users').get();
-                for (const userDoc of allUsersSnapshot.docs) {
-                    const userInscriptionsRef = getInscripcionesRef(userDoc.id);
-                    const userInscriptionsSnapshot = await userInscriptionsRef.where('cursoId', '==', cursoId).get();
-                    cursoEnrollmentCount += userInscriptionsSnapshot.size;
-                }
-                
-                if (cursoEnrollmentCount >= 30) {
-                    showModal('Error', 'Este curso ya no tiene cupo disponible.');
-                    return;
-                }
-                
-                // Generar ID de registro único
-                const cursoDoc = await cursosRef.doc(cursoId).get();
-                const idCursoNumber = cursoDoc.data().Id_Curso;
-                const newEnrollmentCount = cursoEnrollmentCount + 1;
-                const registroId = `TNM-054-${idCursoNumber.toString().padStart(2, '0')}-2026-${newEnrollmentCount.toString().padStart(2, '0')}`;
-                
-                // Crear el documento de inscripción
-                await inscripcionesRef.add({
-                    docenteId: currentUser.uid,
-                    cursoId: cursoId,
-                    idRegistro: registroId,
-                    fechaInscripcion: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                showModal('Inscripción Exitosa', `Te has inscrito en el curso. Tu ID de registro es: ${registroId}`);
-                loadCursos(); // Recarga el catálogo para actualizar el cupo
-                loadMisCursos(); // Recarga mis cursos para mostrar el nuevo
-                
-            } catch (error) {
-                console.error("Error al inscribirse: ", error);
-                showModal('Error', 'Ocurrió un error al intentar inscribirte.');
-            }
-        }
-        
-        // =================================================================
-        // MIS CURSOS
-        // =================================================================
-        async function loadMisCursos() {
-            if (!currentUser) return;
-            const inscripcionesRef = getInscripcionesRef(currentUser.uid);
-            try {
-                const snapshot = await inscripcionesRef.get();
-                myCoursesGrid.innerHTML = '';
-                
-                if (snapshot.empty) {
-                    myCoursesGrid.innerHTML = '<p class="text-center text-xl mt-8 md:col-span-3">No estás inscrito en ningún curso.</p>';
-                    return;
-                }
-                
-                snapshot.forEach(async (doc) => {
-                    const inscripcion = doc.data();
-                    const cursoDoc = await cursosRef.doc(inscripcion.cursoId).get();
-                    if (cursoDoc.exists) {
-                        const curso = cursoDoc.data();
+                    const inscripcionesCounts = {};
+                    // Cargar todas las inscripciones para contar el cupo
+                    const allUsersSnapshot = await db.collection('artifacts').doc(appId).collection('users').get();
+                    for (const userDoc of allUsersSnapshot.docs) {
+                        const inscripcionesRef = getInscripcionesRef(userDoc.id);
+                        const inscripcionesSnapshot = await inscripcionesRef.get();
+                        inscripcionesSnapshot.forEach(doc => {
+                            const cursoId = doc.data().cursoId;
+                            inscripcionesCounts[cursoId] = (inscripcionesCounts[cursoId] || 0) + 1;
+                        });
+                    }
+                    
+                    cursosSnapshot.forEach(doc => {
+                        const curso = doc.data();
+                        const cupoActual = inscripcionesCounts[doc.id] || 0;
+                        const isFull = cupoActual >= 30;
+                        
                         const card = document.createElement('div');
-                        card.className = `bg-white rounded-lg shadow-lg p-6 flex flex-col justify-between`;
+                        card.className = `bg-white rounded-lg shadow-lg p-6 flex flex-col justify-between ${isFull ? 'opacity-60' : ''}`;
                         card.innerHTML = `
                             <div>
                                 <h3 class="text-2xl font-bold mb-2">${curso.Curso}</h3>
                                 <p class="text-gray-600 mb-2">**Tipo:** ${curso.Tipo}</p>
                                 <p class="text-gray-600 mb-2">**Fecha:** ${curso.FechaVisible}</p>
-                                <p class="text-gray-600 mb-4">**ID de Registro:** ${inscripcion.idRegistro}</p>
+                                <p class="text-gray-600 mb-4">**Horario:** ${curso.Horario}</p>
+                                <p class="text-sm text-gray-500">Cupo: ${cupoActual}/30</p>
                             </div>
-                            <button class="unenroll-btn mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105" data-inscripcion-id="${doc.id}">
-                                Anular Inscripción
+                            <button class="enroll-btn mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105" data-curso-id="${doc.id}" ${isFull ? 'disabled' : ''}>
+                                ${isFull ? 'Cupo Lleno' : 'Inscribirse'}
                             </button>
                         `;
-                        myCoursesGrid.appendChild(card);
-                    }
-                });
+                        coursesGrid.appendChild(card);
+                    });
+                    
+                    document.querySelectorAll('.enroll-btn').forEach(button => {
+                        button.addEventListener('click', handleEnrollment);
+                    });
+                    
+                } catch (error) {
+                    console.error("Error al cargar cursos: ", error);
+                    showModal('Error', 'No se pudieron cargar los cursos. Intenta de nuevo.');
+                }
+            }
+            
+            async function handleEnrollment(e) {
+                if (!currentUser) {
+                    showModal('Error', 'Debes iniciar sesión para inscribirte en un curso.');
+                    return;
+                }
                 
-                // Delegación de eventos para los botones de anulación
-                setTimeout(() => {
+                const cursoId = e.target.dataset.cursoId;
+                const inscripcionesRef = getInscripcionesRef(currentUser.uid);
+                
+                try {
+                    // Verificar límite de inscripciones del docente
+                    const myInscriptionsSnapshot = await inscripcionesRef.get();
+                    if (myInscriptionsSnapshot.size >= 3) {
+                        showModal('Error', 'Has alcanzado el límite de 3 cursos inscritos.');
+                        return;
+                    }
+                    
+                    // Verificar si ya está inscrito en este curso
+                    const alreadyEnrolled = myInscriptionsSnapshot.docs.some(doc => doc.data().cursoId === cursoId);
+                    if (alreadyEnrolled) {
+                        showModal('Error', 'Ya estás inscrito en este curso.');
+                        return;
+                    }
+                    
+                    // Verificar cupo del curso
+                    // Se debe contar las inscripciones de todos los usuarios
+                    let cursoEnrollmentCount = 0;
+                    const allUsersSnapshot = await db.collection('artifacts').doc(appId).collection('users').get();
+                    for (const userDoc of allUsersSnapshot.docs) {
+                        const userInscriptionsRef = getInscripcionesRef(userDoc.id);
+                        const userInscriptionsSnapshot = await userInscriptionsRef.where('cursoId', '==', cursoId).get();
+                        cursoEnrollmentCount += userInscriptionsSnapshot.size;
+                    }
+                    
+                    if (cursoEnrollmentCount >= 30) {
+                        showModal('Error', 'Este curso ya no tiene cupo disponible.');
+                        return;
+                    }
+                    
+                    // Generar ID de registro único
+                    const cursoDoc = await cursosRef.doc(cursoId).get();
+                    const idCursoNumber = cursoDoc.data().Id_Curso;
+                    const newEnrollmentCount = cursoEnrollmentCount + 1;
+                    const registroId = `TNM-054-${idCursoNumber.toString().padStart(2, '0')}-2026-${newEnrollmentCount.toString().padStart(2, '0')}`;
+                    
+                    // Crear el documento de inscripción
+                    await inscripcionesRef.add({
+                        docenteId: currentUser.uid,
+                        cursoId: cursoId,
+                        idRegistro: registroId,
+                        fechaInscripcion: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    showModal('Inscripción Exitosa', `Te has inscrito en el curso. Tu ID de registro es: ${registroId}`);
+                    loadCursos(); // Recarga el catálogo para actualizar el cupo
+                    loadMisCursos(); // Recarga mis cursos para mostrar el nuevo
+                    
+                } catch (error) {
+                    console.error("Error al inscribirse: ", error);
+                    showModal('Error', 'Ocurrió un error al intentar inscribirte.');
+                }
+            }
+            
+            // =================================================================
+            // MIS CURSOS
+            // =================================================================
+            async function loadMisCursos() {
+                if (!currentUser) return;
+                const inscripcionesRef = getInscripcionesRef(currentUser.uid);
+                try {
+                    const snapshot = await inscripcionesRef.get();
+                    myCoursesGrid.innerHTML = '';
+                    
+                    if (snapshot.empty) {
+                        myCoursesGrid.innerHTML = '<p class="text-center text-xl mt-8 md:col-span-3">No estás inscrito en ningún curso.</p>';
+                        return;
+                    }
+                    
+                    const fetchCursoData = async (inscripcion) => {
+                        const cursoDoc = await cursosRef.doc(inscripcion.cursoId).get();
+                        if (cursoDoc.exists) {
+                            const curso = cursoDoc.data();
+                            const card = document.createElement('div');
+                            card.className = `bg-white rounded-lg shadow-lg p-6 flex flex-col justify-between`;
+                            card.innerHTML = `
+                                <div>
+                                    <h3 class="text-2xl font-bold mb-2">${curso.Curso}</h3>
+                                    <p class="text-gray-600 mb-2">**Tipo:** ${curso.Tipo}</p>
+                                    <p class="text-gray-600 mb-2">**Fecha:** ${curso.FechaVisible}</p>
+                                    <p class="text-gray-600 mb-4">**ID de Registro:** ${inscripcion.idRegistro}</p>
+                                </div>
+                                <button class="unenroll-btn mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105" data-inscripcion-id="${doc.id}">
+                                    Anular Inscripción
+                                </button>
+                            `;
+                            myCoursesGrid.appendChild(card);
+                        }
+                    };
+                    
+                    const promises = snapshot.docs.map(doc => fetchCursoData(doc.data()));
+                    await Promise.all(promises);
+
                     document.querySelectorAll('.unenroll-btn').forEach(button => {
                         button.addEventListener('click', handleUnenrollment);
                     });
-                }, 500); // Pequeño retraso para asegurar que los elementos estén en el DOM
-                
-            } catch (error) {
-                console.error("Error al cargar mis cursos: ", error);
-                showModal('Error', 'No se pudieron cargar tus cursos inscritos.');
-            }
-        }
-        
-        async function handleUnenrollment(e) {
-            const inscripcionId = e.target.dataset.inscripcionId;
-            const inscripcionesRef = getInscripcionesRef(currentUser.uid);
-            
-            showModal('Confirmar', '¿Estás seguro de que quieres anular tu inscripción a este curso?');
-            modalCloseBtn.textContent = 'Cancelar';
-            
-            const confirmBtn = document.createElement('button');
-            confirmBtn.textContent = 'Confirmar';
-            confirmBtn.className = 'px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 mt-2';
-            modal.querySelector('.items-center').appendChild(confirmBtn);
-            
-            confirmBtn.addEventListener('click', async () => {
-                try {
-                    await inscripcionesRef.doc(inscripcionId).delete();
-                    showModal('Éxito', 'Inscripción anulada correctamente.');
-                    modal.querySelector('.items-center').removeChild(confirmBtn);
-                    modalCloseBtn.textContent = 'Cerrar';
-                    loadCursos();
-                    loadMisCursos();
+                    
                 } catch (error) {
-                    console.error("Error al anular la inscripción: ", error);
-                    showModal('Error', 'Ocurrió un error al anular la inscripción.');
-                    modal.querySelector('.items-center').removeChild(confirmBtn);
-                    modalCloseBtn.textContent = 'Cerrar';
+                    console.error("Error al cargar mis cursos: ", error);
+                    showModal('Error', 'No se pudieron cargar tus cursos inscritos.');
                 }
+            }
+            
+            async function handleUnenrollment(e) {
+                const inscripcionId = e.target.dataset.inscripcionId;
+                const inscripcionesRef = getInscripcionesRef(currentUser.uid);
+                
+                const confirmModal = (title, message, onConfirm) => {
+                    modalTitle.textContent = title;
+                    modalMessage.textContent = message;
+                    modal.style.display = 'block';
+                    modalCloseBtn.textContent = 'Cancelar';
+                    
+                    const confirmBtn = document.createElement('button');
+                    confirmBtn.textContent = 'Confirmar';
+                    confirmBtn.className = 'px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 mt-2';
+                    
+                    // Asegurar que no haya botones de confirmación duplicados
+                    const existingConfirmBtn = modal.querySelector('.items-center button:last-child');
+                    if (existingConfirmBtn && existingConfirmBtn.textContent === 'Confirmar') {
+                        existingConfirmBtn.remove();
+                    }
+                    modal.querySelector('.items-center').appendChild(confirmBtn);
+
+                    const closeHandler = () => {
+                        modal.style.display = 'none';
+                        confirmBtn.removeEventListener('click', confirmHandler);
+                    };
+
+                    const confirmHandler = () => {
+                        onConfirm();
+                        closeHandler();
+                    };
+
+                    confirmBtn.addEventListener('click', confirmHandler);
+                    modalCloseBtn.addEventListener('click', closeHandler, { once: true });
+                };
+
+                confirmModal('Confirmar', '¿Estás seguro de que quieres anular tu inscripción a este curso?', async () => {
+                    try {
+                        await inscripcionesRef.doc(inscripcionId).delete();
+                        showModal('Éxito', 'Inscripción anulada correctamente.');
+                        loadCursos();
+                        loadMisCursos();
+                    } catch (error) {
+                        console.error("Error al anular la inscripción: ", error);
+                        showModal('Error', 'Ocurrió un error al anular la inscripción.');
+                    }
+                });
+            }
+            
+            // =================================================================
+            // LISTENERS DE NAVEGACIÓN
+            // =================================================================
+            viewCoursesBtn.addEventListener('click', () => {
+                loadCursos();
+                showView('coursesView');
             });
             
-            modalCloseBtn.addEventListener('click', () => {
-                modal.querySelector('.items-center').removeChild(confirmBtn);
-                modalCloseBtn.textContent = 'Cerrar';
-            }, { once: true });
-        }
-        
-        // =================================================================
-        // LISTENERS DE NAVEGACIÓN
-        // =================================================================
-        viewCoursesBtn.addEventListener('click', () => {
-            loadCursos();
-            showView('coursesView');
-        });
-        
-        viewMyCoursesBtn.addEventListener('click', () => {
-            loadMisCursos();
-            showView('myCoursesView');
-        });
-
-        // =================================================================
-        // INICIO DE LA APLICACIÓN
-        // =================================================================
-        showView('loadingView');
+            viewMyCoursesBtn.addEventListener('click', () => {
+                loadMisCursos();
+                showView('myCoursesView');
+            });
+            
+            // =================================================================
+            // INICIO DE LA APLICACIÓN
+            // =================================================================
+            showView('loadingView');
+            // La lógica de onAuthStateChanged ahora maneja la transición de vista.
+        };
     </script>
 </body>
 </html>
