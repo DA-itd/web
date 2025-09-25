@@ -45,10 +45,10 @@
             <h2 class="text-3xl font-bold mb-6 text-center">Búsqueda de Docente</h2>
             <form id="searchForm">
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="searchName">Ingresa tu Nombre Completo</label>
-                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="searchName" type="text" placeholder="NOMBRE COMPLETO" required>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="searchCURP">Ingresa tu CURP</label>
+                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="searchCURP" type="text" placeholder="CURP" required minlength="18" maxlength="18">
                     <p class="text-red-600 text-sm mt-2 text-center font-semibold">
-                        IMPORTANTE: Asegúrate de escribir tu nombre completo en MAYÚSCULAS y con acentos.
+                        IMPORTANTE: Asegúrate de escribir tu CURP en MAYÚSCULAS.
                     </p>
                 </div>
                 <div class="flex items-center justify-between">
@@ -241,27 +241,30 @@
                 
                 showView('loadingView');
                 
-                const name = searchForm.searchName.value.toUpperCase();
+                // Usar CURP para la búsqueda, es un identificador único y más fiable
+                const curp = searchForm.searchCURP.value.toUpperCase();
                 
                 try {
-                    const docenteSnapshot = await docentesRef.where('nombre', '==', name).limit(1).get();
+                    const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
                     
                     if (!docenteSnapshot.empty) {
                         // Docente encontrado en la base de datos
-                        console.log('¡Conexión a Firestore exitosa! Se encontró un docente con ese nombre.');
+                        console.log('¡Conexión a Firestore exitosa! CURP encontrado.');
                         const docenteData = docenteSnapshot.docs[0].data();
                         
                         // Pre-llenar campos con la información del docente
                         document.getElementById('registerName').value = docenteData.nombre;
                         document.getElementById('registerName').setAttribute('readonly', 'true');
                         document.getElementById('registerName').classList.add('bg-gray-200');
-                        document.getElementById('registerCURP').value = docenteData.curp || '';
+                        document.getElementById('registerCURP').value = docenteData.curp;
+                        document.getElementById('registerCURP').setAttribute('readonly', 'true');
+                        document.getElementById('registerCURP').classList.add('bg-gray-200');
                         document.getElementById('registerGender').value = docenteData.genero || '';
                         document.getElementById('registerDepartment').value = docenteData.departamento || '';
                         document.getElementById('registerEmail').value = docenteData.email || '';
                         
                         // Mostrar mensaje de éxito y transición a la vista de registro
-                        searchMessageEl.textContent = '¡Docente encontrado! Ahora completa el registro.';
+                        searchMessageEl.textContent = '¡CURP encontrado! Ahora completa tu registro.';
                         searchMessageEl.classList.remove('hidden');
                         searchMessageEl.classList.add('bg-green-200', 'text-green-800');
                         
@@ -272,18 +275,20 @@
                         
                     } else {
                         // Docente no encontrado, preparar el formulario para un nuevo registro
-                        console.log('¡Conexión a Firestore exitosa! No se encontró un docente con ese nombre.');
+                        console.log('¡Conexión a Firestore exitosa! CURP no encontrado.');
                         
-                        document.getElementById('registerName').value = name;
+                        document.getElementById('registerName').value = '';
                         document.getElementById('registerName').removeAttribute('readonly');
                         document.getElementById('registerName').classList.remove('bg-gray-200');
-                        document.getElementById('registerCURP').value = '';
+                        document.getElementById('registerCURP').value = curp;
+                        document.getElementById('registerCURP').removeAttribute('readonly');
+                        document.getElementById('registerCURP').classList.remove('bg-gray-200');
                         document.getElementById('registerGender').value = '';
                         document.getElementById('registerDepartment').value = '';
                         document.getElementById('registerEmail').value = '';
                         
                         // Mostrar mensaje de que no se encontró y que debe registrarse
-                        searchMessageEl.textContent = 'Docente no encontrado. Por favor, regístrate como un nuevo usuario.';
+                        searchMessageEl.textContent = 'CURP no encontrado. Por favor, regístrate como un nuevo usuario.';
                         searchMessageEl.classList.remove('hidden');
                         searchMessageEl.classList.add('bg-yellow-200', 'text-yellow-800');
                         
@@ -293,8 +298,8 @@
                         }, 2000); // 2 segundos de retraso
                     }
                 } catch (error) {
-                    console.error("Error al buscar el nombre: ", error);
-                    showModal('Error al Buscar', 'Ocurrió un error inesperado al buscar tu nombre. Por favor, intenta de nuevo.');
+                    console.error("Error al buscar el CURP: ", error);
+                    showModal('Error al Buscar', 'Ocurrió un error inesperado al buscar tu CURP. Por favor, intenta de nuevo.');
                     showView('searchView'); 
                 }
             });
@@ -349,7 +354,7 @@
                     return;
                 }
                 try {
-                    const docenteSnapshot = await docentesRef.where('nombre', '==', name).limit(1).get();
+                    const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
                     let userCredential;
                     if (!docenteSnapshot.empty) {
                         const docenteDoc = docenteSnapshot.docs[0];
