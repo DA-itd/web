@@ -40,27 +40,8 @@
             <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
             <p class="mt-4 text-xl font-bold text-gray-700">Conectando a la base de datos...</p>
         </div>
-        <!-- Search View -->
-        <div id="searchView" class="view p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg mt-10">
-            <h2 class="text-3xl font-bold mb-6 text-center">Búsqueda de Docente</h2>
-            <form id="searchForm">
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="searchCURP">Ingresa tu CURP</label>
-                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="searchCURP" type="text" placeholder="CURP" required minlength="18" maxlength="18">
-                    <p class="text-red-600 text-sm mt-2 text-center font-semibold">
-                        IMPORTANTE: Asegúrate de escribir tu CURP en MAYÚSCULAS.
-                    </p>
-                </div>
-                <div class="flex items-center justify-between">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline transition duration-300 transform hover:scale-105" type="submit">
-                        Buscar
-                    </button>
-                </div>
-                <div id="searchMessage" class="mt-4 p-3 rounded text-center font-bold hidden"></div>
-            </form>
-        </div>
-        <!-- Login View -->
-        <div id="authView" class="view hidden p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg mt-10">
+        <!-- Login/Auth View -->
+        <div id="authView" class="view p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg mt-10">
             <h2 class="text-3xl font-bold mb-6 text-center">Inicia Sesión</h2>
             <form id="loginForm">
                 <div class="mb-4">
@@ -68,7 +49,7 @@
                     <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="loginEmail" type="email" placeholder="email@itdurango.edu.mx" required>
                 </div>
                 <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="loginPassword">Contraseña</label>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="loginPassword">Contraseña (tu CURP)</label>
                     <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="loginPassword" type="password" placeholder="********" required>
                 </div>
                 <div class="flex items-center justify-between">
@@ -180,7 +161,6 @@
             const showLoginFormBtn = document.getElementById('showLoginFormBtn');
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
-            const searchForm = document.getElementById('searchForm');
             const coursesGrid = document.getElementById('coursesGrid');
             const myCoursesGrid = document.getElementById('myCoursesGrid');
             const registerDepartmentSelect = document.getElementById('registerDepartment');
@@ -190,7 +170,7 @@
             const modalCloseBtn = document.getElementById('modalCloseBtn');
             let currentUser = null;
             // =================================================================
-            // MANEJO DE VISTAS
+            // MANEJO DE VISTAS Y MENSAJES
             // =================================================================
             function showView(viewId) {
                 views.forEach(view => {
@@ -217,8 +197,13 @@
             modalCloseBtn.addEventListener('click', () => {
                 modal.classList.add('hidden');
             });
+            function showMessage(element, text, className) {
+                element.textContent = text;
+                element.className = `${className} mt-4 p-3 rounded-lg text-center font-bold`;
+                element.style.display = 'block';
+            }
             // =================================================================
-            // AUTENTICACIÓN Y BÚSQUEDA
+            // AUTENTICACIÓN
             // =================================================================
             auth.onAuthStateChanged(user => {
                 currentUser = user;
@@ -229,78 +214,7 @@
                 } else {
                     console.log("Usuario no autenticado.");
                     updateNavbar(false);
-                    showView('searchView');
-                }
-            });
-            searchForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                // Ocultar mensaje de búsqueda anterior
-                const searchMessageEl = document.getElementById('searchMessage');
-                searchMessageEl.textContent = '';
-                searchMessageEl.className = 'mt-4 p-3 rounded text-center font-bold hidden';
-                
-                showView('loadingView');
-                
-                // Usar CURP para la búsqueda, es un identificador único y más fiable
-                const curp = searchForm.searchCURP.value.toUpperCase();
-                
-                try {
-                    const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
-                    
-                    if (!docenteSnapshot.empty) {
-                        // Docente encontrado en la base de datos
-                        console.log('¡Conexión a Firestore exitosa! CURP encontrado.');
-                        const docenteData = docenteSnapshot.docs[0].data();
-                        
-                        // Pre-llenar campos con la información del docente
-                        document.getElementById('registerName').value = docenteData.nombre;
-                        document.getElementById('registerName').setAttribute('readonly', 'true');
-                        document.getElementById('registerName').classList.add('bg-gray-200');
-                        document.getElementById('registerCURP').value = docenteData.curp;
-                        document.getElementById('registerCURP').setAttribute('readonly', 'true');
-                        document.getElementById('registerCURP').classList.add('bg-gray-200');
-                        document.getElementById('registerGender').value = docenteData.genero || '';
-                        document.getElementById('registerDepartment').value = docenteData.departamento || '';
-                        document.getElementById('registerEmail').value = docenteData.email || '';
-                        
-                        // Mostrar mensaje de éxito y transición a la vista de registro
-                        searchMessageEl.textContent = '¡CURP encontrado! Ahora completa tu registro.';
-                        searchMessageEl.classList.remove('hidden');
-                        searchMessageEl.classList.add('bg-green-200', 'text-green-800');
-                        
-                        setTimeout(async () => {
-                            await loadDepartamentos();
-                            showView('registerView');
-                        }, 2000); // 2 segundos de retraso para que el usuario pueda leer el mensaje
-                        
-                    } else {
-                        // Docente no encontrado, preparar el formulario para un nuevo registro
-                        console.log('¡Conexión a Firestore exitosa! CURP no encontrado.');
-                        
-                        document.getElementById('registerName').value = '';
-                        document.getElementById('registerName').removeAttribute('readonly');
-                        document.getElementById('registerName').classList.remove('bg-gray-200');
-                        document.getElementById('registerCURP').value = curp;
-                        document.getElementById('registerCURP').removeAttribute('readonly');
-                        document.getElementById('registerCURP').classList.remove('bg-gray-200');
-                        document.getElementById('registerGender').value = '';
-                        document.getElementById('registerDepartment').value = '';
-                        document.getElementById('registerEmail').value = '';
-                        
-                        // Mostrar mensaje de que no se encontró y que debe registrarse
-                        searchMessageEl.textContent = 'CURP no encontrado. Por favor, regístrate como un nuevo usuario.';
-                        searchMessageEl.classList.remove('hidden');
-                        searchMessageEl.classList.add('bg-yellow-200', 'text-yellow-800');
-                        
-                        setTimeout(async () => {
-                            await loadDepartamentos();
-                            showView('registerView');
-                        }, 2000); // 2 segundos de retraso
-                    }
-                } catch (error) {
-                    console.error("Error al buscar el CURP: ", error);
-                    showModal('Error al Buscar', 'Ocurrió un error inesperado al buscar tu CURP. Por favor, intenta de nuevo.');
-                    showView('searchView'); 
+                    showView('authView');
                 }
             });
             loginForm.addEventListener('submit', async (e) => {
@@ -311,48 +225,41 @@
                 const messageEl = document.getElementById('loginMessage');
                 messageEl.textContent = '';
                 messageEl.className = 'mt-4 p-3 rounded-lg text-center font-bold hidden';
-                const validDomains = ['itdurango.edu.mx', 'gmail.com'];
-                const domain = email.split('@')[1];
-                if (!validDomains.includes(domain)) {
-                    showMessage(messageEl, 'Dominio de correo no válido. Solo se aceptan @itdurango.edu.mx y @gmail.com.', 'bg-red-200 text-red-800');
-                    showView('authView'); 
-                    return;
-                }
+                
                 try {
                     await auth.signInWithEmailAndPassword(email, password);
                 } catch (error) {
-                    console.error(error);
-                    let errorMessage = "Error al iniciar sesión. Verifica tu correo y contraseña.";
+                    console.error("Error al iniciar sesión: ", error);
+                    let errorMessage = "Error al iniciar sesión. Verifica tu correo y CURP.";
                     if (error.code === 'auth/user-not-found') {
-                        errorMessage = "No se encontró un usuario con ese correo.";
+                        errorMessage = "No se encontró un usuario con ese correo. Por favor, regístrate.";
+                        showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
+                        // Redirigir al registro si el usuario no existe
+                        setTimeout(() => {
+                            showView('registerView');
+                            document.getElementById('registerEmail').value = email;
+                            document.getElementById('registerCURP').value = password;
+                        }, 2000); // Dar tiempo para que el usuario lea el mensaje
                     } else if (error.code === 'auth/wrong-password') {
-                        errorMessage = "Contraseña incorrecta.";
+                        errorMessage = "CURP incorrecto. Por favor, verifica y vuelve a intentarlo.";
+                        showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
+                        showView('authView');
+                    } else {
+                        showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
+                        showView('authView');
                     }
-                    showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
-                    showView('authView'); 
                 }
             });
-            function showMessage(element, text, className) {
-                element.textContent = text;
-                element.className = `${className} mt-4 p-3 rounded-lg text-center font-bold`;
-                element.style.display = 'block';
-            }
             registerForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 showView('loadingView');
                 const email = registerForm.registerEmail.value;
-                const name = registerForm.registerName.value.toUpperCase();
                 const curp = registerForm.registerCURP.value.toUpperCase();
+                const name = registerForm.registerName.value.toUpperCase();
                 const gender = registerForm.registerGender.value;
                 const department = registerForm.registerDepartment.value;
                 const messageEl = document.getElementById('registerMessage');
-                const validDomains = ['itdurango.edu.mx', 'gmail.com'];
-                const domain = email.split('@')[1];
-                if (!validDomains.includes(domain)) {
-                    showMessage(messageEl, 'Dominio de correo no válido. Solo se aceptan @itdurango.edu.mx y @gmail.com.', 'bg-red-200 text-red-800');
-                    showView('registerView');
-                    return;
-                }
+                
                 try {
                     const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
                     let userCredential;
@@ -361,7 +268,7 @@
                         const docenteData = docenteDoc.data();
                         if (docenteData.email) {
                            showModal('Error', 'Ya tienes una cuenta. Por favor, inicia sesión.');
-                           showView('registerView');
+                           showView('authView');
                            return;
                         }
                         userCredential = await auth.createUserWithEmailAndPassword(email, curp);
@@ -386,11 +293,11 @@
                     console.error("Error al registrar: ", error);
                     let errorMessage = "Error al registrar. Inténtalo de nuevo.";
                     if (error.code === 'auth/email-already-in-use') {
-                        errorMessage = "El correo ya está en uso.";
+                        errorMessage = "El correo ya está en uso. Por favor, inicia sesión o usa otro correo.";
                     } else if (error.code === 'auth/invalid-email') {
                         errorMessage = "El correo no es válido.";
                     } else if (error.code === 'auth/weak-password') {
-                         errorMessage = "La contraseña es muy débil (usa el CURP).";
+                         errorMessage = "La contraseña es muy débil (usa el CURP completo).";
                     }
                     showModal('Error de Registro', errorMessage);
                     showView('registerView');
@@ -417,7 +324,7 @@
                 showView('authView');
             });
             // =================================================================
-            // GESTIÓN DE CURSOS
+            // GESTIÓN DE DATOS
             // =================================================================
             async function loadDepartamentos() {
                 try {
