@@ -36,8 +36,11 @@
             <h2 class="text-3xl font-bold mb-6 text-center">Búsqueda de Docente</h2>
             <form id="searchForm">
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="searchCURP">Ingresa tu CURP</label>
-                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="searchCURP" type="text" placeholder="CURP" required minlength="18" maxlength="18">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="searchName">Ingresa tu Nombre Completo</label>
+                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="searchName" type="text" placeholder="NOMBRE COMPLETO" required>
+                    <p class="text-red-600 text-sm mt-2 text-center font-semibold">
+                        IMPORTANTE: Asegúrate de escribir tu nombre completo tal y como deseas que aparezca en tus constancias, incluyendo acentos y en mayúsculas.
+                    </p>
                 </div>
                 <div class="flex items-center justify-between">
                     <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline transition duration-300 transform hover:scale-105" type="submit">
@@ -73,12 +76,12 @@
             <h2 class="text-3xl font-bold mb-6 text-center">Registro de Docente</h2>
             <form id="registerForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="registerCURP">CURP</label>
-                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 cursor-not-allowed" id="registerCURP" type="text" placeholder="CURP" required minlength="18" maxlength="18" readonly>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="registerName">Nombre Completo</label>
+                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerName" type="text" placeholder="NOMBRE COMPLETO" required>
                 </div>
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="registerName">Nombre Completo</label>
-                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerName" type="text" placeholder="Nombre completo" required>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="registerCURP">CURP</label>
+                    <input class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="registerCURP" type="text" placeholder="CURP" required minlength="18" maxlength="18">
                 </div>
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="registerGender">Género</label>
@@ -221,6 +224,9 @@
             // =================================================================
             // AUTENTICACIÓN Y BÚSQUEDA
             // =================================================================
+            
+            await loadDepartamentos();
+
             auth.onAuthStateChanged(user => {
                 currentUser = user;
                 if (user) {
@@ -236,21 +242,21 @@
                 e.preventDefault();
                 
                 showView('loadingView');
-
-                const curp = searchForm.searchCURP.value.toUpperCase();
+                
+                // Buscar por nombre
+                const name = searchForm.searchName.value.toUpperCase();
                 
                 try {
-                    const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
-                    
-                    // Aquí se carga la lista de departamentos antes de cualquier manipulación de la vista
-                    await loadDepartamentos();
+                    const docenteSnapshot = await docentesRef.where('nombre', '==', name).limit(1).get();
                     
                     if (!docenteSnapshot.empty) {
-                        console.log('CURP encontrado en la base de datos.');
+                        console.log('Nombre encontrado en la base de datos.');
                         const docenteData = docenteSnapshot.docs[0].data();
                         
-                        document.getElementById('registerCURP').value = docenteData.curp;
                         document.getElementById('registerName').value = docenteData.nombre;
+                        document.getElementById('registerName').setAttribute('readonly', 'true'); // Hacer el campo de solo lectura
+                        document.getElementById('registerName').classList.add('bg-gray-200');
+                        document.getElementById('registerCURP').value = docenteData.curp || '';
                         document.getElementById('registerGender').value = docenteData.genero;
                         document.getElementById('registerDepartment').value = docenteData.departamento;
                         document.getElementById('registerEmail').value = docenteData.email || '';
@@ -258,21 +264,21 @@
                         showView('registerView');
                         
                     } else {
-                        console.log('CURP no encontrado. Moviendo al formulario de registro.');
+                        console.log('Nombre no encontrado. Moviendo al formulario de registro.');
                         
-                        document.getElementById('registerCURP').value = curp;
-                        document.getElementById('registerName').value = '';
+                        document.getElementById('registerName').value = name;
+                        document.getElementById('registerName').removeAttribute('readonly'); // Asegurarse de que sea editable
+                        document.getElementById('registerName').classList.remove('bg-gray-200');
+                        document.getElementById('registerCURP').value = '';
                         document.getElementById('registerGender').value = '';
                         document.getElementById('registerDepartment').value = '';
                         document.getElementById('registerEmail').value = '';
 
-                        // La corrección está aquí:
-                        // Si no se encuentra un docente, mostrar el formulario de registro directamente
                         showView('registerView');
                     }
                 } catch (error) {
-                    console.error("Error al buscar CURP: ", error);
-                    showModal('Error al Buscar CURP', 'Ocurrió un error inesperado al buscar tu CURP. Por favor, intenta de nuevo.');
+                    console.error("Error al buscar el nombre: ", error);
+                    showModal('Error al Buscar', 'Ocurrió un error inesperado al buscar tu nombre. Por favor, intenta de nuevo.');
                     showView('searchView'); 
                 }
             });
@@ -285,7 +291,6 @@
                 messageEl.textContent = '';
                 messageEl.className = 'mt-4 p-3 rounded-lg text-center font-bold hidden';
                 
-                // Validar dominio
                 const validDomains = ['itdurango.edu.mx', 'gmail.com'];
                 const domain = email.split('@')[1];
                 if (!validDomains.includes(domain)) {
@@ -316,13 +321,12 @@
             registerForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const email = registerForm.registerEmail.value;
-                const name = registerForm.registerName.value;
+                const name = registerForm.registerName.value.toUpperCase(); // Convertir a mayúsculas
                 const curp = registerForm.registerCURP.value.toUpperCase();
                 const gender = registerForm.registerGender.value;
                 const department = registerForm.registerDepartment.value;
                 const messageEl = document.getElementById('registerMessage');
                 
-                // Validar dominio
                 const validDomains = ['itdurango.edu.mx', 'gmail.com'];
                 const domain = email.split('@')[1];
                 if (!validDomains.includes(domain)) {
@@ -331,7 +335,7 @@
                 }
 
                 try {
-                    const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
+                    const docenteSnapshot = await docentesRef.where('nombre', '==', name).limit(1).get();
                     let userCredential;
 
                     if (!docenteSnapshot.empty) {
