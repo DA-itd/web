@@ -147,18 +147,17 @@
         // =================================================================
         // TU CONFIGURACIÓN DE FIREBASE
         // =================================================================
-        const firebaseConfig = {
-          apiKey: "AIzaSyBYC-9dyv1Ulp9Oe13ePDJoahWBZNJ6-Wc",
-          authDomain: "actualizacion-docente-itd.firebaseapp.com",
-          projectId: "actualizacion-docente-itd",
-          storageBucket: "actualizacion-docente-itd.firebasestorage.app",
-          messagingSenderId: "979604726632",
-          appId: "1:979604726632:web:7e5cdd2d8f4b8cb9a32cdd",
-          measurementId: "G-V2V4CT2C69"
-        };
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
     
         // Inicializar Firebase
-        firebase.initializeApp(firebaseConfig);
+        if (Object.keys(firebaseConfig).length > 0) {
+            firebase.initializeApp(firebaseConfig);
+        } else {
+            console.error("Firebase no está configurado. La aplicación no funcionará correctamente.");
+        }
+        
         const auth = firebase.auth();
         const db = firebase.firestore();
 
