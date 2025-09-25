@@ -25,6 +25,7 @@
             <button id="viewCoursesBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-lg hidden">Catálogo</button>
             <button id="viewMyCoursesBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-lg hidden">Mis Cursos</button>
             <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-lg hidden">Salir</button>
+            <button id="importDataBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-lg">Importar Datos de Prueba</button>
         </div>
     </nav>
 
@@ -161,11 +162,11 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Referencias a colecciones de Firestore
-        const docentesRef = db.collection('docentes');
-        const departamentosRef = db.collection('departamentos');
-        const cursosRef = db.collection('cursos');
-        const inscripcionesRef = db.collection('inscripciones');
+        // Referencias a colecciones de Firestore utilizando la ruta correcta
+        const docentesRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('docentes');
+        const departamentosRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('departamentos');
+        const cursosRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('cursos');
+        const getInscripcionesRef = (uid) => db.collection('artifacts').doc(appId).collection('users').doc(uid).collection('inscripciones');
 
         // Referencias a los elementos del DOM
         const views = document.querySelectorAll('.view');
@@ -180,6 +181,7 @@
         const coursesGrid = document.getElementById('coursesGrid');
         const myCoursesGrid = document.getElementById('myCoursesGrid');
         const registerDepartmentSelect = document.getElementById('registerDepartment');
+        const importDataBtn = document.getElementById('importDataBtn');
 
         const modal = document.getElementById('modal');
         const modalTitle = document.getElementById('modalTitle');
@@ -187,6 +189,103 @@
         const modalCloseBtn = document.getElementById('modalCloseBtn');
         
         let currentUser = null;
+
+        // =================================================================
+        // MANEJO DE DATOS DE PRUEBA
+        // =================================================================
+        const testData = {
+            departamentos: [
+                { NombreDepartamento: "Ingeniería en Sistemas" },
+                { NombreDepartamento: "Ingeniería en Electrónica" },
+                { NombreDepartamento: "Ingeniería en Mecánica" },
+                { NombreDepartamento: "Ciencias Económico-Administrativas" },
+                { NombreDepartamento: "Metal-Mecánica" }
+            ],
+            cursos: [
+                {
+                    "Id_Curso": 1,
+                    "Curso": "Aprovechamiento Didáctico del Entorno de Aprendizaje Virtual",
+                    "Tipo": "Actualización Docente",
+                    "Horario": "16:00 a 20:00 hrs",
+                    "FechaVisible": "26 al 28 de mayo",
+                    "Cupo": 30
+                },
+                {
+                    "Id_Curso": 2,
+                    "Curso": "Desarrollo de Competencias Laborales en Ambientes Industriales",
+                    "Tipo": "Especialización Profesional",
+                    "Horario": "10:00 a 14:00 hrs",
+                    "FechaVisible": "1 al 3 de junio",
+                    "Cupo": 30
+                },
+                {
+                    "Id_Curso": 3,
+                    "Curso": "Metodología de la Investigación Científica",
+                    "Tipo": "Actualización Docente",
+                    "Horario": "09:00 a 13:00 hrs",
+                    "FechaVisible": "10 al 12 de junio",
+                    "Cupo": 30
+                }
+            ],
+            docentes: [
+                {
+                    "curp": "GARC000101HDFLMNR0",
+                    "nombre": "Ricardo García",
+                    "genero": "Masculino",
+                    "departamento": "Ingeniería en Sistemas"
+                },
+                {
+                    "curp": "LOPE990505MDFLMNR0",
+                    "nombre": "Ana López",
+                    "genero": "Femenino",
+                    "departamento": "Ciencias Económico-Administrativas"
+                }
+            ]
+        };
+        
+        async function importTestData() {
+            showModal('Importando Datos', 'Por favor, espera mientras importamos los datos de prueba...');
+            try {
+                // Borrar colecciones existentes para evitar duplicados
+                await Promise.all([
+                    clearCollection(departamentosRef),
+                    clearCollection(cursosRef),
+                    clearCollection(docentesRef)
+                ]);
+
+                // Importar nuevos datos
+                await Promise.all([
+                    ...testData.departamentos.map(data => departamentosRef.add(data)),
+                    ...testData.cursos.map(data => cursosRef.add(data)),
+                    ...testData.docentes.map(data => docentesRef.add(data))
+                ]);
+                
+                showModal('Éxito', 'Los datos de prueba se han importado correctamente.');
+                
+                // Recargar la vista para reflejar los cambios
+                if (currentUser) {
+                    loadCursos();
+                    loadMisCursos();
+                } else {
+                    loadDepartamentos();
+                }
+
+            } catch (error) {
+                console.error("Error al importar datos de prueba:", error);
+                showModal('Error', 'Ocurrió un error al importar los datos de prueba. Revisa la consola para más detalles.');
+            }
+        }
+        
+        async function clearCollection(collectionRef) {
+            const snapshot = await collectionRef.get();
+            const batch = db.batch();
+            snapshot.docs.forEach(doc => {
+                batch.delete(doc.ref);
+            });
+            await batch.commit();
+        }
+
+        importDataBtn.addEventListener('click', importTestData);
 
         // =================================================================
         // MANEJO DE VISTAS
@@ -323,32 +422,25 @@
             }
 
             try {
-                // Buscar si el CURP ya existe en la base de datos de docentes
                 const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
                 let userCredential;
 
                 if (!docenteSnapshot.empty) {
-                    // Si el docente existe en Firestore, intenta autenticarlo con el email
-                    const docenteData = docenteSnapshot.docs[0].data();
+                    const docenteDoc = docenteSnapshot.docs[0];
+                    const docenteData = docenteDoc.data();
                     if (docenteData.email) {
-                       // Si ya tiene email, significa que ya está registrado en auth
                        showModal('Error', 'Ya tienes una cuenta. Por favor, inicia sesión.');
                        return;
                     }
-
-                    // Intenta crear la cuenta de usuario en Firebase Auth
                     userCredential = await auth.createUserWithEmailAndPassword(email, curp);
-                    // Actualiza el documento en Firestore con el email
-                    await docentesRef.doc(docenteSnapshot.docs[0].id).update({
+                    await docentesRef.doc(docenteDoc.id).update({
                         email: email,
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     
                 } else {
-                    // Si no existe, crea un nuevo usuario y un nuevo documento en Firestore
                     userCredential = await auth.createUserWithEmailAndPassword(email, curp);
-                    const user = userCredential.user;
-                    await docentesRef.doc(user.uid).set({
+                    await docentesRef.doc(userCredential.user.uid).set({
                         nombre: name,
                         curp: curp,
                         email: email,
@@ -416,11 +508,16 @@
                 coursesGrid.innerHTML = '';
                 
                 const inscripcionesCounts = {};
-                const inscripcionesSnapshot = await inscripcionesRef.get();
-                inscripcionesSnapshot.forEach(doc => {
-                    const cursoId = doc.data().cursoId;
-                    inscripcionesCounts[cursoId] = (inscripcionesCounts[cursoId] || 0) + 1;
-                });
+                // Cargar todas las inscripciones para contar el cupo
+                const allUsersSnapshot = await db.collection('artifacts').doc(appId).collection('users').get();
+                for (const userDoc of allUsersSnapshot.docs) {
+                    const inscripcionesRef = getInscripcionesRef(userDoc.id);
+                    const inscripcionesSnapshot = await inscripcionesRef.get();
+                    inscripcionesSnapshot.forEach(doc => {
+                        const cursoId = doc.data().cursoId;
+                        inscripcionesCounts[cursoId] = (inscripcionesCounts[cursoId] || 0) + 1;
+                    });
+                }
                 
                 cursosSnapshot.forEach(doc => {
                     const curso = doc.data();
@@ -461,10 +558,11 @@
             }
             
             const cursoId = e.target.dataset.cursoId;
+            const inscripcionesRef = getInscripcionesRef(currentUser.uid);
             
             try {
                 // Verificar límite de inscripciones del docente
-                const myInscriptionsSnapshot = await inscripcionesRef.where('docenteId', '==', currentUser.uid).get();
+                const myInscriptionsSnapshot = await inscripcionesRef.get();
                 if (myInscriptionsSnapshot.size >= 3) {
                     showModal('Error', 'Has alcanzado el límite de 3 cursos inscritos.');
                     return;
@@ -478,8 +576,16 @@
                 }
                 
                 // Verificar cupo del curso
-                const inscripcionesCursoSnapshot = await inscripcionesRef.where('cursoId', '==', cursoId).get();
-                if (inscripcionesCursoSnapshot.size >= 30) {
+                // Se debe contar las inscripciones de todos los usuarios
+                let cursoEnrollmentCount = 0;
+                const allUsersSnapshot = await db.collection('artifacts').doc(appId).collection('users').get();
+                for (const userDoc of allUsersSnapshot.docs) {
+                    const userInscriptionsRef = getInscripcionesRef(userDoc.id);
+                    const userInscriptionsSnapshot = await userInscriptionsRef.where('cursoId', '==', cursoId).get();
+                    cursoEnrollmentCount += userInscriptionsSnapshot.size;
+                }
+                
+                if (cursoEnrollmentCount >= 30) {
                     showModal('Error', 'Este curso ya no tiene cupo disponible.');
                     return;
                 }
@@ -487,7 +593,7 @@
                 // Generar ID de registro único
                 const cursoDoc = await cursosRef.doc(cursoId).get();
                 const idCursoNumber = cursoDoc.data().Id_Curso;
-                const newEnrollmentCount = inscripcionesCursoSnapshot.size + 1;
+                const newEnrollmentCount = cursoEnrollmentCount + 1;
                 const registroId = `TNM-054-${idCursoNumber.toString().padStart(2, '0')}-2026-${newEnrollmentCount.toString().padStart(2, '0')}`;
                 
                 // Crear el documento de inscripción
@@ -513,8 +619,9 @@
         // =================================================================
         async function loadMisCursos() {
             if (!currentUser) return;
+            const inscripcionesRef = getInscripcionesRef(currentUser.uid);
             try {
-                const snapshot = await inscripcionesRef.where('docenteId', '==', currentUser.uid).get();
+                const snapshot = await inscripcionesRef.get();
                 myCoursesGrid.innerHTML = '';
                 
                 if (snapshot.empty) {
@@ -558,7 +665,8 @@
         }
         
         async function handleUnenrollment(e) {
-            const inscripcionId = e.target.dataset.inscripcion-id;
+            const inscripcionId = e.target.dataset.inscripcionId;
+            const inscripcionesRef = getInscripcionesRef(currentUser.uid);
             
             showModal('Confirmar', '¿Estás seguro de que quieres anular tu inscripción a este curso?');
             modalCloseBtn.textContent = 'Cancelar';
