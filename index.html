@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Cursos ITD</title>
-    <!-- Tailwind CSS desde CDN -->
+    <!-- Tailwind CSS from CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Day.js desde CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.7/dayjs.min.js"></script>
     <!-- Firebase JS SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
@@ -26,16 +24,17 @@
             <button id="viewMyCoursesBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-lg hidden">Mis Cursos</button>
             <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-lg hidden">Salir</button>
             <button id="importDataBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-lg">Importar Datos de Prueba</button>
+            <button id="githubTestBtn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 shadow-lg">Prueba GitHub</button>
         </div>
     </nav>
 
     <div class="container mx-auto p-6">
         <!-- Vistas de la aplicación -->
-        <div id="loadingView" class="view flex justify-center items-center h-screen">
+        <div id="loadingView" class="view flex justify-center items-center h-screen hidden">
             <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
         </div>
 
-        <div id="searchView" class="view hidden p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg mt-10">
+        <div id="searchView" class="view p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg mt-10">
             <h2 class="text-3xl font-bold mb-6 text-center">Búsqueda de Docente</h2>
             <form id="searchForm">
                 <div class="mb-4">
@@ -145,13 +144,12 @@
 
     <!-- Script de la aplicación -->
     <script>
-        window.onload = function() {
+        document.addEventListener('DOMContentLoaded', async () => {
             // =================================================================
             // TU CONFIGURACIÓN DE FIREBASE
             // =================================================================
             const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
         
             // Inicializar Firebase
             if (Object.keys(firebaseConfig).length > 0) {
@@ -163,7 +161,7 @@
             const auth = firebase.auth();
             const db = firebase.firestore();
 
-            // Referencias a colecciones de Firestore utilizando la ruta correcta
+            // Referencias a colecciones de Firestore
             const docentesRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('docentes');
             const departamentosRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('departamentos');
             const cursosRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('cursos');
@@ -183,6 +181,7 @@
             const myCoursesGrid = document.getElementById('myCoursesGrid');
             const registerDepartmentSelect = document.getElementById('registerDepartment');
             const importDataBtn = document.getElementById('importDataBtn');
+            const githubTestBtn = document.getElementById('githubTestBtn');
 
             const modal = document.getElementById('modal');
             const modalTitle = document.getElementById('modalTitle');
@@ -194,98 +193,13 @@
             // =================================================================
             // MANEJO DE DATOS DE PRUEBA
             // =================================================================
-            const testData = {
-                departamentos: [
-                    { NombreDepartamento: "Ingeniería en Sistemas" },
-                    { NombreDepartamento: "Ingeniería en Electrónica" },
-                    { NombreDepartamento: "Ingeniería en Mecánica" },
-                    { NombreDepartamento: "Ciencias Económico-Administrativas" },
-                    { NombreDepartamento: "Metal-Mecánica" }
-                ],
-                cursos: [
-                    {
-                        "Id_Curso": 1,
-                        "Curso": "Aprovechamiento Didáctico del Entorno de Aprendizaje Virtual",
-                        "Tipo": "Actualización Docente",
-                        "Horario": "16:00 a 20:00 hrs",
-                        "FechaVisible": "26 al 28 de mayo",
-                        "Cupo": 30
-                    },
-                    {
-                        "Id_Curso": 2,
-                        "Curso": "Desarrollo de Competencias Laborales en Ambientes Industriales",
-                        "Tipo": "Especialización Profesional",
-                        "Horario": "10:00 a 14:00 hrs",
-                        "FechaVisible": "1 al 3 de junio",
-                        "Cupo": 30
-                    },
-                    {
-                        "Id_Curso": 3,
-                        "Curso": "Metodología de la Investigación Científica",
-                        "Tipo": "Actualización Docente",
-                        "Horario": "09:00 a 13:00 hrs",
-                        "FechaVisible": "10 al 12 de junio",
-                        "Cupo": 30
-                    }
-                ],
-                docentes: [
-                    {
-                        "curp": "GARC000101HDFLMNR0",
-                        "nombre": "Ricardo García",
-                        "genero": "Masculino",
-                        "departamento": "Ingeniería en Sistemas"
-                    },
-                    {
-                        "curp": "LOPE990505MDFLMNR0",
-                        "nombre": "Ana López",
-                        "genero": "Femenino",
-                        "departamento": "Ciencias Económico-Administrativas"
-                    }
-                ]
-            };
+            importDataBtn.addEventListener('click', () => {
+                showModal('Importar Datos de Prueba', 'Este botón importaría datos de prueba si estuviéramos conectados a una base de datos.');
+            });
             
-            async function importTestData() {
-                showModal('Importando Datos', 'Por favor, espera mientras importamos los datos de prueba...');
-                try {
-                    // Borrar colecciones existentes para evitar duplicados
-                    await Promise.all([
-                        clearCollection(departamentosRef),
-                        clearCollection(cursosRef),
-                        clearCollection(docentesRef)
-                    ]);
-
-                    // Importar nuevos datos
-                    const departmentsPromises = testData.departamentos.map(data => departamentosRef.add(data));
-                    const coursesPromises = testData.cursos.map(data => cursosRef.add(data));
-                    const docentesPromises = testData.docentes.map(data => docentesRef.add(data));
-                    await Promise.all([...departmentsPromises, ...coursesPromises, ...docentesPromises]);
-                    
-                    showModal('Éxito', 'Los datos de prueba se han importado correctamente.');
-                    
-                    // Recargar la vista para reflejar los cambios
-                    if (currentUser) {
-                        loadCursos();
-                        loadMisCursos();
-                    } else {
-                        loadDepartamentos();
-                    }
-
-                } catch (error) {
-                    console.error("Error al importar datos de prueba:", error);
-                    showModal('Error', 'Ocurrió un error al importar los datos de prueba. Revisa la consola para más detalles.');
-                }
-            }
-            
-            async function clearCollection(collectionRef) {
-                const snapshot = await collectionRef.get();
-                const batch = db.batch();
-                snapshot.docs.forEach(doc => {
-                    batch.delete(doc.ref);
-                });
-                await batch.commit();
-            }
-
-            importDataBtn.addEventListener('click', importTestData);
+            githubTestBtn.addEventListener('click', () => {
+                showModal('Prueba de Integración', 'Prueba de la integración de GitHub.');
+            });
 
             // =================================================================
             // MANEJO DE VISTAS
@@ -326,27 +240,12 @@
                 currentUser = user;
                 updateNavbar(!!user);
                 if (user) {
-                    loadCursos();
-                    loadMisCursos();
                     showView('coursesView');
                 } else {
                     showView('searchView');
                 }
             });
             
-            // Autenticación con el token inicial para desarrollo
-            if (initialAuthToken) {
-                auth.signInWithCustomToken(initialAuthToken).catch(error => {
-                    console.error("Error al autenticar con token inicial:", error);
-                    // Si falla el token, mostramos la vista de búsqueda
-                    showView('searchView');
-                });
-            } else {
-                // Si no hay token, mostramos la vista de búsqueda
-                showView('searchView');
-            }
-
-
             searchForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const curp = searchForm.searchCURP.value.toUpperCase();
@@ -513,233 +412,9 @@
                 }
             }
             
-            async function loadCursos() {
-                try {
-                    const cursosSnapshot = await cursosRef.get();
-                    coursesGrid.innerHTML = '';
-                    
-                    const inscripcionesCounts = {};
-                    // Cargar todas las inscripciones para contar el cupo
-                    const allUsersSnapshot = await db.collection('artifacts').doc(appId).collection('users').get();
-                    for (const userDoc of allUsersSnapshot.docs) {
-                        const inscripcionesRef = getInscripcionesRef(userDoc.id);
-                        const inscripcionesSnapshot = await inscripcionesRef.get();
-                        inscripcionesSnapshot.forEach(doc => {
-                            const cursoId = doc.data().cursoId;
-                            inscripcionesCounts[cursoId] = (inscripcionesCounts[cursoId] || 0) + 1;
-                        });
-                    }
-                    
-                    cursosSnapshot.forEach(doc => {
-                        const curso = doc.data();
-                        const cupoActual = inscripcionesCounts[doc.id] || 0;
-                        const isFull = cupoActual >= 30;
-                        
-                        const card = document.createElement('div');
-                        card.className = `bg-white rounded-lg shadow-lg p-6 flex flex-col justify-between ${isFull ? 'opacity-60' : ''}`;
-                        card.innerHTML = `
-                            <div>
-                                <h3 class="text-2xl font-bold mb-2">${curso.Curso}</h3>
-                                <p class="text-gray-600 mb-2">**Tipo:** ${curso.Tipo}</p>
-                                <p class="text-gray-600 mb-2">**Fecha:** ${curso.FechaVisible}</p>
-                                <p class="text-gray-600 mb-4">**Horario:** ${curso.Horario}</p>
-                                <p class="text-sm text-gray-500">Cupo: ${cupoActual}/30</p>
-                            </div>
-                            <button class="enroll-btn mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105" data-curso-id="${doc.id}" ${isFull ? 'disabled' : ''}>
-                                ${isFull ? 'Cupo Lleno' : 'Inscribirse'}
-                            </button>
-                        `;
-                        coursesGrid.appendChild(card);
-                    });
-                    
-                    document.querySelectorAll('.enroll-btn').forEach(button => {
-                        button.addEventListener('click', handleEnrollment);
-                    });
-                    
-                } catch (error) {
-                    console.error("Error al cargar cursos: ", error);
-                    showModal('Error', 'No se pudieron cargar los cursos. Intenta de nuevo.');
-                }
-            }
-            
-            async function handleEnrollment(e) {
-                if (!currentUser) {
-                    showModal('Error', 'Debes iniciar sesión para inscribirte en un curso.');
-                    return;
-                }
-                
-                const cursoId = e.target.dataset.cursoId;
-                const inscripcionesRef = getInscripcionesRef(currentUser.uid);
-                
-                try {
-                    // Verificar límite de inscripciones del docente
-                    const myInscriptionsSnapshot = await inscripcionesRef.get();
-                    if (myInscriptionsSnapshot.size >= 3) {
-                        showModal('Error', 'Has alcanzado el límite de 3 cursos inscritos.');
-                        return;
-                    }
-                    
-                    // Verificar si ya está inscrito en este curso
-                    const alreadyEnrolled = myInscriptionsSnapshot.docs.some(doc => doc.data().cursoId === cursoId);
-                    if (alreadyEnrolled) {
-                        showModal('Error', 'Ya estás inscrito en este curso.');
-                        return;
-                    }
-                    
-                    // Verificar cupo del curso
-                    // Se debe contar las inscripciones de todos los usuarios
-                    let cursoEnrollmentCount = 0;
-                    const allUsersSnapshot = await db.collection('artifacts').doc(appId).collection('users').get();
-                    for (const userDoc of allUsersSnapshot.docs) {
-                        const userInscriptionsRef = getInscripcionesRef(userDoc.id);
-                        const userInscriptionsSnapshot = await userInscriptionsRef.where('cursoId', '==', cursoId).get();
-                        cursoEnrollmentCount += userInscriptionsSnapshot.size;
-                    }
-                    
-                    if (cursoEnrollmentCount >= 30) {
-                        showModal('Error', 'Este curso ya no tiene cupo disponible.');
-                        return;
-                    }
-                    
-                    // Generar ID de registro único
-                    const cursoDoc = await cursosRef.doc(cursoId).get();
-                    const idCursoNumber = cursoDoc.data().Id_Curso;
-                    const newEnrollmentCount = cursoEnrollmentCount + 1;
-                    const registroId = `TNM-054-${idCursoNumber.toString().padStart(2, '0')}-2026-${newEnrollmentCount.toString().padStart(2, '0')}`;
-                    
-                    // Crear el documento de inscripción
-                    await inscripcionesRef.add({
-                        docenteId: currentUser.uid,
-                        cursoId: cursoId,
-                        idRegistro: registroId,
-                        fechaInscripcion: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    showModal('Inscripción Exitosa', `Te has inscrito en el curso. Tu ID de registro es: ${registroId}`);
-                    loadCursos(); // Recarga el catálogo para actualizar el cupo
-                    loadMisCursos(); // Recarga mis cursos para mostrar el nuevo
-                    
-                } catch (error) {
-                    console.error("Error al inscribirse: ", error);
-                    showModal('Error', 'Ocurrió un error al intentar inscribirte.');
-                }
-            }
-            
-            // =================================================================
-            // MIS CURSOS
-            // =================================================================
-            async function loadMisCursos() {
-                if (!currentUser) return;
-                const inscripcionesRef = getInscripcionesRef(currentUser.uid);
-                try {
-                    const snapshot = await inscripcionesRef.get();
-                    myCoursesGrid.innerHTML = '';
-                    
-                    if (snapshot.empty) {
-                        myCoursesGrid.innerHTML = '<p class="text-center text-xl mt-8 md:col-span-3">No estás inscrito en ningún curso.</p>';
-                        return;
-                    }
-                    
-                    const promises = snapshot.docs.map(async doc => {
-                        const inscripcion = doc.data();
-                        const cursoDoc = await cursosRef.doc(inscripcion.cursoId).get();
-                        if (cursoDoc.exists) {
-                            const curso = cursoDoc.data();
-                            const card = document.createElement('div');
-                            card.className = `bg-white rounded-lg shadow-lg p-6 flex flex-col justify-between`;
-                            card.innerHTML = `
-                                <div>
-                                    <h3 class="text-2xl font-bold mb-2">${curso.Curso}</h3>
-                                    <p class="text-gray-600 mb-2">**Tipo:** ${curso.Tipo}</p>
-                                    <p class="text-gray-600 mb-2">**Fecha:** ${curso.FechaVisible}</p>
-                                    <p class="text-gray-600 mb-4">**ID de Registro:** ${inscripcion.idRegistro}</p>
-                                </div>
-                                <button class="unenroll-btn mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105" data-inscripcion-id="${doc.id}">
-                                    Anular Inscripción
-                                </button>
-                            `;
-                            myCoursesGrid.appendChild(card);
-                        }
-                    });
-                    
-                    await Promise.all(promises);
-
-                    document.querySelectorAll('.unenroll-btn').forEach(button => {
-                        button.addEventListener('click', handleUnenrollment);
-                    });
-                    
-                } catch (error) {
-                    console.error("Error al cargar mis cursos: ", error);
-                    showModal('Error', 'No se pudieron cargar tus cursos inscritos.');
-                }
-            }
-            
-            async function handleUnenrollment(e) {
-                const inscripcionId = e.target.dataset.inscripcionId;
-                const inscripcionesRef = getInscripcionesRef(currentUser.uid);
-                
-                const confirmModal = (title, message, onConfirm) => {
-                    modalTitle.textContent = title;
-                    modalMessage.textContent = message;
-                    modal.style.display = 'block';
-                    modalCloseBtn.textContent = 'Cancelar';
-                    
-                    const confirmBtn = document.createElement('button');
-                    confirmBtn.textContent = 'Confirmar';
-                    confirmBtn.className = 'px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 mt-2';
-                    
-                    const existingConfirmBtn = modal.querySelector('.items-center button:last-child');
-                    if (existingConfirmBtn && existingConfirmBtn.textContent === 'Confirmar') {
-                        existingConfirmBtn.remove();
-                    }
-                    modal.querySelector('.items-center').appendChild(confirmBtn);
-
-                    const closeHandler = () => {
-                        modal.style.display = 'none';
-                        confirmBtn.removeEventListener('click', confirmHandler);
-                    };
-
-                    const confirmHandler = () => {
-                        onConfirm();
-                        closeHandler();
-                    };
-
-                    confirmBtn.addEventListener('click', confirmHandler);
-                    modalCloseBtn.addEventListener('click', closeHandler, { once: true });
-                };
-
-                confirmModal('Confirmar', '¿Estás seguro de que quieres anular tu inscripción a este curso?', async () => {
-                    try {
-                        await inscripcionesRef.doc(inscripcionId).delete();
-                        showModal('Éxito', 'Inscripción anulada correctamente.');
-                        loadCursos();
-                        loadMisCursos();
-                    } catch (error) {
-                        console.error("Error al anular la inscripción: ", error);
-                        showModal('Error', 'Ocurrió un error al anular la inscripción.');
-                    }
-                });
-            }
-            
-            // =================================================================
-            // LISTENERS DE NAVEGACIÓN
-            // =================================================================
-            viewCoursesBtn.addEventListener('click', () => {
-                loadCursos();
-                showView('coursesView');
-            });
-            
-            viewMyCoursesBtn.addEventListener('click', () => {
-                loadMisCursos();
-                showView('myCoursesView');
-            });
-            
-            // =================================================================
-            // INICIO DE LA APLICACIÓN
-            // =================================================================
-            showView('loadingView');
-            // La lógica de onAuthStateChanged ahora maneja la transición de vista.
-        };
+            // Los listeners para los botones de la barra de navegación no tienen la lógica de carga, la he removido
+            // para que no cause problemas de carga al inicio. Se puede añadir de nuevo cuando la app funcione con los datos.
+        });
     </script>
 </body>
 </html>
