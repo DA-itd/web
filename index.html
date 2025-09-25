@@ -259,10 +259,6 @@
                 try {
                     const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
                     
-                    // Ahora, la carga de departamentos se hace ANTES de cambiar la vista.
-                    // Si falla, el error será capturado aquí.
-                    await loadDepartamentos();
-                    
                     if (!docenteSnapshot.empty) {
                         console.log('CURP encontrado en la base de datos.');
                         const docenteData = docenteSnapshot.docs[0].data();
@@ -271,23 +267,26 @@
                         document.getElementById('registerGender').value = docenteData.genero;
                         document.getElementById('registerDepartment').value = docenteData.departamento;
                         document.getElementById('registerEmail').value = docenteData.email || '';
+                        
+                        await loadDepartamentos();
                         showView('registerView');
                         
                     } else {
                         console.log('CURP no encontrado. Moviendo al formulario de registro.');
                         document.getElementById('registerCURP').value = curp;
+                        
                         // Limpiar los campos para un nuevo registro
                         document.getElementById('registerName').value = '';
                         document.getElementById('registerGender').value = '';
                         document.getElementById('registerDepartment').value = '';
                         document.getElementById('registerEmail').value = '';
+                        await loadDepartamentos();
                         showView('registerView');
                     }
                 } catch (error) {
-                    console.error("Error al buscar o cargar datos: ", error);
+                    console.error("Error al buscar CURP: ", error);
                     // Muestra un mensaje de error más claro y regresa a la vista de búsqueda
-                    showModal('Error de Conexión', 'Ocurrió un error inesperado al buscar tu CURP. Por favor, intenta de nuevo o revisa la consola para más detalles.');
-                    // La vista solo se cambia a 'searchView' después de mostrar el modal
+                    showModal('Error al Buscar CURP', 'Ocurrió un error inesperado al buscar tu CURP. Por favor, intenta de nuevo o revisa la consola para más detalles.');
                     showView('searchView'); 
                 }
             });
