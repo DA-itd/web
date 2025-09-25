@@ -234,13 +234,24 @@
             });
             searchForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                // Ocultar mensaje de búsqueda anterior
+                const searchMessageEl = document.getElementById('searchMessage');
+                searchMessageEl.textContent = '';
+                searchMessageEl.className = 'mt-4 p-3 rounded text-center font-bold hidden';
+                
                 showView('loadingView');
+                
                 const name = searchForm.searchName.value.toUpperCase();
+                
                 try {
                     const docenteSnapshot = await docentesRef.where('nombre', '==', name).limit(1).get();
+                    
                     if (!docenteSnapshot.empty) {
+                        // Docente encontrado en la base de datos
                         console.log('¡Conexión a Firestore exitosa! Se encontró un docente con ese nombre.');
                         const docenteData = docenteSnapshot.docs[0].data();
+                        
+                        // Pre-llenar campos con la información del docente
                         document.getElementById('registerName').value = docenteData.nombre;
                         document.getElementById('registerName').setAttribute('readonly', 'true');
                         document.getElementById('registerName').classList.add('bg-gray-200');
@@ -248,10 +259,21 @@
                         document.getElementById('registerGender').value = docenteData.genero || '';
                         document.getElementById('registerDepartment').value = docenteData.departamento || '';
                         document.getElementById('registerEmail').value = docenteData.email || '';
-                        await loadDepartamentos();
-                        showView('registerView');
+                        
+                        // Mostrar mensaje de éxito y transición a la vista de registro
+                        searchMessageEl.textContent = '¡Docente encontrado! Ahora completa el registro.';
+                        searchMessageEl.classList.remove('hidden');
+                        searchMessageEl.classList.add('bg-green-200', 'text-green-800');
+                        
+                        setTimeout(async () => {
+                            await loadDepartamentos();
+                            showView('registerView');
+                        }, 2000); // 2 segundos de retraso para que el usuario pueda leer el mensaje
+                        
                     } else {
+                        // Docente no encontrado, preparar el formulario para un nuevo registro
                         console.log('¡Conexión a Firestore exitosa! No se encontró un docente con ese nombre.');
+                        
                         document.getElementById('registerName').value = name;
                         document.getElementById('registerName').removeAttribute('readonly');
                         document.getElementById('registerName').classList.remove('bg-gray-200');
@@ -259,8 +281,16 @@
                         document.getElementById('registerGender').value = '';
                         document.getElementById('registerDepartment').value = '';
                         document.getElementById('registerEmail').value = '';
-                        await loadDepartamentos();
-                        showView('registerView');
+                        
+                        // Mostrar mensaje de que no se encontró y que debe registrarse
+                        searchMessageEl.textContent = 'Docente no encontrado. Por favor, regístrate como un nuevo usuario.';
+                        searchMessageEl.classList.remove('hidden');
+                        searchMessageEl.classList.add('bg-yellow-200', 'text-yellow-800');
+                        
+                        setTimeout(async () => {
+                            await loadDepartamentos();
+                            showView('registerView');
+                        }, 2000); // 2 segundos de retraso
                     }
                 } catch (error) {
                     console.error("Error al buscar el nombre: ", error);
