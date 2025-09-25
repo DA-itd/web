@@ -239,13 +239,16 @@
             auth.onAuthStateChanged(user => {
                 currentUser = user;
                 updateNavbar(!!user);
+                // Si el usuario está logueado, muestra la vista de cursos, de lo contrario, no hace nada porque la vista de búsqueda ya se muestra al inicio.
                 if (user) {
                     showView('coursesView');
-                } else {
-                    showView('searchView');
                 }
             });
             
+            // Lógica para mostrar la vista de búsqueda al cargar la página,
+            // lo que previene que la pantalla se quede en blanco.
+            showView('searchView');
+
             searchForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const curp = searchForm.searchCURP.value.toUpperCase();
