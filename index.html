@@ -239,6 +239,7 @@
                 try {
                     const docenteSnapshot = await docentesRef.where('nombre', '==', name).limit(1).get();
                     if (!docenteSnapshot.empty) {
+                        console.log('¡Conexión a Firestore exitosa! Se encontró un docente con ese nombre.');
                         const docenteData = docenteSnapshot.docs[0].data();
                         document.getElementById('registerName').value = docenteData.nombre;
                         document.getElementById('registerName').setAttribute('readonly', 'true');
@@ -250,6 +251,7 @@
                         await loadDepartamentos();
                         showView('registerView');
                     } else {
+                        console.log('¡Conexión a Firestore exitosa! No se encontró un docente con ese nombre.');
                         document.getElementById('registerName').value = name;
                         document.getElementById('registerName').removeAttribute('readonly');
                         document.getElementById('registerName').classList.remove('bg-gray-200');
