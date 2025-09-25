@@ -206,31 +206,31 @@
             // =================================================================
             function showView(viewId) {
                 views.forEach(view => {
-                    view.style.display = 'none';
+                    view.classList.add('hidden');
                 });
-                document.getElementById(viewId).style.display = 'block';
+                document.getElementById(viewId).classList.remove('hidden');
             }
             
             function updateNavbar(isLoggedIn) {
                 if (isLoggedIn) {
-                    viewCoursesBtn.style.display = 'block';
-                    viewMyCoursesBtn.style.display = 'block';
-                    logoutBtn.style.display = 'block';
+                    viewCoursesBtn.classList.remove('hidden');
+                    viewMyCoursesBtn.classList.remove('hidden');
+                    logoutBtn.classList.remove('hidden');
                 } else {
-                    viewCoursesBtn.style.display = 'none';
-                    viewMyCoursesBtn.style.display = 'none';
-                    logoutBtn.style.display = 'none';
+                    viewCoursesBtn.classList.add('hidden');
+                    viewMyCoursesBtn.classList.add('hidden');
+                    logoutBtn.classList.add('hidden');
                 }
             }
             
             function showModal(title, message) {
                 modalTitle.textContent = title;
                 modalMessage.textContent = message;
-                modal.style.display = 'block';
+                modal.classList.remove('hidden');
             }
             
             modalCloseBtn.addEventListener('click', () => {
-                modal.style.display = 'none';
+                modal.classList.add('hidden');
             });
 
             // =================================================================
@@ -238,17 +238,15 @@
             // =================================================================
             auth.onAuthStateChanged(user => {
                 currentUser = user;
-                updateNavbar(!!user);
-                // Si el usuario está logueado, muestra la vista de cursos, de lo contrario, no hace nada porque la vista de búsqueda ya se muestra al inicio.
                 if (user) {
+                    updateNavbar(true);
                     showView('coursesView');
+                } else {
+                    updateNavbar(false);
+                    showView('searchView');
                 }
             });
             
-            // Lógica para mostrar la vista de búsqueda al cargar la página,
-            // lo que previene que la pantalla se quede en blanco.
-            showView('searchView');
-
             searchForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const curp = searchForm.searchCURP.value.toUpperCase();
@@ -263,9 +261,8 @@
                         document.getElementById('registerName').value = docenteData.nombre;
                         document.getElementById('registerGender').value = docenteData.genero;
                         document.getElementById('registerDepartment').value = docenteData.departamento;
-                        document.getElementById('registerEmail').value = docenteData.email;
+                        document.getElementById('registerEmail').value = docenteData.email || '';
                         
-                        showMessage(messageEl, 'CURP encontrado. Rellena tu correo para iniciar sesión o registrarte.', 'bg-green-200 text-green-800');
                         loadDepartamentos();
                         showView('registerView');
                         
@@ -363,7 +360,7 @@
                         });
                     }
                     
-                    showMessage(messageEl, '¡Registro exitoso! Ya puedes iniciar sesión.', 'bg-green-200 text-green-800');
+                    showModal('Registro Exitoso', 'Tu cuenta ha sido creada. Ahora puedes iniciar sesión.');
                     showView('authView');
 
                 } catch (error) {
@@ -376,7 +373,7 @@
                     } else if (error.code === 'auth/weak-password') {
                          errorMessage = "La contraseña es muy débil (usa el CURP).";
                     }
-                    showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
+                    showModal('Error de Registro', errorMessage);
                 }
             });
 
@@ -384,9 +381,18 @@
                 await auth.signOut();
             });
             
+            viewCoursesBtn.addEventListener('click', () => {
+                showView('coursesView');
+                // Aquí se cargaría la lista completa de cursos
+            });
+
+            viewMyCoursesBtn.addEventListener('click', () => {
+                showView('myCoursesView');
+                // Aquí se cargarían los cursos en los que el usuario está inscrito
+            });
+            
             showRegisterFormBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                loadDepartamentos();
                 showView('searchView');
             });
             
@@ -414,9 +420,6 @@
                     showModal('Error', 'No se pudieron cargar los departamentos. Por favor, intenta de nuevo.');
                 }
             }
-            
-            // Los listeners para los botones de la barra de navegación no tienen la lógica de carga, la he removido
-            // para que no cause problemas de carga al inicio. Se puede añadir de nuevo cuando la app funcione con los datos.
         });
     </script>
 </body>
