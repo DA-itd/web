@@ -36,8 +36,9 @@
     </nav>
     <div class="container mx-auto p-6">
         <!-- Vistas de la aplicación -->
-        <div id="loadingView" class="view flex justify-center items-center h-screen hidden">
+        <div id="loadingView" class="view flex flex-col justify-center items-center h-screen hidden">
             <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+            <p class="mt-4 text-xl font-bold text-gray-700">Conectando a la base de datos...</p>
         </div>
         <!-- Search View -->
         <div id="searchView" class="view p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg mt-10">
@@ -267,6 +268,7 @@
             });
             loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                showView('loadingView');
                 const email = loginForm.loginEmail.value;
                 const password = loginForm.loginPassword.value;
                 const messageEl = document.getElementById('loginMessage');
@@ -276,6 +278,7 @@
                 const domain = email.split('@')[1];
                 if (!validDomains.includes(domain)) {
                     showMessage(messageEl, 'Dominio de correo no válido. Solo se aceptan @itdurango.edu.mx y @gmail.com.', 'bg-red-200 text-red-800');
+                    showView('authView'); 
                     return;
                 }
                 try {
@@ -289,6 +292,7 @@
                         errorMessage = "Contraseña incorrecta.";
                     }
                     showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
+                    showView('authView'); 
                 }
             });
             function showMessage(element, text, className) {
@@ -298,6 +302,7 @@
             }
             registerForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                showView('loadingView');
                 const email = registerForm.registerEmail.value;
                 const name = registerForm.registerName.value.toUpperCase();
                 const curp = registerForm.registerCURP.value.toUpperCase();
@@ -308,6 +313,7 @@
                 const domain = email.split('@')[1];
                 if (!validDomains.includes(domain)) {
                     showMessage(messageEl, 'Dominio de correo no válido. Solo se aceptan @itdurango.edu.mx y @gmail.com.', 'bg-red-200 text-red-800');
+                    showView('registerView');
                     return;
                 }
                 try {
@@ -318,6 +324,7 @@
                         const docenteData = docenteDoc.data();
                         if (docenteData.email) {
                            showModal('Error', 'Ya tienes una cuenta. Por favor, inicia sesión.');
+                           showView('registerView');
                            return;
                         }
                         userCredential = await auth.createUserWithEmailAndPassword(email, curp);
@@ -349,6 +356,7 @@
                          errorMessage = "La contraseña es muy débil (usa el CURP).";
                     }
                     showModal('Error de Registro', errorMessage);
+                    showView('registerView');
                 }
             });
             logoutBtn.addEventListener('click', async () => {
@@ -362,9 +370,10 @@
                 showView('myCoursesView');
                 // Lógica para cargar los cursos del usuario
             });
-            showRegisterFormBtn.addEventListener('click', (e) => {
+            showRegisterFormBtn.addEventListener('click', async (e) => {
                 e.preventDefault();
-                showView('searchView');
+                await loadDepartamentos();
+                showView('registerView');
             });
             showLoginFormBtn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -375,7 +384,6 @@
             // =================================================================
             async function loadDepartamentos() {
                 try {
-                    console.log("Cargando departamentos...");
                     const snapshot = await departamentosRef.get();
                     registerDepartmentSelect.innerHTML = '<option value="">Selecciona tu departamento</option>';
                     snapshot.forEach(doc => {
@@ -388,6 +396,7 @@
                 } catch (error) {
                     console.error("Error al cargar departamentos: ", error);
                     showModal('Error', 'No se pudieron cargar los departamentos. Por favor, intenta de nuevo.');
+                    throw error;
                 }
             }
         });
