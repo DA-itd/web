@@ -236,7 +236,6 @@
                 e.preventDefault();
                 console.log('Formulario de búsqueda enviado.');
                 
-                // Mostrar el spinner de carga para dar feedback visual
                 showView('loadingView');
 
                 const curp = searchForm.searchCURP.value.toUpperCase();
@@ -270,11 +269,12 @@
                         document.getElementById('registerDepartment').value = '';
                         document.getElementById('registerEmail').value = '';
 
+                        // La corrección está aquí:
+                        // Si no se encuentra un docente, mostrar el formulario de registro directamente
                         showView('registerView');
                     }
                 } catch (error) {
                     console.error("Error al buscar CURP: ", error);
-                    // Muestra un mensaje de error más claro y regresa a la vista de búsqueda
                     showModal('Error al Buscar CURP', 'Ocurrió un error inesperado al buscar tu CURP. Por favor, intenta de nuevo.');
                     showView('searchView'); 
                 }
