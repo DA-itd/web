@@ -39,10 +39,10 @@
     <div class="bg-white p-6 md:p-10 rounded-2xl shadow-2xl w-full max-w-4xl border border-gray-200">
         
         <!-- Encabezado con Logo y Títulos -->
-        <div class="flex flex-col md:flex-row justify-between items-start mb-6 border-b pb-4">
-            <!-- Logo ITD -->
-            <img src="https://raw.githubusercontent.com/DA-itd/web/main/logo_itdurango.png" alt="Logo ITD" class="h-14 w-auto object-contain mb-4 md:mb-0">
-            <div class="text-right w-full md:w-auto">
+        <div class="flex flex-col justify-center items-center text-center mb-6 border-b pb-4">
+            <!-- Logo ITD (AUMENTADO A h-20) -->
+            <img src="https://raw.githubusercontent.com/DA-itd/web/main/logo_itdurango.png" alt="Logo ITD" class="h-20 w-auto object-contain mb-4">
+            <div class="w-full">
                 <h2 class="text-xl font-semibold text-gray-700">INSTITUTO TECNOLOGICO DE DURANGO</h2>
                 <h1 class="text-3xl font-bold text-gray-800">Registro de Cursos de Actualización Docente</h1>
             </div>
@@ -75,6 +75,7 @@
                 <!-- CURP -->
                 <div>
                     <label for="curp" class="block text-sm font-medium text-gray-700">CURP</label>
+                    <!-- ATRIBUTO REQUIRED PARA REQUERIR EL LLENADO -->
                     <input type="text" id="curp" name="curp" maxlength="18" required 
                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 uppercase" 
                            oninput="this.value = this.value.toUpperCase()">
@@ -83,6 +84,7 @@
                 <!-- Email -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                    <!-- ATRIBUTO REQUIRED PARA REQUERIR EL LLENADO -->
                     <input type="email" id="email" name="email" required 
                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
                            placeholder="usuario@itdurango.edu.mx o usuario@gmail.com">
@@ -191,8 +193,8 @@
     <script>
         // URLs de los archivos de datos en GitHub (TODOS AHORA EN FORMATO CSV)
         const COURSES_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/cursos.csv'; 
-        const DEPARTMENTS_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/departamentos.csv'; // ACTUALIZADO
-        const DOCENTES_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/docentes.csv'; // ACTUALIZADO
+        const DEPARTMENTS_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/departamentos.csv'; 
+        const DOCENTES_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/docentes.csv'; 
         
         // Variables globales para almacenar los datos cargados
         let COURSES = [];
@@ -208,46 +210,72 @@
         const courseDetailsBlock = document.getElementById('courseDetailsBlock');
         const loadingMessage = document.getElementById('loadingMessage');
         
-        // --- Nueva Función para parsear CSV (REUTILIZADA) ---
+        // --- Función mejorada para parsear CSV (FIX CRÍTICO) ---
         /**
-         * Convierte una cadena de texto CSV a un array de objetos JSON.
-         * Asume que la primera fila son los encabezados.
+         * Convierte una cadena de texto CSV a un array de objetos JSON de forma más robusta.
+         * Maneja comillas dobles y campos vacíos al final o en medio.
          * @param {string} csvText - La cadena de texto del archivo CSV.
          * @returns {Array<Object>} Array de objetos donde cada objeto es una fila.
          */
         function parseCSV(csvText) {
+            // Utiliza un regex que coincide con:
+            // 1. Un valor entre comillas dobles ("value")
+            // 2. O un valor sin comas internas y sin comillas dobles
+            // Y captura todo lo que no es una coma o una nueva línea, respetando los campos vacíos.
             const lines = csvText.split('\n').filter(line => line.trim() !== '');
-            if (lines.length === 0) return [];
+            if (lines.length < 2) return [];
 
-            // Simple parser: usa comas como delimitador, maneja comillas para valores con comas internas.
-            const headers = lines[0].match(/(?:\"[^\"]*\"|[^,])+/g).map(h => h.trim().replace(/"/g, ''));
+            // Extraer encabezados de forma segura
+            const headerLine = lines[0];
+            // Regex para dividir por comas, respetando las comillas
+            const headerRegex = /(".*?"|[^,]+)(?=\s*,|\s*$)/g;
+            const headers = (headerLine.match(headerRegex) || []).map(h => h.trim().replace(/"/g, ''));
+
             const result = [];
 
             for (let i = 1; i < lines.length; i++) {
-                // Función para manejar la división de líneas con comillas
-                const values = lines[i].match(/(?:\"[^\"]*\"|[^,])+/g) || [];
-                const obj = {};
+                const line = lines[i];
+                if (line.trim() === '') continue;
 
-                for (let j = 0; j < headers.length; j++) {
-                    let value = values[j] ? values[j].trim() : '';
-                    // Eliminar comillas alrededor si existen
-                    if (value.startsWith('"') && value.endsWith('"')) {
-                        value = value.substring(1, value.length - 1).trim();
+                // Patrón para capturar campos, incluyendo campos vacíos:
+                // Captura el valor entre comillas, o el valor que no tiene coma, o una cadena vacía entre comas.
+                const values = [];
+                let match;
+                const valueRegex = /(".*?"|[^,]*)(?:,|$)/g;
+                
+                while (match = valueRegex.exec(line)) {
+                    // Si el grupo de captura no es nulo y no estamos al final de la línea después de una coma
+                    if (match[1] !== undefined) {
+                        let value = match[1].trim();
+                        // Eliminar comillas alrededor si existen
+                        if (value.startsWith('"') && value.endsWith('"')) {
+                            value = value.substring(1, value.length - 1).trim();
+                        }
+                        values.push(value);
                     }
-                    // Utilizamos los encabezados como nombres de propiedades (keys)
-                    obj[headers[j]] = value;
+                    // Detener si es el final de la línea y el último campo está vacío
+                    if (valueRegex.lastIndex === line.length && line.endsWith(',')) {
+                        values.push('');
+                        break;
+                    }
+                    if (valueRegex.lastIndex === line.length) break;
                 }
                 
-                // Solo añadir si no es una fila vacía
-                if (Object.values(obj).some(v => v !== '' && v !== null)) { 
+                // Asegurar que el número de valores sea el mismo que el de encabezados
+                const obj = {};
+                for (let j = 0; j < headers.length; j++) {
+                    obj[headers[j]] = values[j] !== undefined ? values[j] : '';
+                }
+
+                // Solo añadir si tiene algún valor en los campos principales (nombre, curp, email)
+                if (obj[headers[0]] && obj[headers[0]].trim() !== '') { 
                     result.push(obj);
                 }
             }
             return result;
         }
 
-
-        // --- Funciones de Carga de Datos desde GitHub (MODIFICADA PARA USAR parseCSV EN TODOS) ---
+        // --- Funciones de Carga de Datos desde GitHub (SIN CAMBIOS, usa la nueva parseCSV) ---
         async function loadExternalData() {
             try {
                 // Función auxiliar para cargar y parsear cualquier CSV
@@ -273,11 +301,16 @@
                 
                 // Crear el mapa de búsqueda para autocompletado/validación
                 DOCENTES_MAP = docentesData.reduce((acc, doc) => {
+                    // Mapeo por Nombre Completo
                     const nombreUpper = (doc.NombreCompleto || '').toUpperCase();
-                    // Los campos deben coincidir con los encabezados del CSV de docentes
-                    if (doc.Curp) acc[doc.Curp.toUpperCase()] = doc;
-                    if (doc.Email) acc[doc.Email.toLowerCase()] = doc;
                     if (nombreUpper) acc[nombreUpper] = doc;
+                    
+                    // Mapeo por CURP (si existe)
+                    if (doc.Curp && doc.Curp.trim() !== '') acc[doc.Curp.toUpperCase()] = doc;
+                    
+                    // Mapeo por Email (si existe)
+                    if (doc.Email && doc.Email.trim() !== '') acc[doc.Email.toLowerCase()] = doc;
+                    
                     return acc;
                 }, {});
 
@@ -307,7 +340,7 @@
         }
 
 
-        // --- Funciones de Autocompletado y Utilidad (RESTO DE LA LÓGICA NO CAMBIA) ---
+        // --- Funciones de Autocompletado y Utilidad (MODIFICADO AQUÍ) ---
 
         // Función para poblar la lista de autocompletado de docentes
         function populateDocentesDatalist() {
@@ -326,49 +359,71 @@
         // Función para autocompletar campos cuando se selecciona un docente
         window.autofillDocente = function(selectedName) {
             const upperName = selectedName.toUpperCase();
-            const docente = DOCENTES_MAP[upperName];
+            // Buscar por nombre
+            const docente = DOCENTES_LIST.find(doc => (doc.NombreCompleto || '').toUpperCase() === upperName);
             
             if (docente) {
-                // Autocompletar campos de identificación
-                document.getElementById('curp').value = (docente.Curp || '').toUpperCase();
-                document.getElementById('email').value = (docente.Email || '').toLowerCase();
+                const curpField = document.getElementById('curp');
+                const emailField = document.getElementById('email');
+
+                // Autocompletar y bloquear si el valor existe en el CSV
+                const curpValue = (docente.Curp || '').toUpperCase().trim();
+                const emailValue = (docente.Email || '').toLowerCase().trim();
                 
-                // Autocompletar Departamento (El campo queda activo para selección)
+                curpField.value = curpValue;
+                emailField.value = emailValue;
+                
+                // Solo deshabilitar el campo si tiene un valor que vino del CSV
+                setFieldDisabled(curpField, curpValue !== '');
+                setFieldDisabled(emailField, emailValue !== '');
+                
+                // Si la columna 'Departamento' existe en el CSV de Docentes, la usamos (aunque tu CSV no la tiene)
                 const departamentoSelect = document.getElementById('departamento');
-                // IMPORTANTE: Asegurar que el valor autocompletado exista en las opciones del select.
-                // Si el valor no existe, el select volverá a la primera opción, que es el placeholder.
-                departamentoSelect.value = docente.Departamento || ''; 
+                if (docente.Departamento && departamentoSelect) { 
+                    departamentoSelect.value = docente.Departamento || ''; 
+                } 
                 
-                // Deshabilitar solo CURP y Email (Identificadores únicos)
-                setPersonalInfoFieldsDisabled(true);
             } else {
-                // Si el nombre no coincide, habilitar todos los campos 
-                setPersonalInfoFieldsDisabled(false);
+                // Si el nombre no coincide, habilitar todos los campos de identificación (quitar bloqueo)
+                setFieldDisabled(document.getElementById('curp'), false);
+                setFieldDisabled(document.getElementById('email'), false);
             }
             
             // Asegurar que el campo de Nombre Completo siempre esté en mayúsculas
             document.getElementById('nombreCompleto').value = upperName;
         }
 
+        /**
+         * Aplica o quita el estado de readOnly y el estilo de deshabilitado a un campo.
+         * @param {HTMLElement} field - El elemento de input.
+         * @param {boolean} isDisabled - True para bloquear, False para habilitar.
+         */
+        function setFieldDisabled(field, isDisabled) {
+             if (field) { 
+                field.readOnly = isDisabled;
+                if (isDisabled) {
+                    field.classList.add('input-disabled');
+                } else {
+                    field.classList.remove('input-disabled');
+                }
+            }
+        }
 
         // Función para habilitar/deshabilitar campos de información personal
         function setPersonalInfoFieldsDisabled(isDisabled) {
             
-            // Campos que DEBEN bloquearse al encontrar al docente: CURP y Email.
-            const fieldsToLock = [
-                document.getElementById('curp'),
-                document.getElementById('email')
-            ];
-            
+            // Campos que DEBEN bloquearse al tener cursos registrados: CURP y Email.
+            // Esto asegura que el mismo docente envíe todos los cursos.
+            const curpField = document.getElementById('curp');
+            const emailField = document.getElementById('email');
+
             // Itera sobre los campos de input (CURP, Email)
-            fieldsToLock.forEach(field => {
-                if (field) { 
-                    field.readOnly = isDisabled;
-                    if (isDisabled) {
-                        field.classList.add('input-disabled');
-                    } else {
-                        field.classList.remove('input-disabled');
-                    }
+            [curpField, emailField].forEach(field => {
+                // Solo bloquear si tiene contenido. Si el contenido está vacío (porque vino vacío del CSV), 
+                // entonces forzamos la NO desactivación para que el usuario pueda escribir.
+                if (field) {
+                    const shouldBeReadOnly = isDisabled && field.value.trim() !== '';
+                    setFieldDisabled(field, shouldBeReadOnly);
                 }
             });
             
@@ -531,7 +586,9 @@
             } else {
                 container.classList.add('hidden');
                 // Habilitar CURP y Email si no hay cursos registrados
-                setPersonalInfoFieldsDisabled(false);
+                // Esto se hace en autofillDocente() al limpiar el campo o si no se encuentra el docente
+                // Aquí solo aseguramos que no se bloqueen por el contador.
+                // La lógica de bloqueo por contenido la maneja autofillDocente y setFieldDisabled.
                 aceptarButton.textContent = 'Aceptar'; 
             }
         }
@@ -553,12 +610,16 @@
         }
         
         // Función de validación de existencia de docente
-        function validateDocenteExistence(curp, email) {
-            // Utilizamos DOCENTES_MAP que ya incluye Curp y Email en mayúsculas/minúsculas
-            if (DOCENTES_MAP[curp.toUpperCase()] || DOCENTES_MAP[email.toLowerCase()]) {
+        function validateDocenteExistence(curp, email, nombre) {
+             // Buscamos por Nombre Completo
+            const nameFound = DOCENTES_LIST.find(doc => (doc.NombreCompleto || '').toUpperCase() === nombre.toUpperCase());
+
+            if (nameFound) {
+                // Si el nombre existe, el docente es válido. 
+                // La CURP y Email deben llenarse si o si gracias al atributo 'required' en el HTML.
                 return null; // Docente encontrado
             }
-            return "Tu CURP o Correo Electrónico no fue encontrado en la base de datos de Docentes. Por favor, verifica tus datos o contacta a la administración.";
+            return "Tu Nombre Completo no fue encontrado en la base de datos de Docentes. Por favor, verifica tus datos o contacta a la administración.";
         }
 
 
@@ -661,26 +722,27 @@
 
             // 1. VALIDACIONES DE INFORMACIÓN PERSONAL 
             // Esto solo se valida si es la primera inscripción O si los campos de identificación no están bloqueados
-            if (registeredCourses.length === 0 || !document.getElementById('curp').readOnly) {
+            // O si hay un campo que debe rellenarse
+            if (registeredCourses.length === 0 || !document.getElementById('curp').readOnly || !document.getElementById('email').readOnly) {
                  // A. Validación de Email (Dominio específico)
                 if (!validateEmailDomain(currentData.email)) {
                     showModal('Error de Validación', 'El correo electrónico debe ser de dominio @itdurango.edu.mx o @gmail.com.', 'Entendido');
                     return;
                 }
                 
-                // B. Validación de Docente 
-                if (Object.keys(DOCENTES_MAP).length === 0) {
+                // B. Validación de Docente (solo se valida que el nombre exista en el DOCENTES_LIST)
+                if (DOCENTES_LIST.length === 0) {
                     showModal('Cargando Datos', 'La base de datos de docentes aún se está cargando. Por favor, espera un momento y vuelve a intentarlo.', 'Entendido');
                     return;
                 }
                 
-                const docenteError = validateDocenteExistence(currentData.curp, currentData.email);
+                const docenteError = validateDocenteExistence(currentData.curp, currentData.email, currentData.nombreCompleto);
                 if (docenteError) {
                     showModal('Acceso Denegado', docenteError, 'Entendido');
                     return;
                 }
 
-                // Si las validaciones pasan, bloqueamos CURP y Email.
+                // Si las validaciones pasan, re-bloqueamos CURP y Email si es que ya tienen un valor.
                 setPersonalInfoFieldsDisabled(true);
             }
 
@@ -794,6 +856,16 @@
 
         // Asignar listeners de cambio
         document.getElementById('curso').addEventListener('change', updateCourseDetails);
+        
+        // Al interactuar con el campo NombreCompleto, forzar el re-autocompletado/chequeo del bloqueo
+        document.getElementById('nombreCompleto').addEventListener('input', function() {
+            // Si el usuario borra el campo, debemos re-habilitar todos
+            if (this.value.trim() === '') {
+                 setFieldDisabled(document.getElementById('curp'), false);
+                 setFieldDisabled(document.getElementById('email'), false);
+            }
+        });
+
 
     </script>
 
