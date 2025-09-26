@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Inscripción de Cursos para Docentes</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 1. Cargar Babel Standalone para transpilar TSX/JSX en el navegador -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
 <script type="importmap">
 {
   "imports": {
@@ -36,7 +39,8 @@
     window.__firebase_config = JSON.stringify(firebaseConfig);
   </script>
 
-  <!-- Script principal de la aplicación (con ruta corregida) -->
-  <script type="module" src="./index.tsx"></script>
+  <!-- 2. Cambiar el tipo de script a "text/babel" y añadir presets -->
+  <!-- Esto le dice a Babel que procese este archivo antes de que el navegador lo ejecute -->
+  <script type="text/babel" data-type="module" data-presets="typescript,react" src="./index.tsx"></script>
 </body>
 </html>
