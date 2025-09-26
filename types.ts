@@ -1,32 +1,24 @@
+// Fix: Defining and exporting types required by the application.
+export interface ModalInfo {
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: 'confirm' | 'alert';
+    onConfirm?: () => void;
+    onCancel?: () => void;
+}
 
-export interface Departamento {
+export interface Course {
     id: string;
-    nombre: string;
+    name: string;
+    instructor: string;
+    schedule: string;
+    department: string;
 }
 
-export interface Docente {
-    id: string; // Corresponds to Firebase Auth UID
-    nombreCompleto: string;
-    curp: string;
-    email: string;
-    genero: 'Masculino' | 'Femenino' | 'Otro';
-    departamentoId: string;
-}
-
-export interface Curso {
-    id: string;
-    nombre: string;
-    fecha: string; // Using string for simplicity, can be parsed
-    horario: string;
-    tipo: 'Presencial' | 'En línea' | 'Híbrido';
-    idCurso: number; // The 'XX' part for the registration ID
-}
-
-export interface Inscripcion {
-    id: string; // Firestore document ID
-    docenteId: string;
-    cursoId: string;
-    idRegistro: string; // The unique 'TNM-054-XX-2026-WW' ID
-    fechaInscripcion: any; // Firestore Timestamp
-    curso?: Curso; // Optional: populated for 'My Courses' view
+export interface RegistrationData {
+    teacherName: string;
+    rfc: string;
+    department: string;
+    selectedCourses: Course[];
 }

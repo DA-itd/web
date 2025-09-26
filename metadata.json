@@ -1,5 +1,5 @@
 {
-  "name": "Sistema de Inscripción de Cursos de Actualización  Docente",
-  "description": "Una aplicación web para que los docentes se inscriban en cursos de formación. Gestiona la autenticación, el registro de docentes, la visualización de cursos y las inscripciones, interactuando con una base de datos de Firestore.",
+  "name": "ITD Teacher Course Registration",
+  "description": "An application for teachers at the Instituto Tecnologico de Durango to register for professional development courses. The app features autocompletion for teacher data, multi-course registration, and schedule validation.",
   "requestFramePermissions": []
 }
