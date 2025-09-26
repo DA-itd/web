@@ -26,6 +26,11 @@
         .course-option-group-1 { background-color: #ebf8ff; /* blue-50 */ }
         .course-option-group-2 { background-color: #e0e7ff; /* indigo-50 */ }
         .course-option-group-3 { background-color: #ffe6e6; /* red-50 (opcional) */ }
+        /* Clases para deshabilitar la entrada de texto */
+        .input-disabled {
+            background-color: #f3f4f6;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
@@ -43,9 +48,14 @@
             </div>
         </div>
         
+        <!-- Mensaje de Carga -->
+        <div id="loadingMessage" class="p-4 bg-yellow-100 text-yellow-800 rounded-xl text-center font-semibold mb-4">
+            Cargando datos de cursos y docentes desde GitHub...
+        </div>
+
         <!-- Formulario -->
         <!-- La URL del action debe ser el endpoint de tu Google Apps Script para registrar la inscripción -->
-        <form id="registroForm" class="space-y-6" action="https://script.google.com/macros/s/AKfycbyxWZVL33x5pXJQ01Bug4ALTVT43xSSBzoZr1D5A58wlU4Tnvxj9AomY/exec" method="POST">
+        <form id="registroForm" class="space-y-6 hidden" action="https://script.google.com/macros/s/AKfycbyxWZVL33x5pXJQ01Bug4ALTVT43xSSBzoZr1D5A58wlU4Tnvxj9AomY/exec" method="POST">
             
             <!-- Campos de Información Personal -->
             <div id="personalInfoFields" class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border rounded-xl bg-blue-50/50">
@@ -91,8 +101,8 @@
                     <label for="departamento" class="block text-sm font-medium text-gray-700">Departamento</label>
                     <select id="departamento" name="departamento" required 
                             class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Selecciona un departamento</option>
-                        <!-- Opciones pobladas desde la lista actualizada de departamentos -->
+                        <option value="">Cargando departamentos...</option>
+                        <!-- Opciones pobladas desde GitHub -->
                     </select>
                 </div>
             </div>
@@ -107,8 +117,8 @@
                     <select id="curso" name="cursoSeleccionado" required 
                             class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
                             onchange="updateCourseDetails()">
-                        <option value="">Selecciona un curso</option>
-                        <!-- Opciones pobladas desde la lista actualizada de cursos -->
+                        <option value="">Cargando cursos...</option>
+                        <!-- Opciones pobladas desde GitHub con colores -->
                     </select>
                 </div>
 
@@ -175,43 +185,15 @@
 
     <!-- JavaScript con Datos y Lógica -->
     <script>
-        // ATENCIÓN: Estos datos han sido extraídos de las hojas de Google que proporcionaste.
-        // Para que la aplicación lea los datos dinámicamente cada vez que actualices el Google Sheet,
-        // necesitarías implementar y desplegar un Google Apps Script para que actúe como API de lectura.
+        // URLs de los archivos JSON en GitHub
+        const COURSES_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/cursos.json';
+        const DEPARTMENTS_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/departamento.json';
+        const DOCENTES_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/docentes.json';
         
-        const DEPARTMENTS = [
-            "DEPARTAMENTO DE SISTEMAS Y COMPUTACION",
-            "DEPARTAMENTO DE INGENIERÍA ELÉCTRICA Y ELECTRÓNICA",
-            "DEPARTAMENTO DE CIENCIAS ECONOMICO-ADMINISTRATIVAS",
-            "DEPARTAMENTO DE INGENIERÍA QUÍMICA-BIOQUÍMICA",
-            "DEPARTAMENTO DE CIENCIAS DE LA TIERRA",
-            "DEPARTAMENTO DE CIENCIAS BASICAS",
-            "DEPARTAMENTO DE METAL-MECÁNICA",
-            "DEPARTAMENTO DE INGENIERÍA INDUSTRIAL",
-            "DIVISION DE ESTUDIOS DE POSGRADO E INVESTIGACION",
-            "ADMINISTRATIVO",
-            "EXTERNO"
-        ];
-
-        // Lista de Cursos actualizada con todos los detalles de las hojas de Google
-        const COURSES = [
-            { id: 1, name: "CONOCIENDO REGLAMENTOS Y LINEAMIENTOS: UNA PAUTA PARA EL DESARROLLO DOCENTE Y PERFIL DESEABLE", date: "DEL 13 AL 17 DE ENERO DEL 2026", period: "PERIODO_1", hours: 30, location: "A4", schedule: "9:00 a 15:00 hrs" },
-            { id: 2, name: "PYTHON BÁSICO", date: "DEL 13 AL 17 DE ENERO DEL 2026", period: "PERIODO_1", hours: 30, location: "Edifcio O", schedule: "9:00 a 15:00 hrs" },
-            { id: 3, name: "MANTENIMIENTO CORRECTIVO FRESA CNC DYNA MYTE", date: "DEL 13 AL 17 DE ENERO DEL 2026", period: "PERIODO_1", hours: 30, location: "Lab. de Electrica", schedule: "9:00 a 15:00 hrs" },
-            { id: 4, name: "HERRAMIENTAS DE INTELIGENCIA ARTIFICIAL GENERATIVA", date: "DEL 13 AL 17 DE ENERO DEL 2026", period: "PERIODO_1", hours: 30, location: "Lab. de Elen", schedule: "9:00 a 15:00 hrs" },
-            { id: 5, name: "METODOLOGÍA DE EDUCACIÓN VIRTUAL /ITDED", date: "DEL 13 AL 17 DE ENERO DEL 2026", period: "PERIODO_1", hours: 30, location: "Centro de Información Sala A", schedule: "9:00 a 15:00 hrs" },
-            { id: 6, name: "BÚSQUEDA Y RESCATE", date: "DEL 13 AL 17 DE ENERO DEL 2026", period: "PERIODO_1", hours: 30, location: "UPIDET", schedule: "9:00 a 15:00 hrs" },
-            // Asumiendo que ESTANDARIZACIÓN... se completa con el primer grupo.
-            
-            { id: 7, name: "ESTRATEGIAS PARA EL DESARROLLO Y MEJORA DEL LABORATORIO DE INGENIERÍA CIVIL", date: "DEL 20 AL 24 DE ENERO DEL 2026", period: "PERIODO_2", hours: 30, location: "Lab. de Elen", schedule: "9:00 a 15:00 hrs" },
-            { id: 8, name: "MARCO DE REFERENCIA CACEI 2025, PARA LA ACREDITACIÓN DE INGENIERÍA QUÍMICA PARTE II", date: "DEL 20 AL 24 DE ENERO DEL 2026", period: "PERIODO_2", hours: 30, location: "Centro de Información Sala A", schedule: "9:00 a 15:00 hrs" },
-            { id: 9, name: "DISEÑO DE PROCESOS TÉRMICOS EN ALIMENTOS DE BAJA ACIDEZ", date: "DEL 20 AL 24 DE ENERO DEL 2026", period: "PERIODO_2", hours: 30, location: "UPIDET", schedule: "9:00 a 15:00 hrs" },
-            { id: 10, name: "INGLES BÁSICO I", date: "DEL 20 AL 24 DE ENERO DEL 2026", period: "PERIODO_2", hours: 30, location: "Centro de Innovación", schedule: "9:00 a 15:00 hrs" },
-            { id: 11, name: "DISEÑO DE PLANES DE FORMACIÓN DUAL", date: "DEL 20 AL 24 DE ENERO DEL 2026", period: "PERIODO_2", hours: 30, location: "Ed. Quimica-Bioqumica", schedule: "9:00 a 15:00 hrs" },
-            
-            // Asumiendo que hay un tercer periodo de cursos basado en datos parciales.
-            { id: 12, name: "HERRAMIENTAS Y ESTRATEGIAS PARA EL ACOMPAÑAMIENTO ACADÉMICO EN INGENIERÍA MECÁNICA Y MECATRÓNICA", date: "DEL 27 AL 31 DE ENERO DEL 2026", period: "PERIODO_3", hours: 30, location: "Lab. Meca", schedule: "9:00 a 15:00 hrs" },
-        ];
+        // Variables globales para almacenar los datos cargados
+        let COURSES = [];
+        let DEPARTMENTS = [];
+        let DOCENTES = {}; // Usaremos un objeto para búsqueda rápida por CURP/Email
 
         let registeredCourses = JSON.parse(localStorage.getItem('registeredCourses')) || [];
         const form = document.getElementById('registroForm');
@@ -219,6 +201,46 @@
         const personalInfoFields = document.getElementById('personalInfoFields');
         const successMessage = document.getElementById('successMessage');
         const courseDetailsBlock = document.getElementById('courseDetailsBlock');
+        const loadingMessage = document.getElementById('loadingMessage');
+
+        // --- Funciones de Carga de Datos desde GitHub ---
+        async function loadExternalData() {
+            try {
+                // 1. Cargar Cursos
+                const coursesResponse = await fetch(COURSES_URL);
+                COURSES = await coursesResponse.json();
+
+                // 2. Cargar Departamentos
+                const departmentsResponse = await fetch(DEPARTMENTS_URL);
+                // Asumiendo que departamento.json es un array de strings o de objetos con NombreDepartamento
+                const deptData = await departmentsResponse.json();
+                DEPARTMENTS = deptData.map(d => d.NombreDepartamento || d); // Extraer solo el nombre
+
+                // 3. Cargar Docentes (para validación)
+                const docentesResponse = await fetch(DOCENTES_URL);
+                const docentesData = await docentesResponse.json();
+                
+                // Convertir la lista de docentes a un mapa para búsquedas rápidas por CURP y Email
+                DOCENTES = docentesData.reduce((acc, doc) => {
+                    if (doc.Curp) acc[doc.Curp.toUpperCase()] = doc;
+                    if (doc.Email) acc[doc.Email.toLowerCase()] = doc;
+                    return acc;
+                }, {});
+
+                // Inicializar la interfaz después de la carga exitosa
+                populateDropdowns();
+                renderRegisteredCourses();
+                updateCourseDetails(); 
+                loadingMessage.classList.add('hidden');
+                form.classList.remove('hidden');
+
+            } catch (error) {
+                console.error("Error al cargar los datos desde GitHub:", error);
+                loadingMessage.textContent = "Error al cargar los datos. Por favor, recarga la página.";
+                loadingMessage.classList.add('bg-red-100', 'text-red-800');
+            }
+        }
+
 
         // --- Funciones de Utilidad ---
 
@@ -226,6 +248,9 @@
         function populateDropdowns() {
             const departamentoSelect = document.getElementById('departamento');
             const cursoSelect = document.getElementById('curso');
+            
+            departamentoSelect.innerHTML = '<option value="">Selecciona un departamento</option>';
+            cursoSelect.innerHTML = '<option value="">Selecciona un curso</option>';
 
             // 1. Departamentos
             DEPARTMENTS.forEach(dept => {
@@ -237,10 +262,10 @@
 
             // 2. Cursos
             const coursesByDate = COURSES.reduce((acc, course) => {
-                if (!acc[course.date]) {
-                    acc[course.date] = [];
+                if (!acc[course.FechaVisible]) {
+                    acc[course.FechaVisible] = [];
                 }
-                acc[course.date].push(course);
+                acc[course.FechaVisible].push(course);
                 return acc;
             }, {});
 
@@ -252,15 +277,14 @@
 
                 coursesByDate[date].forEach(curso => {
                     const option = document.createElement('option');
-                    option.value = curso.name;
-                    option.textContent = `${curso.name}`;
-                    option.dataset.courseId = curso.id; 
+                    option.value = curso.NombreCurso;
+                    option.textContent = `${curso.NombreCurso}`;
                     optgroup.appendChild(option);
                 });
                 cursoSelect.appendChild(optgroup);
 
-                // Alternar el color del grupo
-                groupIndex = groupIndex % 3 + 1; // Alterna entre 1, 2, 3
+                // Alternar el color del grupo (1, 2, 3)
+                groupIndex = groupIndex % 3 + 1; 
             }
         }
 
@@ -268,18 +292,19 @@
         function updateCourseDetails() {
             const cursoSelect = document.getElementById('curso');
             const selectedCourseName = cursoSelect.value;
-            const curso = COURSES.find(c => c.name === selectedCourseName);
+            // Buscar el curso por el nombre (NombreCurso)
+            const curso = COURSES.find(c => c.NombreCurso === selectedCourseName); 
 
             if (curso) {
                 // Actualizar los inputs hidden para el envío del formulario
-                document.getElementById('fechaVisible').value = curso.date;
-                document.getElementById('lugar').value = curso.location;
-                document.getElementById('horario').value = curso.schedule;
+                document.getElementById('fechaVisible').value = curso.FechaVisible;
+                document.getElementById('lugar').value = curso.Lugar;
+                document.getElementById('horario').value = curso.Horario;
 
                 // Actualizar los detalles visibles
-                document.getElementById('detailFechaVisible').textContent = curso.date;
-                document.getElementById('detailLugar').textContent = curso.location;
-                document.getElementById('detailHorario').textContent = curso.schedule;
+                document.getElementById('detailFechaVisible').textContent = curso.FechaVisible;
+                document.getElementById('detailLugar').textContent = curso.Lugar;
+                document.getElementById('detailHorario').textContent = curso.Horario;
                 courseDetailsBlock.classList.remove('hidden');
 
             } else {
@@ -297,20 +322,21 @@
             const container = document.getElementById('registeredCoursesContainer');
             list.innerHTML = '';
             
+            const fields = personalInfoFields.querySelectorAll('input, select');
+            
             if (registeredCourses.length > 0) {
                 container.classList.remove('hidden');
                 registeredCourses.forEach((reg, index) => {
                     const li = document.createElement('li');
-                    li.innerHTML = `<strong>${reg.name}</strong> (${reg.date} | ${reg.schedule}) 
+                    li.innerHTML = `<strong>${reg.cursoSeleccionado}</strong> (${reg.fechaVisible} | ${reg.horario}) 
                                     <button onclick="removeCourse(${index})" class="ml-2 text-red-500 hover:text-red-700 text-xs font-bold transition duration-150">BORRAR</button>`;
                     list.appendChild(li);
                 });
                 
                 // Deshabilitar campos de información personal después del primer registro
-                const fields = personalInfoFields.querySelectorAll('input, select');
                 fields.forEach(field => {
                     field.readOnly = true;
-                    field.classList.add('bg-gray-100');
+                    field.classList.add('input-disabled');
                 });
 
                 if (registeredCourses.length >= 3) {
@@ -322,10 +348,9 @@
             } else {
                 container.classList.add('hidden');
                 // Habilitar campos si no hay cursos registrados
-                const fields = personalInfoFields.querySelectorAll('input, select');
                 fields.forEach(field => {
                     field.readOnly = false;
-                    field.classList.remove('bg-gray-100');
+                    field.classList.remove('input-disabled');
                 });
                 aceptarButton.textContent = 'Aceptar'; 
             }
@@ -341,32 +366,45 @@
         }
         window.removeCourse = removeCourse; 
 
-        // Función de validación de correo electrónico
-        function validateEmail(email) {
+        // Función de validación de correo electrónico de dominio ITD/Gmail
+        function validateEmailDomain(email) {
             const regex = /^[a-zA-Z0-9._%+-]+@((itdurango\.edu\.mx)|(gmail\.com))$/i;
             return regex.test(email);
         }
+        
+        // Función de validación de existencia de docente
+        function validateDocenteExistence(curp, email) {
+            if (DOCENTES[curp.toUpperCase()]) {
+                return null; // Docente encontrado por CURP
+            }
+            if (DOCENTES[email.toLowerCase()]) {
+                return null; // Docente encontrado por Email
+            }
+            return "Tu CURP o Correo Electrónico no fue encontrado en la base de datos de Docentes. Por favor, verifica tus datos o contacta a la administración.";
+        }
+
 
         // Función de validación de traslape
         function checkOverlap(newCourseName) {
-            const newCourseData = COURSES.find(c => c.name === newCourseName);
+            // Buscar el curso por el nombre (NombreCurso)
+            const newCourseData = COURSES.find(c => c.NombreCurso === newCourseName);
             if (!newCourseData) return null;
 
-            // Regla: Curso ya en la lista
-            if (registeredCourses.some(reg => reg.name === newCourseData.name)) {
-                return `El curso "${newCourseData.name}" ya está en tu lista de inscripciones temporales.`;
+            // Regla 1: Curso ya en la lista
+            if (registeredCourses.some(reg => reg.cursoSeleccionado === newCourseData.NombreCurso)) {
+                return `El curso "${newCourseData.NombreCurso}" ya está en tu lista de inscripciones temporales.`;
             }
 
-            // Regla: No empalme de Fecha y Horario
+            // Regla 2: No empalme de Fecha y Horario
             const overlap = registeredCourses.find(reg => 
-                reg.date === newCourseData.date && reg.schedule === newCourseData.schedule
+                reg.fechaVisible === newCourseData.FechaVisible && reg.horario === newCourseData.Horario
             );
             
             if (overlap) {
-                return `El curso se empalma con "${overlap.name}", que tiene la misma fecha y horario (${overlap.date} | ${overlap.schedule}).`;
+                return `El curso se empalma con "${overlap.cursoSeleccionado}", que tiene la misma fecha y horario (${overlap.fechaVisible} | ${overlap.horario}).`;
             }
 
-            // Regla: Máximo 3 cursos
+            // Regla 3: Máximo 3 cursos
             if (registeredCourses.length >= 3) {
                 return "Has alcanzado el límite máximo de 3 cursos.";
             }
@@ -374,7 +412,7 @@
             return null; // No hay errores
         }
         
-        // Función para mostrar el modal
+        // Funciones de Modal
         function showModal(title, message, buttonText, actionFunction = null) {
             const modal = document.getElementById('customModal');
             document.getElementById('modalTitle').textContent = title;
@@ -392,11 +430,9 @@
                 }
             };
             buttonsContainer.appendChild(acceptButton);
-
             modal.classList.add('modal-active');
         }
 
-        // Función para mostrar el modal de confirmación de otro curso
         function showConfirmModal(nextStepFunction) {
             const modal = document.getElementById('customModal');
             document.getElementById('modalTitle').textContent = 'Curso Agregado';
@@ -404,30 +440,26 @@
             const buttonsContainer = document.getElementById('modalButtons');
             buttonsContainer.innerHTML = '';
 
-            // Botón: No, finalizar registro
             const finishButton = document.createElement('button');
             finishButton.textContent = 'No, finalizar registro';
             finishButton.className = 'px-4 py-2 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition duration-150';
             finishButton.onclick = () => {
                 hideModal();
-                nextStepFunction(true); // Indica que es el final
+                nextStepFunction(true); 
             };
             buttonsContainer.appendChild(finishButton);
 
-            // Botón: Sí, agregar otro curso
             const continueButton = document.createElement('button');
             continueButton.textContent = 'Sí, agregar otro curso';
             continueButton.className = 'px-4 py-2 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition duration-150';
             continueButton.onclick = () => {
                 hideModal();
-                nextStepFunction(false); // Indica que no es el final
+                nextStepFunction(false); 
             };
             buttonsContainer.appendChild(continueButton);
-
             modal.classList.add('modal-active');
         }
 
-        // Función para ocultar el modal
         function hideModal() {
             document.getElementById('customModal').classList.remove('modal-active');
         }
@@ -447,11 +479,21 @@
             const formData = new FormData(form);
             const currentData = Object.fromEntries(formData.entries());
 
-            // 1. Validación de Email (Dominio específico)
-            if (!validateEmail(currentData.email)) {
-                showModal('Error de Validación', 'El correo electrónico debe ser de dominio @itdurango.edu.mx o @gmail.com.', 'Entendido');
-                return;
+            // 1. VALIDACIONES DE INFORMACIÓN PERSONAL (Solo en el primer curso)
+            if (registeredCourses.length === 0) {
+                 // A. Validación de Email (Dominio específico)
+                if (!validateEmailDomain(currentData.email)) {
+                    showModal('Error de Validación', 'El correo electrónico debe ser de dominio @itdurango.edu.mx o @gmail.com.', 'Entendido');
+                    return;
+                }
+                // B. Validación de Docente en la base de datos de docentes.json
+                const docenteError = validateDocenteExistence(currentData.curp, currentData.email);
+                if (docenteError) {
+                    showModal('Acceso Denegado', docenteError, 'Entendido');
+                    return;
+                }
             }
+
             
             // Si ya tiene 3 cursos y presiona ACEPTAR, es para FINALIZAR el registro
             if (registeredCourses.length >= 3) {
@@ -467,12 +509,19 @@
             }
             
             // 3. Agregar curso a la lista temporal
-            const courseDetails = COURSES.find(c => c.name === currentData.cursoSeleccionado);
+            const courseDetails = COURSES.find(c => c.NombreCurso === currentData.cursoSeleccionado);
             
+            // Estructura de datos para guardar en la lista temporal
             registeredCourses.push({
-                ...currentData,
-                date: courseDetails.date,
-                schedule: courseDetails.schedule
+                nombreCompleto: currentData.nombreCompleto,
+                curp: currentData.curp,
+                email: currentData.email,
+                genero: currentData.genero,
+                departamento: currentData.departamento,
+                cursoSeleccionado: currentData.cursoSeleccionado,
+                fechaVisible: courseDetails.FechaVisible,
+                lugar: courseDetails.Lugar,
+                horario: courseDetails.Horario
             });
             localStorage.setItem('registeredCourses', JSON.stringify(registeredCourses));
             renderRegisteredCourses();
@@ -483,15 +532,12 @@
 
             // 4. Determinar siguiente paso: ¿Añadir otro o finalizar?
             if (registeredCourses.length >= 3) {
-                // Límite alcanzado, pasar a la función de envío final
                 showModal('Límite Alcanzado', 'Has alcanzado el máximo de 3 cursos. Procede al envío final.', 'Continuar', startFinalSubmission);
             } else {
-                // Preguntar si desea otro curso
                 showConfirmModal((isFinal) => {
                     if (isFinal) {
                         startFinalSubmission();
                     } 
-                    // Si no es final, la app se queda esperando la siguiente selección de curso.
                 });
             }
         });
@@ -517,7 +563,7 @@
                     // Crear un FormData para el envío individual
                     const individualFormData = new FormData();
                     for (const key in courseData) {
-                        // Asegurar que el nombre completo siempre esté en mayúsculas al enviar
+                         // Asegurar que nombre y CURP estén en mayúsculas al enviar
                         if (key === 'nombreCompleto' || key === 'curp') {
                             individualFormData.append(key, courseData[key].toUpperCase());
                         } else {
@@ -525,7 +571,6 @@
                         }
                     }
                     
-                    // La URL de acción del formulario debe ser el endpoint de tu Apps Script
                     const response = await fetch(form.action, {
                         method: 'POST',
                         body: individualFormData,
@@ -536,7 +581,7 @@
                     console.log(`Envío de curso ${i + 1} completado.`);
 
                 } catch (error) {
-                    console.error("Error al enviar el curso:", courseData.name, error);
+                    console.error("Error al enviar el curso:", courseData.cursoSeleccionado, error);
                 }
             }
             
@@ -556,33 +601,10 @@
         }
 
         // --- Inicialización ---
-        window.onload = function() {
-            populateDropdowns();
-            renderRegisteredCourses();
-            updateCourseDetails(); 
-            
-            // Asignar el listener de cambio para actualizar detalles
-            document.getElementById('curso').addEventListener('change', updateCourseDetails);
+        window.onload = loadExternalData;
 
-            // Escuchar el cambio en el formulario para deshabilitar/habilitar campos personales
-            form.addEventListener('change', () => {
-                const fields = personalInfoFields.querySelectorAll('input, select');
-                if (registeredCourses.length > 0) {
-                    fields.forEach(field => {
-                        field.readOnly = true;
-                        field.classList.add('bg-gray-100');
-                    });
-                } else {
-                    fields.forEach(field => {
-                        field.readOnly = false;
-                        field.classList.remove('bg-gray-100');
-                    });
-                }
-            });
-
-            // Forzar la validación de readOnly al inicio
-            renderRegisteredCourses();
-        };
+        // Asignar listeners de cambio
+        document.getElementById('curso').addEventListener('change', updateCourseDetails);
 
     </script>
 
