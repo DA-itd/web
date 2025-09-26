@@ -1,32 +1,100 @@
-// Fix: Implementing a mock data service to provide course data and handle form submissions.
-import { Course, RegistrationData } from '../types';
+import { Course, Docente } from '../types';
 
-const courses: Course[] = [
-    { id: 'C1', name: 'Inteligencia Artificial Aplicada', instructor: 'Dr. Juan Pérez', schedule: 'L-V 9:00-11:00', department: 'Sistemas y Computación' },
-    { id: 'C2', name: 'Nuevas Tecnologías en la Enseñanza', instructor: 'Dra. María García', schedule: 'L-M-V 11:00-13:00', department: 'Ciencias Básicas' },
-    { id: 'C3', name: 'Desarrollo de Habilidades Blandas', instructor: 'Lic. Carlos Rodríguez', schedule: 'M-J 16:00-18:00', department: 'Todas las áreas' },
-    { id: 'C4', name: 'Gestión de Proyectos Educativos', instructor: 'Ing. Ana López', schedule: 'S 9:00-14:00', department: 'Ciencias Económico-Administrativas' },
-];
+// URLs de los archivos de datos en GitHub
+const COURSES_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/cursos.csv';
+const DEPARTMENTS_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/departamentos.csv';
+const DOCENTES_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/docentes.csv';
+export const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyxWZVL33x5pXJQ01Bug4ALTVT43xSSBzoZr1D5A58wlU4Tnvxj9AomY/exec';
 
-export const getCourses = async (): Promise<Course[]> => {
-    // Simulate API call
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(courses);
-        }, 500);
-    });
+
+/**
+ * Normaliza un string: convierte a mayúsculas, recorta espacios, y elimina acentos.
+ */
+export function normalizeString(str: string | undefined | null): string {
+    if (!str) return '';
+    return String(str)
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, "")
+        .toUpperCase()
+        .trim();
+}
+
+/**
+ * Parsea texto CSV a un array de objetos. Es flexible con el número de columnas y asume una fila de encabezado.
+ */
+function parseCSV<T>(csvText: string, expectedColumns: (keyof T)[]): T[] {
+    const lines = csvText.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
+    if (lines.length < 2) return []; // Necesita al menos un encabezado y una línea de datos
+
+    const dataLines = lines.slice(1); // Omitir la fila del encabezado
+    const separatorRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+    const result: T[] = [];
+
+    for (const line of dataLines) {
+        let values = line.split(separatorRegex);
+
+        const obj = {} as T;
+        for (let j = 0; j < expectedColumns.length; j++) {
+            let val = (values[j] || '').trim();
+            // Limpiar comillas
+            if (val.startsWith('"') && val.endsWith('"')) {
+                val = val.substring(1, val.length - 1).replace(/""/g, '"');
+            }
+            obj[expectedColumns[j]] = val as any;
+        }
+        result.push(obj);
+    }
+    return result;
+}
+
+
+async function fetchAndParseCSV<T>(url: string, columns: (keyof T)[]): Promise<T[]> {
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Fallo al cargar la URL: ${url} (Estado: ${response.status})`);
+    }
+    const csvText = await response.text();
+    return parseCSV(csvText, columns);
 };
 
-export const submitRegistration = async (data: RegistrationData): Promise<{ success: boolean; message: string }> => {
-    // Simulate API call
-    console.log('Submitting registration:', data);
-    return new Promise(resolve => {
-        setTimeout(() => {
-            if (data.teacherName && data.rfc && data.department && data.selectedCourses.length > 0) {
-                resolve({ success: true, message: 'Registro exitoso.' });
-            } else {
-                resolve({ success: false, message: 'Faltan datos en el formulario.' });
-            }
-        }, 1000);
-    });
+export const loadCourses = async (): Promise<Course[]> => {
+    // Columnas en el orden esperado en el archivo CSV
+    // FIX: Corrected the type of `columns` to match the generic argument `Omit<Course, 'Codigo'>` passed to `fetchAndParseCSV`.
+    const columns: (keyof Omit<Course, 'Codigo'>)[] = ['NombreCurso', 'FechaVisible', 'Lugar', 'Horario', 'Capacidad', 'Inscritos'];
+    const rawCourses = await fetchAndParseCSV<Omit<Course, 'Codigo'>>(COURSES_URL, columns);
+    
+    return rawCourses.map(c => {
+        const rawNombreCurso = c.NombreCurso || '';
+        // Regex para separar el código (primera palabra) del resto del nombre
+        const match = rawNombreCurso.match(/^(\S+)\s+(.*)$/);
+        
+        const codigo = match ? match[1] : '';
+        const nombre = match ? match[2] : rawNombreCurso; // Usar el nombre completo si no hay código
+
+        return {
+            ...c,
+            Codigo: codigo,
+            NombreCurso: nombre,
+            Capacidad: parseInt(String(c.Capacidad) || '30', 10), // Default a 30 si no se especifica
+            Inscritos: parseInt(String(c.Inscritos) || '0', 10),
+        };
+    }).filter(c => c.NombreCurso);
+};
+
+export const loadDepartments = async (): Promise<string[]> => {
+    const response = await fetch(DEPARTMENTS_URL);
+    if (!response.ok) throw new Error(`Failed to fetch departments: ${response.status}`);
+    const text = await response.text();
+    // Omitir encabezado si existe y filtrar líneas vacías
+    return text.split(/\r?\n/).slice(1).map(line => line.trim()).filter(Boolean);
+};
+
+export const loadDocentes = async (): Promise<Docente[]> => {
+    const columns: (keyof Docente)[] = ['NombreCompleto', 'Curp', 'Email'];
+    const rawDocentes = await fetchAndParseCSV<Docente>(DOCENTES_URL, columns);
+    return rawDocentes.map(doc => ({
+        NombreCompleto: normalizeString(doc.NombreCompleto),
+        Curp: normalizeString(doc.Curp),
+        Email: (doc.Email || '').toLowerCase().trim(),
+    })).filter(d => d.NombreCompleto);
 };
