@@ -13,44 +13,49 @@
         import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 
-        // Global variables for Firebase services
+        // Variables globales para los servicios de Firebase
         let db, auth;
         let currentUser;
         
-        // Use the provided global variables for Firebase configuration.
+        // Usar las variables globales proporcionadas por el entorno de desarrollo
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
+        // ** Diagnóstico: Imprimir la configuración en la consola para depuración **
+        console.log('App ID:', appId);
+        console.log('Firebase config:', firebaseConfig);
+        console.log('Initial Auth Token:', initialAuthToken);
 
-        // Initialize Firebase
+
+        // Inicializar Firebase
         function initializeFirebase() {
-            if (firebaseConfig && Object.keys(firebaseConfig).length > 0) {
+            if (firebaseConfig && firebaseConfig.apiKey && firebaseConfig.projectId) {
                 const app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
-                setLogLevel('debug'); // Enable debug logging for Firestore
-                console.log("Firebase has been initialized.");
+                setLogLevel('debug'); // Habilitar registro de depuración para Firestore
+                console.log("Firebase ha sido inicializado correctamente.");
                 return true;
             } else {
-                console.error("Firebase config is missing.");
-                showModal("Error de Configuración", "La configuración de Firebase no está disponible. Por favor, contacta al soporte.");
+                console.error("Firebase config is missing or invalid.");
+                showModal("Error de Configuración", "La configuración de Firebase no está disponible o no es válida. Por favor, contacta al soporte.");
                 return false;
             }
         }
 
-        // Authentication State Listener
+        // Oyente del estado de autenticación
         function setupAuthListener() {
             onAuthStateChanged(auth, async (user) => {
                 currentUser = user;
                 if (user) {
-                    console.log("User authenticated:", user.uid);
+                    console.log("Usuario autenticado:", user.uid);
                     updateNavbar(true);
                     loadCourses();
                     loadMyCourses();
                     showView('coursesView');
                 } else {
-                    console.log("User not authenticated.");
+                    console.log("Usuario no autenticado.");
                     updateNavbar(false);
                     showView('authView');
                 }
@@ -379,16 +384,17 @@
             try {
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
-                    console.log("Signed in with custom token.");
+                    console.log("Sesión iniciada con token personalizado.");
                 } else {
                     await signInAnonymously(auth);
+                    console.log("Sesión iniciada anónimamente.");
                 }
                 
                 // Limpiar el temporizador si la autenticación es exitosa
                 clearTimeout(timeoutId);
 
             } catch (error) {
-                console.error("Failed to sign in:", error);
+                console.error("Fallo al iniciar sesión:", error);
                 
                 // Forzar el cambio a la vista de autenticación en caso de fallo de inicio de sesión
                 showView('authView');
