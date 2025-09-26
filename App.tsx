@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'https://esm.sh/react@18.2.0';
 import { onAuthStateChanged, User } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import { auth, getDocente } from './services/firebaseService';
 import type { Docente } from './types';

@@ -9,17 +9,15 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <!--
-    ESTRATEGIA FINAL: Se abandona el uso de importmap para Firebase.
-    El código ahora importará Firebase directamente desde su CDN oficial (gstatic.com),
-    haciendo que cualquier modificación automática del servidor a este bloque sea irrelevante.
+    ESTRATEGIA FINAL: Se abandona el uso de importmap por completo.
+    El código ahora importará todas las librerías (React y Firebase) directamente
+    desde sus CDNs oficiales, haciendo que cualquier modificación automática del servidor
+    a este bloque sea irrelevante.
   -->
   <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@18.2.0",
-    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
     "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
     "react/": "https://aistudiocdn.com/react@^19.1.1/"
   }
 }
