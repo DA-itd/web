@@ -1,10 +1,10 @@
-import { initializeApp, FirebaseApp } from 'firebase/app';
+import { initializeApp, FirebaseApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { 
     getAuth, 
     Auth,
     createUserWithEmailAndPassword,
     User
-} from 'firebase/auth';
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import { 
     getFirestore, 
     Firestore,
@@ -20,7 +20,7 @@ import {
     serverTimestamp,
     deleteDoc,
     getCountFromServer
-} from 'firebase/firestore';
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 import type { Departamento, Docente, Curso, Inscripcion } from '../types';
 

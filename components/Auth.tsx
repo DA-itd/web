@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import { registerTeacher, getDepartamentos, auth } from '../services/firebaseService';
 import type { Departamento } from '../types';
 import Spinner from './common/Spinner';

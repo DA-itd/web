@@ -9,9 +9,9 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <!--
-    CORRECCIÓN FINAL: Se eliminan las rutas generales ambiguas.
-    Al usar solo rutas explícitas, se garantiza que el navegador cargue
-    los módulos de Firebase de forma correcta, resolviendo el error de inicialización.
+    ESTRATEGIA FINAL: Se abandona el uso de importmap para Firebase.
+    El código ahora importará Firebase directamente desde su CDN oficial (gstatic.com),
+    haciendo que cualquier modificación automática del servidor a este bloque sea irrelevante.
   -->
   <script type="importmap">
 {
@@ -19,15 +19,12 @@
     "react": "https://esm.sh/react@18.2.0",
     "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
     "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
-    "firebase/app": "https://esm.sh/firebase@10.12.2/app",
-    "firebase/auth": "https://esm.sh/firebase@10.12.2/auth",
-    "firebase/firestore": "https://esm.sh/firebase@10.12.2/firestore",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
-    "react/": "https://aistudiocdn.com/react@^19.1.1/",
-    "firebase/": "https://aistudiocdn.com/firebase@^12.3.0/"
+    "react/": "https://aistudiocdn.com/react@^19.1.1/"
   }
 }
 </script>
+<link rel="stylesheet" href="/index.css">
 </head>
 <body class="bg-gray-100">
   <div id="root"></div>
@@ -52,5 +49,6 @@
   <!-- 2. Cambiar el tipo de script a "text/babel" y añadir presets -->
   <!-- Esto le dice a Babel que procese este archivo antes de que el navegador lo ejecute -->
   <script type="text/babel" data-type="module" data-presets="typescript,react" src="./index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
 </body>
 </html>
