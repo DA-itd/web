@@ -9,8 +9,8 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <!--
-    CORRECCIÓN FINAL: Se eliminaron las importaciones duplicadas y conflictivas.
-    Ahora solo se usa una versión consistente de cada librería desde esm.sh.
+    CORRECCIÓN DEFINITIVA: Se predefinen las rutas generales para satisfacer
+    al sistema "AUTOFIX" y asegurar que todas las librerías se carguen desde esm.sh.
   -->
   <script type="importmap">
 {
@@ -21,13 +21,13 @@
     "firebase/app": "https://esm.sh/firebase@10.12.2/app",
     "firebase/auth": "https://esm.sh/firebase@10.12.2/auth",
     "firebase/firestore": "https://esm.sh/firebase@10.12.2/firestore",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
-    "react/": "https://aistudiocdn.com/react@^19.1.1/",
-    "firebase/": "https://aistudiocdn.com/firebase@^12.3.0/"
+
+    "react/": "https://esm.sh/react@18.2.0/",
+    "react-dom/": "https://esm.sh/react-dom@18.2.0/",
+    "firebase/": "https://esm.sh/firebase@10.12.2/"
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
 <body class="bg-gray-100">
   <div id="root"></div>
@@ -52,6 +52,5 @@
   <!-- 2. Cambiar el tipo de script a "text/babel" y añadir presets -->
   <!-- Esto le dice a Babel que procese este archivo antes de que el navegador lo ejecute -->
   <script type="text/babel" data-type="module" data-presets="typescript,react" src="./index.tsx"></script>
-<script type="module" src="/index.tsx"></script>
 </body>
 </html>
