@@ -154,6 +154,7 @@
                 const department = registerForm.registerDepartment.value;
                 
                 try {
+                    console.log("Iniciando registro para el usuario:", email);
                     const docentesRef = collection(db, 'artifacts', appId, 'public', 'data', 'docentes');
                     const q = query(docentesRef, where('curp', '==', curp));
                     const querySnapshot = await getDocs(q);
@@ -167,9 +168,11 @@
                         }
                     }
 
+                    console.log("Creando usuario en Firebase Auth...");
                     const userCredential = await createUserWithEmailAndPassword(auth, email, curp);
                     const user = userCredential.user;
 
+                    console.log("Guardando información del docente en Firestore...");
                     await setDoc(doc(docentesRef, user.uid), {
                         nombre: name,
                         curp: curp,
@@ -179,6 +182,7 @@
                         createdAt: new Date()
                     });
 
+                    console.log("Registro completado. Mostrando modal de éxito.");
                     showModal('Registro Exitoso', 'Tu cuenta ha sido creada. Ahora puedes iniciar sesión.');
                     showView('authView');
                 } catch (error) {
