@@ -360,24 +360,45 @@
         // =================================================================
         window.onload = async () => {
             showView('loadingView');
-            if (initializeFirebase()) {
+            
+            // Si la configuración no está disponible, mostrar la vista de autenticación y salir
+            if (!initializeFirebase()) {
+                showView('authView');
+                return;
+            }
+
+            // Temporizador de seguridad: si la autenticación tarda más de 5 segundos,
+            // mostrar el formulario de inicio de sesión y un mensaje de error.
+            const timeoutId = setTimeout(() => {
+                showView('authView');
+                showModal("Error de Conexión", "La conexión a la base de datos ha tardado demasiado. Por favor, intenta iniciar sesión manualmente.");
+            }, 5000); // 5 segundos
+
+            try {
                 const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
                 if (token) {
-                    try {
-                        await signInWithCustomToken(auth, token);
-                        console.log("Signed in with custom token.");
-                    } catch (error) {
-                        console.error("Failed to sign in with custom token:", error);
-                        await signInAnonymously(auth);
-                    }
+                    await signInWithCustomToken(auth, token);
+                    console.log("Signed in with custom token.");
                 } else {
                     await signInAnonymously(auth);
                 }
-                setupAuthListener();
-                setupEventListeners();
-            } else {
+                
+                // Limpiar el temporizador si la autenticación es exitosa
+                clearTimeout(timeoutId);
+
+            } catch (error) {
+                console.error("Failed to sign in:", error);
+                
+                // Forzar el cambio a la vista de autenticación en caso de fallo de inicio de sesión
                 showView('authView');
+                showModal("Error de Autenticación", "No se pudo iniciar sesión automáticamente. Por favor, inicia sesión con tus credenciales.");
+
+                // Limpiar el temporizador
+                clearTimeout(timeoutId);
             }
+            
+            setupAuthListener();
+            setupEventListeners();
         };
     </script>
     <style>
