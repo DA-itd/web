@@ -1,11 +1,13 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, FirebaseApp } from 'firebase/app';
 import { 
     getAuth, 
+    Auth,
     createUserWithEmailAndPassword,
     User
 } from 'firebase/auth';
 import { 
     getFirestore, 
+    Firestore,
     collection, 
     getDocs, 
     query, 
@@ -22,47 +24,52 @@ import {
 
 import type { Departamento, Docente, Curso, Inscripcion } from '../types';
 
-// Declara la variable global para la configuración de Firebase inyectada por el entorno.
-declare const __firebase_config: string;
+// =================================================================
+// INICIALIZACIÓN DE FIREBASE (VERSIÓN ROBUSTA)
+// =================================================================
 
-// =================================================================
-// CONFIGURACIÓN DE FIREBASE
-// Se carga desde una variable global para evitar exponer las claves en el código fuente.
-// =================================================================
-let firebaseConfig;
-try {
-    if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-        firebaseConfig = JSON.parse(__firebase_config);
-    } else {
-        // FIX: En lugar de lanzar un error que bloquea la aplicación, se muestra una advertencia
-        // y se utiliza una configuración de marcador de posición. Esto permite que la aplicación se cargue
-        // incluso si la configuración de Firebase no se inyecta, facilitando la depuración.
-        console.warn(
-            "ADVERTENCIA: La configuración de Firebase no se encontró. " +
-            "La aplicación no funcionará correctamente sin una configuración válida. " +
-            "Asegúrate de que la variable global `__firebase_config` esté definida."
-        );
-        firebaseConfig = {
-            apiKey: "AIzaSy...",
-            authDomain: "project-id.firebaseapp.com",
-            projectId: "project-id",
-            storageBucket: "project-id.appspot.com",
-            messagingSenderId: "1234567890",
-            appId: "1:1234567890:web:abcdef123456"
-        };
-    }
-} catch (error) {
-    console.error("Error al analizar la configuración de Firebase:", error);
-    throw new Error("No se pudo inicializar Firebase. La configuración es inválida.");
+// Declarar la propiedad en el objeto global Window para que TypeScript la reconozca.
+declare global {
+  interface Window { __firebase_config?: string; }
 }
 
-// Inicializar Firebase
-// Si la configuración no es válida (por ejemplo, marcadores de posición),
-// Firebase SDK lanzará errores en la consola al intentar usar sus servicios,
-// lo cual es un comportamiento esperado en este escenario de fallback.
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+let auth: Auth;
+let db: Firestore;
+
+try {
+    const configString = window.__firebase_config;
+    if (!configString) {
+        throw new Error("La variable global '__firebase_config' no fue encontrada. Asegúrate de que el script de configuración en index.html se está ejecutando correctamente.");
+    }
+
+    const firebaseConfig = JSON.parse(configString);
+    const app: FirebaseApp = initializeApp(firebaseConfig);
+    
+    auth = getAuth(app);
+    db = getFirestore(app);
+
+} catch (error) {
+    console.error("ERROR FATAL: La inicialización de Firebase falló.", error);
+    // En caso de un error crítico, se muestra un mensaje en la pantalla para evitar la página en blanco.
+    const rootElement = document.getElementById('root');
+    if (rootElement) {
+        rootElement.innerHTML = `
+            <div style="font-family: sans-serif; text-align: center; padding: 2rem; color: #b91c1c;">
+                <h1 style="font-size: 1.5rem; font-weight: bold;">Error Crítico de Aplicación</h1>
+                <p style="margin-top: 1rem;">No se pudo inicializar la conexión con la base de datos (Firebase).</p>
+                <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #4b5563;">Por favor, revisa la consola del desarrollador (F12) para más detalles técnicos.</p>
+                <p style="margin-top: 1rem; font-size: 0.8rem; background-color: #fee2e2; padding: 0.5rem; border-radius: 0.25rem; border: 1px solid #fecaca;">
+                    <strong>Mensaje de error:</strong> ${(error as Error).message}
+                </p>
+            </div>
+        `;
+    }
+    // Detener la ejecución del resto del script para prevenir más errores.
+    throw new Error("Deteniendo ejecución debido a un fallo en la inicialización de Firebase.");
+}
+
+// Exportar las instancias ya inicializadas para que el resto de la app las use.
+export { auth, db };
 
 
 // --- COLECCIONES ---
