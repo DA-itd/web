@@ -154,7 +154,6 @@
                 const department = registerForm.registerDepartment.value;
                 
                 try {
-                    // Primero, verifica si el CURP ya está en uso en Firestore
                     const docentesRef = collection(db, 'artifacts', appId, 'public', 'data', 'docentes');
                     const q = query(docentesRef, where('curp', '==', curp));
                     const querySnapshot = await getDocs(q);
@@ -168,11 +167,9 @@
                         }
                     }
 
-                    // Crea el usuario en Firebase Authentication
                     const userCredential = await createUserWithEmailAndPassword(auth, email, curp);
                     const user = userCredential.user;
 
-                    // Guarda la información del docente en Firestore
                     await setDoc(doc(docentesRef, user.uid), {
                         nombre: name,
                         curp: curp,
