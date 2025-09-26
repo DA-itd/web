@@ -191,7 +191,7 @@
 
     <!-- JavaScript con Datos y Lógica -->
     <script>
-        // URLs de los archivos de datos en GitHub (TODOS AHORA EN FORMATO CSV)
+        // URLs de los archivos de datos en GitHub (USANDO RAW URLS PARA ACCEDER AL CONTENIDO PURO)
         const COURSES_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/cursos.csv'; 
         const DEPARTMENTS_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/departamentos.csv'; 
         const DOCENTES_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/docentes.csv'; 
@@ -210,65 +210,90 @@
         const courseDetailsBlock = document.getElementById('courseDetailsBlock');
         const loadingMessage = document.getElementById('loadingMessage');
         
-        // --- Función mejorada para parsear CSV (FIX CRÍTICO) ---
+        // --- Función mejorada y robusta para parsear CSV (FIX CRÍTICO #2) ---
         /**
-         * Convierte una cadena de texto CSV a un array de objetos JSON de forma más robusta.
-         * Maneja comillas dobles y campos vacíos al final o en medio.
+         * Convierte una cadena de texto CSV a un array de objetos JSON de forma robusta.
+         * Se le pasa un tipo de dato para manejar encabezados ausentes o incorrectos (Ej: docentes.csv).
          * @param {string} csvText - La cadena de texto del archivo CSV.
+         * @param {string} dataType - 'cursos', 'departamentos', 'docentes'.
          * @returns {Array<Object>} Array de objetos donde cada objeto es una fila.
          */
-        function parseCSV(csvText) {
-            // Utiliza un regex que coincide con:
-            // 1. Un valor entre comillas dobles ("value")
-            // 2. O un valor sin comas internas y sin comillas dobles
-            // Y captura todo lo que no es una coma o una nueva línea, respetando los campos vacíos.
-            const lines = csvText.split('\n').filter(line => line.trim() !== '');
-            if (lines.length < 2) return [];
+        function parseCSV(csvText, dataType) {
+            // Define encabezados esperados para archivos sin ellos o con errores
+            const expectedHeaders = {
+                'docentes': ['NombreCompleto', 'Curp', 'Email'],
+                'departamentos': ['NombreDepartamento'],
+                // Usamos una lista más completa para cursos si la primera línea no es clara
+                'cursos': ['NombreCurso', 'FechaVisible', 'Periodo', 'Horas', 'Lugar', 'Horario'] 
+            };
 
-            // Extraer encabezados de forma segura
-            const headerLine = lines[0];
-            // Regex para dividir por comas, respetando las comillas
-            const headerRegex = /(".*?"|[^,]+)(?=\s*,|\s*$)/g;
-            const headers = (headerLine.match(headerRegex) || []).map(h => h.trim().replace(/"/g, ''));
+            const lines = csvText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+            if (lines.length === 0) return [];
 
+            let headers = [];
+            let dataLines = lines;
+
+            // Intenta leer la primera línea como encabezado
+            const firstLine = lines[0];
+            const sampleValues = firstLine.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            
+            // Verificación heurística: si la primera línea se parece a un encabezado esperado, la usamos.
+            // Si el primer campo coincide con el primer campo del encabezado esperado, lo tratamos como encabezado.
+            const isHeader = expectedHeaders[dataType] && sampleValues.length === expectedHeaders[dataType].length && 
+                             (sampleValues[0].replace(/"/g, '').trim() === expectedHeaders[dataType][0]);
+
+            if (isHeader) {
+                // Si es un encabezado válido, lo usamos y pasamos a la siguiente línea para los datos
+                headers = firstLine.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(h => h.trim().replace(/"/g, ''));
+                dataLines = lines.slice(1);
+            } else {
+                // Si no se parece al encabezado o falta, usamos el encabezado esperado y procesamos TODAS las líneas como datos.
+                headers = expectedHeaders[dataType];
+                dataLines = lines; // Todas las líneas son datos
+                console.warn(`[CSV_WARN] El archivo ${dataType}.csv no contenía el encabezado esperado. Usando encabezados predefinidos: ${headers.join(', ')}.`);
+            }
+            
+            const numHeaders = headers.length;
             const result = [];
+            // Regex para dividir campos: busca comas que NO estén dentro de comillas dobles.
+            const separatorRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
 
-            for (let i = 1; i < lines.length; i++) {
-                const line = lines[i];
+            for (const line of dataLines) {
                 if (line.trim() === '') continue;
 
-                // Patrón para capturar campos, incluyendo campos vacíos:
-                // Captura el valor entre comillas, o el valor que no tiene coma, o una cadena vacía entre comas.
-                const values = [];
-                let match;
-                const valueRegex = /(".*?"|[^,]*)(?:,|$)/g;
-                
-                while (match = valueRegex.exec(line)) {
-                    // Si el grupo de captura no es nulo y no estamos al final de la línea después de una coma
-                    if (match[1] !== undefined) {
-                        let value = match[1].trim();
-                        // Eliminar comillas alrededor si existen
-                        if (value.startsWith('"') && value.endsWith('"')) {
-                            value = value.substring(1, value.length - 1).trim();
-                        }
-                        values.push(value);
+                let values = line.split(separatorRegex);
+
+                // Si hay más valores de los que debería haber, es posible que el regex fallara o que la línea esté mal.
+                if (values.length !== numHeaders) {
+                    // Si el archivo es Docentes.csv y tiene 4 campos (error común al haber un campo extra)
+                    if (dataType === 'docentes' && values.length === 4) {
+                        // Ignoramos el último campo si el número de valores no coincide con el encabezado de 3 campos
+                         values = values.slice(0, 3);
+                    } else if (dataType === 'cursos' && values.length > numHeaders) {
+                        // Para cursos, si hay más, podría ser porque un NombreCurso tenía más comas de lo esperado o una línea incompleta.
+                         console.warn(`[CSV_WARN] Línea omitida en ${dataType} por desajuste: Esperado ${numHeaders}, encontrado ${values.length}. Línea: ${line}`);
+                         continue; 
+                    } else if (values.length !== numHeaders) {
+                         console.warn(`[CSV_WARN] Línea omitida en ${dataType} por desajuste: Esperado ${numHeaders}, encontrado ${values.length}. Línea: ${line}`);
+                         continue; 
                     }
-                    // Detener si es el final de la línea y el último campo está vacío
-                    if (valueRegex.lastIndex === line.length && line.endsWith(',')) {
-                        values.push('');
-                        break;
-                    }
-                    if (valueRegex.lastIndex === line.length) break;
                 }
                 
-                // Asegurar que el número de valores sea el mismo que el de encabezados
                 const obj = {};
-                for (let j = 0; j < headers.length; j++) {
-                    obj[headers[j]] = values[j] !== undefined ? values[j] : '';
+                for (let j = 0; j < numHeaders; j++) {
+                    let val = (values[j] || '').trim();
+                    
+                    // Limpiar comillas dobles circundantes
+                    if (val.startsWith('"') && val.endsWith('"') && val.length > 1) {
+                        val = val.substring(1, val.length - 1).replace(/""/g, '"').trim();
+                    }
+                    
+                    obj[headers[j]] = val;
                 }
 
-                // Solo añadir si tiene algún valor en los campos principales (nombre, curp, email)
-                if (obj[headers[0]] && obj[headers[0]].trim() !== '') { 
+                // Solo añadir si el primer campo no está vacío
+                const firstHeader = headers[0];
+                if (obj[firstHeader] && obj[firstHeader].trim() !== '') { 
                     result.push(obj);
                 }
             }
@@ -279,24 +304,24 @@
         async function loadExternalData() {
             try {
                 // Función auxiliar para cargar y parsear cualquier CSV
-                const fetchAndParseCSV = async (url) => {
+                const fetchAndParseCSV = async (url, type) => {
                     const response = await fetch(url);
                     const csvText = await response.text();
-                    return parseCSV(csvText);
+                    return parseCSV(csvText, type);
                 };
 
                 // 1. Cargar Cursos (CSV)
-                const rawCourses = await fetchAndParseCSV(COURSES_URL);
+                const rawCourses = await fetchAndParseCSV(COURSES_URL, 'cursos');
+                // Aseguramos que NombreCurso exista y sea string válido
                 COURSES = rawCourses.filter(c => c.NombreCurso && typeof c.NombreCurso === 'string' && c.NombreCurso.trim() !== '');
                 
                 // 2. Cargar Departamentos (CSV)
-                const rawDepartments = await fetchAndParseCSV(DEPARTMENTS_URL);
-                // Asumiendo que el campo es 'NombreDepartamento'
-                DEPARTMENTS = rawDepartments.map(d => d.NombreDepartamento).filter(d => d); 
+                const rawDepartments = await fetchAndParseCSV(DEPARTMENTS_URL, 'departamentos');
+                // Mapeamos solo el valor del departamento y filtramos strings no vacíos
+                DEPARTMENTS = rawDepartments.map(d => d.NombreDepartamento).filter(d => typeof d === 'string' && d.trim() !== ''); 
                 
                 // 3. Cargar Docentes (CSV)
-                const docentesData = await fetchAndParseCSV(DOCENTES_URL);
-                
+                const docentesData = await fetchAndParseCSV(DOCENTES_URL, 'docentes');
                 DOCENTES_LIST = docentesData; 
                 
                 // Crear el mapa de búsqueda para autocompletado/validación
@@ -319,11 +344,12 @@
                      console.error("[CONSOLE_ERROR] Algunos datos esenciales están vacíos después del parseo.");
                      loadingMessage.textContent = "Error: Faltan datos esenciales (cursos, docentes o departamentos). Verifica los archivos CSV.";
                      loadingMessage.classList.add('bg-red-100', 'text-red-800');
+                     // Mostrar los conteos para depuración
+                     console.log(`Cursos cargados: ${COURSES.length}, Departamentos cargados: ${DEPARTMENTS.length}, Docentes cargados: ${DOCENTES_LIST.length}`);
                      return;
                 }
 
-
-                // Inicializar la interfaz después de la carga exitosa
+                // Si todo está bien, inicializar la interfaz
                 populateDropdowns();
                 populateDocentesDatalist(); 
                 renderRegisteredCourses();
@@ -340,7 +366,7 @@
         }
 
 
-        // --- Funciones de Autocompletado y Utilidad (MODIFICADO AQUÍ) ---
+        // --- Funciones de Autocompletado y Utilidad (SIN CAMBIOS FUNCIONALES) ---
 
         // Función para poblar la lista de autocompletado de docentes
         function populateDocentesDatalist() {
