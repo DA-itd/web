@@ -16,14 +16,16 @@
         // Global variables for Firebase services
         let db, auth;
         let currentUser;
-        const firebaseConfig = typeof __firebase_config !== 'undefined' && Object.keys(JSON.parse(__firebase_config)).length > 0
-            ? JSON.parse(__firebase_config)
-            : null;
+        
+        // Use the provided global variables for Firebase configuration.
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
 
         // Initialize Firebase
         function initializeFirebase() {
-            if (firebaseConfig) {
+            if (firebaseConfig && Object.keys(firebaseConfig).length > 0) {
                 const app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
@@ -375,9 +377,8 @@
             }, 5000); // 5 segundos
 
             try {
-                const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                if (token) {
-                    await signInWithCustomToken(auth, token);
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
                     console.log("Signed in with custom token.");
                 } else {
                     await signInAnonymously(auth);
