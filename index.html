@@ -8,13 +8,22 @@
   <!-- 1. Cargar Babel Standalone para transpilar TSX/JSX en el navegador -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-<script type="importmap">
+  <!--
+    CORRECCIÓN: Se limpió el importmap.
+    - Se eliminaron las entradas conflictivas y antiguas.
+    - Ahora solo se usan las URLs correctas del CDN esm.sh.
+  -->
+  <script type="importmap">
 {
   "imports": {
-    "firebase/": "https://aistudiocdn.com/firebase@^12.3.0/",
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "firebase/app": "https://esm.sh/firebase@10.12.2/app",
+    "firebase/auth": "https://esm.sh/firebase@10.12.2/auth",
+    "firebase/firestore": "https://esm.sh/firebase@10.12.2/firestore",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
-    "react": "https://aistudiocdn.com/react@^19.1.1",
-    "react/": "https://aistudiocdn.com/react@^19.1.1/"
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "firebase/": "https://aistudiocdn.com/firebase@^12.3.0/"
   }
 }
 </script>
