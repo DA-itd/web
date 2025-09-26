@@ -139,7 +139,6 @@
             const name = registerForm.registerName.value.toUpperCase();
             const gender = registerForm.registerGender.value;
             const department = registerForm.registerDepartment.value;
-            const messageEl = document.getElementById('registerMessage');
             
             try {
                 // Primero, verifica si el CURP ya está en uso en Firestore
@@ -173,7 +172,7 @@
                 showModal('Registro Exitoso', 'Tu cuenta ha sido creada. Ahora puedes iniciar sesión.');
                 showView('authView');
             } catch (error) {
-                console.error("Error during registration: ", error);
+                console.error("Error during registration:", error);
                 let errorMessage = "Error al registrar. Inténtalo de nuevo.";
                 if (error.code === 'auth/email-already-in-use') {
                     errorMessage = "El correo ya está en uso. Por favor, inicia sesión.";
@@ -181,7 +180,10 @@
                     errorMessage = "El correo no es válido.";
                 } else if (error.code === 'auth/weak-password') {
                     errorMessage = "La contraseña es muy débil (usa el CURP completo).";
+                } else if (error.code === 'permission-denied') {
+                    errorMessage = "Permiso denegado. Revisa las reglas de seguridad de tu base de datos.";
                 }
+                
                 showModal('Error de Registro', errorMessage);
                 showView('registerView');
             }
