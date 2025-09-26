@@ -59,7 +59,6 @@ async function fetchAndParseCSV<T>(url: string, columns: (keyof T)[]): Promise<T
 
 export const loadCourses = async (): Promise<Course[]> => {
     // Columnas en el orden esperado en el archivo CSV
-    // FIX: Corrected the type of `columns` to match the generic argument `Omit<Course, 'Codigo'>` passed to `fetchAndParseCSV`.
     const columns: (keyof Omit<Course, 'Codigo'>)[] = ['NombreCurso', 'FechaVisible', 'Lugar', 'Horario', 'Capacidad', 'Inscritos'];
     const rawCourses = await fetchAndParseCSV<Omit<Course, 'Codigo'>>(COURSES_URL, columns);
     
@@ -75,8 +74,10 @@ export const loadCourses = async (): Promise<Course[]> => {
             ...c,
             Codigo: codigo,
             NombreCurso: nombre,
-            Capacidad: parseInt(String(c.Capacidad) || '30', 10), // Default a 30 si no se especifica
-            Inscritos: parseInt(String(c.Inscritos) || '0', 10),
+            // FIX: Explicitly convert to string before passing to parseInt to resolve type error.
+            Capacidad: parseInt(String(c.Capacidad || '30'), 10) || 30, // Default a 30 si es inválido
+            // FIX: Explicitly convert to string before passing to parseInt to resolve type error.
+            Inscritos: parseInt(String(c.Inscritos || '0'), 10) || 0,   // Default a 0 si es inválido
         };
     }).filter(c => c.NombreCurso);
 };
