@@ -7,9 +7,258 @@
     <!-- Tailwind CSS from CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Firebase JS SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore-compat.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+
+        // Global variables for Firebase services
+        let db, auth;
+        let currentUser;
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // Initialize Firebase
+        function initializeFirebase() {
+            if (Object.keys(firebaseConfig).length > 0) {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                setLogLevel('debug'); // Enable debug logging for Firestore
+                console.log("Firebase has been initialized.");
+                return true;
+            } else {
+                console.error("Firebase config is missing.");
+                return false;
+            }
+        }
+
+        // Authentication State Listener
+        function setupAuthListener() {
+            onAuthStateChanged(auth, async (user) => {
+                currentUser = user;
+                if (user) {
+                    console.log("User authenticated:", user.uid);
+                    updateNavbar(true);
+                    showView('coursesView');
+                } else {
+                    console.log("User not authenticated.");
+                    updateNavbar(false);
+                    showView('authView');
+                }
+            });
+        }
+
+        // =================================================================
+        // MANEJO DE VISTAS Y ELEMENTOS DE LA UI
+        // =================================================================
+        const views = document.querySelectorAll('.view');
+        const viewCoursesBtn = document.getElementById('viewCoursesBtn');
+        const viewMyCoursesBtn = document.getElementById('viewMyCoursesBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const showRegisterFormBtn = document.getElementById('showRegisterFormBtn');
+        const showLoginFormBtn = document.getElementById('showLoginFormBtn');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const coursesGrid = document.getElementById('coursesGrid');
+        const myCoursesGrid = document.getElementById('myCoursesGrid');
+        const registerDepartmentSelect = document.getElementById('registerDepartment');
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+        const loadingView = document.getElementById('loadingView');
+
+        function showView(viewId) {
+            views.forEach(view => {
+                view.classList.add('hidden');
+            });
+            document.getElementById(viewId).classList.remove('hidden');
+        }
+
+        function updateNavbar(isLoggedIn) {
+            if (isLoggedIn) {
+                viewCoursesBtn.classList.remove('hidden');
+                viewMyCoursesBtn.classList.remove('hidden');
+                logoutBtn.classList.remove('hidden');
+            } else {
+                viewCoursesBtn.classList.add('hidden');
+                viewMyCoursesBtn.classList.add('hidden');
+                logoutBtn.classList.add('hidden');
+            }
+        }
+
+        function showModal(title, message) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modal.classList.remove('hidden');
+        }
+
+        modalCloseBtn.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        function showMessage(element, text, className) {
+            element.textContent = text;
+            element.className = `${className} mt-4 p-3 rounded-lg text-center font-bold`;
+            element.style.display = 'block';
+        }
+
+        // =================================================================
+        // AUTENTICACIÓN Y MANEJO DE FORMULARIOS
+        // =================================================================
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showView('loadingView');
+            const email = loginForm.loginEmail.value;
+            const password = loginForm.loginPassword.value;
+            const messageEl = document.getElementById('loginMessage');
+            messageEl.textContent = '';
+            messageEl.className = 'mt-4 p-3 rounded-lg text-center font-bold hidden';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showMessage(messageEl, 'Inicio de sesión exitoso.', 'bg-green-200 text-green-800');
+            } catch (error) {
+                console.error("Error al iniciar sesión: ", error);
+                let errorMessage = "Error al iniciar sesión. Verifica tu correo y CURP.";
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    errorMessage = "CURP o correo incorrectos. Por favor, regístrate si no tienes una cuenta.";
+                }
+                showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
+                showView('authView');
+            }
+        });
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showView('loadingView');
+            const email = registerForm.registerEmail.value;
+            const curp = registerForm.registerCURP.value.toUpperCase();
+            const name = registerForm.registerName.value.toUpperCase();
+            const gender = registerForm.registerGender.value;
+            const department = registerForm.registerDepartment.value;
+            const messageEl = document.getElementById('registerMessage');
+            
+            try {
+                // Primero, verifica si el CURP ya está en uso en Firestore
+                const docentesRef = collection(db, 'artifacts', appId, 'public', 'data', 'docentes');
+                const q = query(docentesRef, where('curp', '==', curp));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    const docenteData = querySnapshot.docs[0].data();
+                    if (docenteData.email) {
+                        showModal('Error', 'Ya tienes una cuenta. Por favor, inicia sesión.');
+                        showView('authView');
+                        return;
+                    }
+                }
+
+                // Crea el usuario en Firebase Authentication
+                const userCredential = await createUserWithEmailAndPassword(auth, email, curp);
+                const user = userCredential.user;
+
+                // Guarda la información del docente en Firestore
+                await setDoc(doc(docentesRef, user.uid), {
+                    nombre: name,
+                    curp: curp,
+                    email: email,
+                    genero: gender,
+                    departamento: department,
+                    createdAt: new Date()
+                });
+
+                showModal('Registro Exitoso', 'Tu cuenta ha sido creada. Ahora puedes iniciar sesión.');
+                showView('authView');
+            } catch (error) {
+                console.error("Error during registration: ", error);
+                let errorMessage = "Error al registrar. Inténtalo de nuevo.";
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = "El correo ya está en uso. Por favor, inicia sesión.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "El correo no es válido.";
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = "La contraseña es muy débil (usa el CURP completo).";
+                }
+                showModal('Error de Registro', errorMessage);
+                showView('registerView');
+            }
+        });
+
+        logoutBtn.addEventListener('click', async () => {
+            await signOut(auth);
+        });
+
+        viewCoursesBtn.addEventListener('click', () => {
+            showView('coursesView');
+        });
+
+        viewMyCoursesBtn.addEventListener('click', () => {
+            showView('myCoursesView');
+        });
+
+        showRegisterFormBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            showView('loadingView');
+            await loadDepartamentos();
+            showView('registerView');
+        });
+
+        showLoginFormBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showView('authView');
+        });
+
+        // =================================================================
+        // GESTIÓN DE DATOS DE FIRESTORE
+        // =================================================================
+        async function loadDepartamentos() {
+            try {
+                const departamentosRef = collection(db, 'artifacts', appId, 'public', 'data', 'departamentos');
+                const snapshot = await getDocs(departamentosRef);
+                registerDepartmentSelect.innerHTML = '<option value="">Selecciona tu departamento</option>';
+                snapshot.forEach(doc => {
+                    const depto = doc.data();
+                    const option = document.createElement('option');
+                    option.value = depto.NombreDepartamento;
+                    option.textContent = depto.NombreDepartamento;
+                    registerDepartmentSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Error al cargar departamentos: ", error);
+                showModal('Error', 'No se pudieron cargar los departamentos. Por favor, intenta de nuevo.');
+                throw error;
+            }
+        }
+
+        // =================================================================
+        // INICIO DE LA APLICACIÓN
+        // =================================================================
+        window.onload = async () => {
+            showView('loadingView');
+            if (initializeFirebase()) {
+                const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                if (token) {
+                    try {
+                        await signInWithCustomToken(auth, token);
+                        console.log("Signed in with custom token.");
+                        setupAuthListener();
+                    } catch (error) {
+                        console.error("Failed to sign in with custom token:", error);
+                        await signInAnonymously(auth);
+                        setupAuthListener();
+                    }
+                } else {
+                    await signInAnonymously(auth);
+                    setupAuthListener();
+                }
+            } else {
+                showView('authView');
+            }
+        };
+    </script>
     <style>
         .view {
             transition: opacity 0.5s ease-in-out;
@@ -131,219 +380,5 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            // =================================================================
-            // TU CONFIGURACIÓN DE FIREBASE
-            // =================================================================
-            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            // Inicializar Firebase
-            if (Object.keys(firebaseConfig).length > 0) {
-                firebase.initializeApp(firebaseConfig);
-                firebase.firestore.setLogLevel('debug');
-            } else {
-                console.error("Firebase no está configurado. La aplicación no funcionará correctamente.");
-            }
-            const auth = firebase.auth();
-            const db = firebase.firestore();
-            // Referencias a colecciones de Firestore
-            const docentesRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('docentes');
-            const departamentosRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('departamentos');
-            const cursosRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('cursos');
-            const getInscripcionesRef = (uid) => db.collection('artifacts').doc(appId).collection('users').doc(uid).collection('inscripciones');
-            // Referencias a los elementos del DOM
-            const views = document.querySelectorAll('.view');
-            const viewCoursesBtn = document.getElementById('viewCoursesBtn');
-            const viewMyCoursesBtn = document.getElementById('viewMyCoursesBtn');
-            const logoutBtn = document.getElementById('logoutBtn');
-            const showRegisterFormBtn = document.getElementById('showRegisterFormBtn');
-            const showLoginFormBtn = document.getElementById('showLoginFormBtn');
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
-            const coursesGrid = document.getElementById('coursesGrid');
-            const myCoursesGrid = document.getElementById('myCoursesGrid');
-            const registerDepartmentSelect = document.getElementById('registerDepartment');
-            const modal = document.getElementById('modal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalMessage = document.getElementById('modalMessage');
-            const modalCloseBtn = document.getElementById('modalCloseBtn');
-            let currentUser = null;
-            // =================================================================
-            // MANEJO DE VISTAS Y MENSAJES
-            // =================================================================
-            function showView(viewId) {
-                views.forEach(view => {
-                    view.classList.add('hidden');
-                });
-                document.getElementById(viewId).classList.remove('hidden');
-            }
-            function updateNavbar(isLoggedIn) {
-                if (isLoggedIn) {
-                    viewCoursesBtn.classList.remove('hidden');
-                    viewMyCoursesBtn.classList.remove('hidden');
-                    logoutBtn.classList.remove('hidden');
-                } else {
-                    viewCoursesBtn.classList.add('hidden');
-                    viewMyCoursesBtn.classList.add('hidden');
-                    logoutBtn.classList.add('hidden');
-                }
-            }
-            function showModal(title, message) {
-                modalTitle.textContent = title;
-                modalMessage.textContent = message;
-                modal.classList.remove('hidden');
-            }
-            modalCloseBtn.addEventListener('click', () => {
-                modal.classList.add('hidden');
-            });
-            function showMessage(element, text, className) {
-                element.textContent = text;
-                element.className = `${className} mt-4 p-3 rounded-lg text-center font-bold`;
-                element.style.display = 'block';
-            }
-            // =================================================================
-            // AUTENTICACIÓN
-            // =================================================================
-            auth.onAuthStateChanged(user => {
-                currentUser = user;
-                if (user) {
-                    console.log("Usuario autenticado:", user.uid);
-                    updateNavbar(true);
-                    showView('coursesView');
-                } else {
-                    console.log("Usuario no autenticado.");
-                    updateNavbar(false);
-                    showView('authView');
-                }
-            });
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                showView('loadingView');
-                const email = loginForm.loginEmail.value;
-                const password = loginForm.loginPassword.value;
-                const messageEl = document.getElementById('loginMessage');
-                messageEl.textContent = '';
-                messageEl.className = 'mt-4 p-3 rounded-lg text-center font-bold hidden';
-                
-                try {
-                    await auth.signInWithEmailAndPassword(email, password);
-                } catch (error) {
-                    console.error("Error al iniciar sesión: ", error);
-                    let errorMessage = "Error al iniciar sesión. Verifica tu correo y CURP.";
-                    if (error.code === 'auth/user-not-found') {
-                        errorMessage = "No se encontró un usuario con ese correo. Por favor, regístrate.";
-                        showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
-                        // Redirigir al registro si el usuario no existe
-                        setTimeout(() => {
-                            showView('registerView');
-                            document.getElementById('registerEmail').value = email;
-                            document.getElementById('registerCURP').value = password;
-                        }, 2000); // Dar tiempo para que el usuario lea el mensaje
-                    } else if (error.code === 'auth/wrong-password') {
-                        errorMessage = "CURP incorrecto. Por favor, verifica y vuelve a intentarlo.";
-                        showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
-                        showView('authView');
-                    } else {
-                        showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
-                        showView('authView');
-                    }
-                }
-            });
-            registerForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                showView('loadingView');
-                const email = registerForm.registerEmail.value;
-                const curp = registerForm.registerCURP.value.toUpperCase();
-                const name = registerForm.registerName.value.toUpperCase();
-                const gender = registerForm.registerGender.value;
-                const department = registerForm.registerDepartment.value;
-                const messageEl = document.getElementById('registerMessage');
-                
-                try {
-                    const docenteSnapshot = await docentesRef.where('curp', '==', curp).limit(1).get();
-                    let userCredential;
-                    if (!docenteSnapshot.empty) {
-                        const docenteDoc = docenteSnapshot.docs[0];
-                        const docenteData = docenteDoc.data();
-                        if (docenteData.email) {
-                           showModal('Error', 'Ya tienes una cuenta. Por favor, inicia sesión.');
-                           showView('authView');
-                           return;
-                        }
-                        userCredential = await auth.createUserWithEmailAndPassword(email, curp);
-                        await docentesRef.doc(docenteDoc.id).update({
-                            email: email,
-                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                    } else {
-                        userCredential = await auth.createUserWithEmailAndPassword(email, curp);
-                        await docentesRef.doc(userCredential.user.uid).set({
-                            nombre: name,
-                            curp: curp,
-                            email: email,
-                            genero: gender,
-                            departamento: department,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                    }
-                    showModal('Registro Exitoso', 'Tu cuenta ha sido creada. Ahora puedes iniciar sesión.');
-                    showView('authView');
-                } catch (error) {
-                    console.error("Error al registrar: ", error);
-                    let errorMessage = "Error al registrar. Inténtalo de nuevo.";
-                    if (error.code === 'auth/email-already-in-use') {
-                        errorMessage = "El correo ya está en uso. Por favor, inicia sesión o usa otro correo.";
-                    } else if (error.code === 'auth/invalid-email') {
-                        errorMessage = "El correo no es válido.";
-                    } else if (error.code === 'auth/weak-password') {
-                         errorMessage = "La contraseña es muy débil (usa el CURP completo).";
-                    }
-                    showModal('Error de Registro', errorMessage);
-                    showView('registerView');
-                }
-            });
-            logoutBtn.addEventListener('click', async () => {
-                await auth.signOut();
-            });
-            viewCoursesBtn.addEventListener('click', () => {
-                showView('coursesView');
-                // Lógica para cargar el catálogo de cursos
-            });
-            viewMyCoursesBtn.addEventListener('click', () => {
-                showView('myCoursesView');
-                // Lógica para cargar los cursos del usuario
-            });
-            showRegisterFormBtn.addEventListener('click', async (e) => {
-                e.preventDefault();
-                await loadDepartamentos();
-                showView('registerView');
-            });
-            showLoginFormBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                showView('authView');
-            });
-            // =================================================================
-            // GESTIÓN DE DATOS
-            // =================================================================
-            async function loadDepartamentos() {
-                try {
-                    const snapshot = await departamentosRef.get();
-                    registerDepartmentSelect.innerHTML = '<option value="">Selecciona tu departamento</option>';
-                    snapshot.forEach(doc => {
-                        const depto = doc.data();
-                        const option = document.createElement('option');
-                        option.value = depto.NombreDepartamento;
-                        option.textContent = depto.NombreDepartamento;
-                        registerDepartmentSelect.appendChild(option);
-                    });
-                } catch (error) {
-                    console.error("Error al cargar departamentos: ", error);
-                    showModal('Error', 'No se pudieron cargar los departamentos. Por favor, intenta de nuevo.');
-                    throw error;
-                }
-            }
-        });
-    </script>
 </body>
 </html>
