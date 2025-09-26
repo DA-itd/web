@@ -1,9 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { 
     getAuth, 
-    createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword, 
-    onAuthStateChanged,
+    createUserWithEmailAndPassword,
     User
 } from 'firebase/auth';
 import { 
@@ -226,5 +224,3 @@ export const anularInscripcion = async (inscripcionId: string): Promise<void> =>
     const inscripcionRef = doc(db, "inscripciones", inscripcionId);
     await deleteDoc(inscripcionRef);
 };
-
-export { onAuthStateChanged, signInWithEmailAndPassword };

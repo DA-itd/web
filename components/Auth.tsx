@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-// FIX: Import the `auth` instance to be used with `signInWithEmailAndPassword`.
-import { signInWithEmailAndPassword, registerTeacher, getDepartamentos, auth } from '../services/firebaseService';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { registerTeacher, getDepartamentos, auth } from '../services/firebaseService';
 import type { Departamento } from '../types';
 import Spinner from './common/Spinner';
 import Alert from './common/Alert';
