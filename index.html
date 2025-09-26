@@ -9,9 +9,9 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <!--
-    CORRECCIÓN DEFINITIVA: Se predefinen las rutas generales para satisfacer
-    al sistema "AUTOFIX" del servidor de despliegue y asegurar que todas
-    las librerías se carguen consistentemente desde esm.sh.
+    CORRECCIÓN FINAL: Se eliminan las rutas generales ambiguas.
+    Al usar solo rutas explícitas, se garantiza que el navegador cargue
+    los módulos de Firebase de forma correcta, resolviendo el error de inicialización.
   -->
   <script type="importmap">
 {
@@ -22,10 +22,9 @@
     "firebase/app": "https://esm.sh/firebase@10.12.2/app",
     "firebase/auth": "https://esm.sh/firebase@10.12.2/auth",
     "firebase/firestore": "https://esm.sh/firebase@10.12.2/firestore",
-
-    "react/": "https://esm.sh/react@18.2.0/",
-    "react-dom/": "https://esm.sh/react-dom@18.2.0/",
-    "firebase/": "https://esm.sh/firebase@10.12.2/"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "firebase/": "https://aistudiocdn.com/firebase@^12.3.0/"
   }
 }
 </script>
