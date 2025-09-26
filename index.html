@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -21,9 +20,24 @@
 <body class="bg-gray-100">
   <div id="root"></div>
 
-  <!-- Firebase SDKs - Asegúrate de usar las versiones más recientes y compatibles -->
-  <!-- Es importante inicializar Firebase antes de que tu script de la app se ejecute. -->
-  <!-- Usamos type="module" para permitir importaciones en el script principal -->
+  <!-- Inyección de la configuración de Firebase -->
+  <script>
+    // Configuración de Firebase proporcionada por el usuario
+    const firebaseConfig = {
+      apiKey: "AIzaSyBYC-9dyv1Ulp9Oe13ePDJoahWBZNJ6-Wc",
+      authDomain: "actualizacion-docente-itd.firebaseapp.com",
+      projectId: "actualizacion-docente-itd",
+      storageBucket: "actualizacion-docente-itd.appspot.com",
+      messagingSenderId: "979604726632",
+      appId: "1:979604726632:web:7e5cdd2d8f4b8cb9a32cdd",
+      measurementId: "G-V2V4CT2C69"
+    };
+
+    // Se crea la variable global que la aplicación espera leer
+    window.__firebase_config = JSON.stringify(firebaseConfig);
+  </script>
+
+  <!-- Script principal de la aplicación -->
   <script type="module" src="/index.tsx"></script>
 </body>
 </html>
