@@ -30,6 +30,7 @@
                 return true;
             } else {
                 console.error("Firebase config is missing.");
+                showModal("Error de Configuración", "La configuración de Firebase no está disponible. Por favor, contacta al soporte.");
                 return false;
             }
         }
@@ -249,17 +250,15 @@
                     try {
                         await signInWithCustomToken(auth, token);
                         console.log("Signed in with custom token.");
-                        setupAuthListener();
                     } catch (error) {
                         console.error("Failed to sign in with custom token:", error);
                         await signInAnonymously(auth);
-                        setupAuthListener();
                     }
                 } else {
                     await signInAnonymously(auth);
-                    setupAuthListener();
                 }
-                setupEventListeners(); // Mover la configuración de eventos aquí
+                setupAuthListener();
+                setupEventListeners();
             } else {
                 showView('authView');
             }
