@@ -95,124 +95,6 @@
             modal.classList.remove('hidden');
         }
 
-        modalCloseBtn.addEventListener('click', () => {
-            modal.classList.add('hidden');
-        });
-
-        function showMessage(element, text, className) {
-            element.textContent = text;
-            element.className = `${className} mt-4 p-3 rounded-lg text-center font-bold`;
-            element.style.display = 'block';
-        }
-
-        // =================================================================
-        // AUTENTICACIÓN Y MANEJO DE FORMULARIOS
-        // =================================================================
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            showView('loadingView');
-            const email = loginForm.loginEmail.value;
-            const password = loginForm.loginPassword.value;
-            const messageEl = document.getElementById('loginMessage');
-            messageEl.textContent = '';
-            messageEl.className = 'mt-4 p-3 rounded-lg text-center font-bold hidden';
-
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                showMessage(messageEl, 'Inicio de sesión exitoso.', 'bg-green-200 text-green-800');
-            } catch (error) {
-                console.error("Error al iniciar sesión: ", error);
-                let errorMessage = "Error al iniciar sesión. Verifica tu correo y CURP.";
-                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                    errorMessage = "CURP o correo incorrectos. Por favor, regístrate si no tienes una cuenta.";
-                }
-                showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
-                showView('authView');
-            }
-        });
-
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            showView('loadingView');
-            const email = registerForm.registerEmail.value;
-            const curp = registerForm.registerCURP.value.toUpperCase();
-            const name = registerForm.registerName.value.toUpperCase();
-            const gender = registerForm.registerGender.value;
-            const department = registerForm.registerDepartment.value;
-            
-            try {
-                // Primero, verifica si el CURP ya está en uso en Firestore
-                const docentesRef = collection(db, 'artifacts', appId, 'public', 'data', 'docentes');
-                const q = query(docentesRef, where('curp', '==', curp));
-                const querySnapshot = await getDocs(q);
-
-                if (!querySnapshot.empty) {
-                    const docenteData = querySnapshot.docs[0].data();
-                    if (docenteData.email) {
-                        showModal('Error', 'Ya tienes una cuenta. Por favor, inicia sesión.');
-                        showView('authView');
-                        return;
-                    }
-                }
-
-                // Crea el usuario en Firebase Authentication
-                const userCredential = await createUserWithEmailAndPassword(auth, email, curp);
-                const user = userCredential.user;
-
-                // Guarda la información del docente en Firestore
-                await setDoc(doc(docentesRef, user.uid), {
-                    nombre: name,
-                    curp: curp,
-                    email: email,
-                    genero: gender,
-                    departamento: department,
-                    createdAt: new Date()
-                });
-
-                showModal('Registro Exitoso', 'Tu cuenta ha sido creada. Ahora puedes iniciar sesión.');
-                showView('authView');
-            } catch (error) {
-                console.error("Error during registration:", error);
-                let errorMessage = "Error al registrar. Inténtalo de nuevo.";
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMessage = "El correo ya está en uso. Por favor, inicia sesión.";
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = "El correo no es válido.";
-                } else if (error.code === 'auth/weak-password') {
-                    errorMessage = "La contraseña es muy débil (usa el CURP completo).";
-                } else if (error.code === 'permission-denied') {
-                    errorMessage = "Permiso denegado. Revisa las reglas de seguridad de tu base de datos.";
-                }
-                
-                showModal('Error de Registro', errorMessage);
-                showView('registerView');
-            }
-        });
-
-        logoutBtn.addEventListener('click', async () => {
-            await signOut(auth);
-        });
-
-        viewCoursesBtn.addEventListener('click', () => {
-            showView('coursesView');
-        });
-
-        viewMyCoursesBtn.addEventListener('click', () => {
-            showView('myCoursesView');
-        });
-
-        showRegisterFormBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            showView('loadingView');
-            await loadDepartamentos();
-            showView('registerView');
-        });
-
-        showLoginFormBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            showView('authView');
-        });
-
         // =================================================================
         // GESTIÓN DE DATOS DE FIRESTORE
         // =================================================================
@@ -236,6 +118,126 @@
         }
 
         // =================================================================
+        // AUTENTICACIÓN Y MANEJO DE FORMULARIOS
+        // =================================================================
+        function setupEventListeners() {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                showView('loadingView');
+                const email = loginForm.loginEmail.value;
+                const password = loginForm.loginPassword.value;
+                const messageEl = document.getElementById('loginMessage');
+                messageEl.textContent = '';
+                messageEl.className = 'mt-4 p-3 rounded-lg text-center font-bold hidden';
+
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    showMessage(messageEl, 'Inicio de sesión exitoso.', 'bg-green-200 text-green-800');
+                } catch (error) {
+                    console.error("Error al iniciar sesión: ", error);
+                    let errorMessage = "Error al iniciar sesión. Verifica tu correo y CURP.";
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                        errorMessage = "CURP o correo incorrectos. Por favor, regístrate si no tienes una cuenta.";
+                    }
+                    showMessage(messageEl, errorMessage, 'bg-red-200 text-red-800');
+                    showView('authView');
+                }
+            });
+
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                showView('loadingView');
+                const email = registerForm.registerEmail.value;
+                const curp = registerForm.registerCURP.value.toUpperCase();
+                const name = registerForm.registerName.value.toUpperCase();
+                const gender = registerForm.registerGender.value;
+                const department = registerForm.registerDepartment.value;
+                
+                try {
+                    // Primero, verifica si el CURP ya está en uso en Firestore
+                    const docentesRef = collection(db, 'artifacts', appId, 'public', 'data', 'docentes');
+                    const q = query(docentesRef, where('curp', '==', curp));
+                    const querySnapshot = await getDocs(q);
+
+                    if (!querySnapshot.empty) {
+                        const docenteData = querySnapshot.docs[0].data();
+                        if (docenteData.email) {
+                            showModal('Error', 'Ya tienes una cuenta. Por favor, inicia sesión.');
+                            showView('authView');
+                            return;
+                        }
+                    }
+
+                    // Crea el usuario en Firebase Authentication
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, curp);
+                    const user = userCredential.user;
+
+                    // Guarda la información del docente en Firestore
+                    await setDoc(doc(docentesRef, user.uid), {
+                        nombre: name,
+                        curp: curp,
+                        email: email,
+                        genero: gender,
+                        departamento: department,
+                        createdAt: new Date()
+                    });
+
+                    showModal('Registro Exitoso', 'Tu cuenta ha sido creada. Ahora puedes iniciar sesión.');
+                    showView('authView');
+                } catch (error) {
+                    console.error("Error during registration:", error);
+                    let errorMessage = "Error al registrar. Inténtalo de nuevo.";
+                    if (error.code === 'auth/email-already-in-use') {
+                        errorMessage = "El correo ya está en uso. Por favor, inicia sesión.";
+                    } else if (error.code === 'auth/invalid-email') {
+                        errorMessage = "El correo no es válido.";
+                    } else if (error.code === 'auth/weak-password') {
+                        errorMessage = "La contraseña es muy débil (usa el CURP completo).";
+                    } else if (error.code === 'permission-denied') {
+                        errorMessage = "Permiso denegado. Revisa las reglas de seguridad de tu base de datos.";
+                    }
+                    
+                    showModal('Error de Registro', errorMessage);
+                    showView('registerView');
+                }
+            });
+
+            logoutBtn.addEventListener('click', async () => {
+                await signOut(auth);
+            });
+
+            viewCoursesBtn.addEventListener('click', () => {
+                showView('coursesView');
+            });
+
+            viewMyCoursesBtn.addEventListener('click', () => {
+                showView('myCoursesView');
+            });
+
+            showRegisterFormBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                showView('loadingView');
+                await loadDepartamentos();
+                showView('registerView');
+            });
+
+            showLoginFormBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                showView('authView');
+            });
+
+            modalCloseBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+        }
+
+        function showMessage(element, text, className) {
+            element.textContent = text;
+            element.className = `${className} mt-4 p-3 rounded-lg text-center font-bold`;
+            element.style.display = 'block';
+        }
+
+        // =================================================================
         // INICIO DE LA APLICACIÓN
         // =================================================================
         window.onload = async () => {
@@ -256,6 +258,7 @@
                     await signInAnonymously(auth);
                     setupAuthListener();
                 }
+                setupEventListeners(); // Mover la configuración de eventos aquí
             } else {
                 showView('authView');
             }
