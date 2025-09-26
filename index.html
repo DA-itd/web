@@ -10,7 +10,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 
         // Global variables for Firebase services
@@ -42,6 +42,8 @@
                 if (user) {
                     console.log("User authenticated:", user.uid);
                     updateNavbar(true);
+                    loadCourses();
+                    loadMyCourses();
                     showView('coursesView');
                 } else {
                     console.log("User not authenticated.");
@@ -116,6 +118,116 @@
                 showModal('Error', 'No se pudieron cargar los departamentos. Por favor, intenta de nuevo.');
                 throw error;
             }
+        }
+
+        async function loadCourses() {
+            if (!currentUser) return;
+            showView('loadingView');
+            coursesGrid.innerHTML = '';
+            try {
+                const coursesRef = collection(db, 'artifacts', appId, 'public', 'data', 'cursos');
+                const myCoursesRef = doc(db, 'artifacts', appId, 'public', 'data', 'inscripciones', currentUser.uid);
+                const coursesSnapshot = await getDocs(coursesRef);
+                const myCoursesSnapshot = await getDoc(myCoursesRef);
+                const myCourses = myCoursesSnapshot.exists() ? myCoursesSnapshot.data().cursosInscritos : [];
+
+                coursesSnapshot.forEach(courseDoc => {
+                    const courseData = courseDoc.data();
+                    const courseId = courseDoc.id;
+                    const isRegistered = myCourses.includes(courseId);
+                    const courseCard = createCourseCard(courseData, courseId, isRegistered);
+                    coursesGrid.appendChild(courseCard);
+                });
+                showView('coursesView');
+            } catch (error) {
+                console.error("Error loading courses:", error);
+                showModal("Error de Carga", "No se pudieron cargar los cursos.");
+                showView('coursesView');
+            }
+        }
+
+        async function loadMyCourses() {
+            if (!currentUser) return;
+            showView('loadingView');
+            myCoursesGrid.innerHTML = '';
+            try {
+                const myCoursesRef = doc(db, 'artifacts', appId, 'public', 'data', 'inscripciones', currentUser.uid);
+                const myCoursesSnapshot = await getDoc(myCoursesRef);
+                if (myCoursesSnapshot.exists()) {
+                    const myCourses = myCoursesSnapshot.data().cursosInscritos;
+                    if (myCourses.length > 0) {
+                        const coursesRef = collection(db, 'artifacts', appId, 'public', 'data', 'cursos');
+                        const coursesSnapshot = await getDocs(coursesRef);
+                        coursesSnapshot.forEach(courseDoc => {
+                            if (myCourses.includes(courseDoc.id)) {
+                                const courseCard = createCourseCard(courseDoc.data(), courseDoc.id, true);
+                                myCoursesGrid.appendChild(courseCard);
+                            }
+                        });
+                    } else {
+                        myCoursesGrid.innerHTML = '<p class="text-center text-gray-500 col-span-full">Aún no estás inscrito en ningún curso.</p>';
+                    }
+                } else {
+                    myCoursesGrid.innerHTML = '<p class="text-center text-gray-500 col-span-full">Aún no estás inscrito en ningún curso.</p>';
+                }
+                showView('myCoursesView');
+            } catch (error) {
+                console.error("Error loading my courses:", error);
+                showModal("Error de Carga", "No se pudieron cargar tus cursos.");
+                showView('myCoursesView');
+            }
+        }
+
+        async function toggleCourseRegistration(courseId, isRegistered) {
+            if (!currentUser) {
+                showModal("Error", "Debes iniciar sesión para inscribirte.");
+                return;
+            }
+            try {
+                const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'inscripciones', currentUser.uid);
+                if (isRegistered) {
+                    await updateDoc(userDocRef, {
+                        cursosInscritos: arrayRemove(courseId)
+                    });
+                    showModal("Éxito", "Has cancelado tu inscripción al curso.");
+                } else {
+                    await setDoc(userDocRef, {
+                        cursosInscritos: arrayUnion(courseId)
+                    }, { merge: true });
+                    showModal("Éxito", "¡Te has inscrito al curso con éxito!");
+                }
+                loadCourses();
+                loadMyCourses();
+            } catch (error) {
+                console.error("Error toggling course registration:", error);
+                showModal("Error", "No se pudo actualizar tu inscripción.");
+            }
+        }
+
+        function createCourseCard(course, courseId, isRegistered) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow-md p-6 flex flex-col justify-between';
+            card.innerHTML = `
+                <div class="flex-grow">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">${course.NombreCurso}</h3>
+                    <p class="text-gray-600 mb-2">**Especialidad:** ${course.Especialidad}</p>
+                    <p class="text-gray-600 mb-2">**Modalidad:** ${course.Modalidad}</p>
+                    <p class="text-gray-600 mb-2">**Departamento:** ${course.Departamento}</p>
+                    <p class="text-gray-600 mb-4">**Créditos:** ${course.Creditos}</p>
+                </div>
+                <div class="mt-4">
+                    <button class="register-btn w-full py-2 px-4 rounded-full font-bold transition duration-300 transform hover:scale-105 ${isRegistered ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'}" data-course-id="${courseId}" data-is-registered="${isRegistered}">
+                        ${isRegistered ? 'Cancelar Inscripción' : 'Inscribirse'}
+                    </button>
+                </div>
+            `;
+            const button = card.querySelector('.register-btn');
+            button.addEventListener('click', (e) => {
+                const id = e.target.dataset.courseId;
+                const registered = e.target.dataset.isRegistered === 'true';
+                toggleCourseRegistration(id, registered);
+            });
+            return card;
         }
 
         // =================================================================
@@ -209,10 +321,12 @@
             });
 
             viewCoursesBtn.addEventListener('click', () => {
+                loadCourses();
                 showView('coursesView');
             });
 
             viewMyCoursesBtn.addEventListener('click', () => {
+                loadMyCourses();
                 showView('myCoursesView');
             });
 
