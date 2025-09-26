@@ -191,7 +191,7 @@
 
     <!-- JavaScript con Datos y Lógica -->
     <script>
-        // URLs de los archivos de datos en GitHub (USANDO RAW URLS PARA ACCEDER AL CONTENIDO PURO)
+        // URLs de los archivos de datos en GitHub (USANDO RAW URLS)
         const COURSES_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/cursos.csv'; 
         const DEPARTMENTS_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/departamentos.csv'; 
         const DOCENTES_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/docentes.csv'; 
@@ -210,80 +210,84 @@
         const courseDetailsBlock = document.getElementById('courseDetailsBlock');
         const loadingMessage = document.getElementById('loadingMessage');
         
-        // --- Función mejorada y robusta para parsear CSV (FIX CRÍTICO #2) ---
+        // --- NUEVA FUNCIÓN DE NORMALIZACIÓN ESTRICTA ---
+        /**
+         * Normaliza un nombre o CURP: convierte a mayúsculas, recorta espacios, y elimina acentos.
+         * Esto asegura consistencia en las búsquedas (ej. "Andrés" y "ANDRES" se vuelven "ANDRES").
+         * @param {string} str - La cadena a normalizar.
+         * @returns {string} La cadena normalizada.
+         */
+        function normalizeString(str) {
+            if (!str) return '';
+            // 1. Convertir a forma descompuesta (NFD) para separar letras de acentos/diacríticos
+            // 2. Remover los caracteres diacríticos (acento, tilde, etc.)
+            // 3. Convertir a mayúsculas
+            // 4. Quitar espacios
+            return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
+        }
+
+        // --- Función mejorada y robusta para parsear CSV (SIN CAMBIOS EN LA LÓGICA DE PARSEO) ---
         /**
          * Convierte una cadena de texto CSV a un array de objetos JSON de forma robusta.
-         * Se le pasa un tipo de dato para manejar encabezados ausentes o incorrectos (Ej: docentes.csv).
+         * Maneja comas dentro de campos usando comillas dobles y tolera encabezados faltantes/incorrectos.
          * @param {string} csvText - La cadena de texto del archivo CSV.
          * @param {string} dataType - 'cursos', 'departamentos', 'docentes'.
          * @returns {Array<Object>} Array de objetos donde cada objeto es una fila.
          */
         function parseCSV(csvText, dataType) {
-            // Define encabezados esperados para archivos sin ellos o con errores
+            // Define encabezados esperados
             const expectedHeaders = {
                 'docentes': ['NombreCompleto', 'Curp', 'Email'],
                 'departamentos': ['NombreDepartamento'],
-                // Usamos una lista más completa para cursos si la primera línea no es clara
                 'cursos': ['NombreCurso', 'FechaVisible', 'Periodo', 'Horas', 'Lugar', 'Horario'] 
             };
-
-            const lines = csvText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+            const numExpectedHeaders = expectedHeaders[dataType] ? expectedHeaders[dataType].length : 0;
+            
+            // 1. Limpiar y dividir líneas
+            const lines = csvText.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
             if (lines.length === 0) return [];
 
-            let headers = [];
+            let headers = expectedHeaders[dataType]; // Empezamos asumiendo los encabezados esperados
             let dataLines = lines;
-
-            // Intenta leer la primera línea como encabezado
-            const firstLine = lines[0];
-            const sampleValues = firstLine.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
             
-            // Verificación heurística: si la primera línea se parece a un encabezado esperado, la usamos.
-            // Si el primer campo coincide con el primer campo del encabezado esperado, lo tratamos como encabezado.
-            const isHeader = expectedHeaders[dataType] && sampleValues.length === expectedHeaders[dataType].length && 
-                             (sampleValues[0].replace(/"/g, '').trim() === expectedHeaders[dataType][0]);
-
-            if (isHeader) {
-                // Si es un encabezado válido, lo usamos y pasamos a la siguiente línea para los datos
-                headers = firstLine.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(h => h.trim().replace(/"/g, ''));
-                dataLines = lines.slice(1);
-            } else {
-                // Si no se parece al encabezado o falta, usamos el encabezado esperado y procesamos TODAS las líneas como datos.
-                headers = expectedHeaders[dataType];
-                dataLines = lines; // Todas las líneas son datos
-                console.warn(`[CSV_WARN] El archivo ${dataType}.csv no contenía el encabezado esperado. Usando encabezados predefinidos: ${headers.join(', ')}.`);
-            }
-            
-            const numHeaders = headers.length;
-            const result = [];
-            // Regex para dividir campos: busca comas que NO estén dentro de comillas dobles.
+            // Regex para dividir campos: busca comas que NO estén dentro de comillas dobles
             const separatorRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
 
+            // 2. Intentar determinar si hay un encabezado
+            const firstLineValues = lines[0].split(separatorRegex).map(v => v.trim().replace(/"/g, ''));
+            
+            if (firstLineValues.length === numExpectedHeaders) {
+                const isLikelyHeader = firstLineValues[0].toLowerCase().includes(headers[0].toLowerCase());
+
+                if (isLikelyHeader) {
+                    headers = firstLineValues;
+                    dataLines = lines.slice(1);
+                    console.log(`[CSV_DEBUG] Encabezado detectado y utilizado para ${dataType}: ${headers.join(', ')}`);
+                } else {
+                     console.warn(`[CSV_WARN] La primera línea de ${dataType}.csv tiene ${numExpectedHeaders} campos, pero no parece encabezado. Usando encabezados predefinidos: ${headers.join(', ')}.`);
+                     dataLines = lines;
+                }
+            } else {
+                console.warn(`[CSV_WARN] El archivo ${dataType}.csv tiene conteo de campos incorrecto en la primera línea (${firstLineValues.length}). Usando encabezados predefinidos: ${headers.join(', ')}.`);
+                dataLines = lines;
+            }
+
+            // 3. Procesar las líneas de datos
+            const result = [];
             for (const line of dataLines) {
                 if (line.trim() === '') continue;
 
                 let values = line.split(separatorRegex);
 
-                // Si hay más valores de los que debería haber, es posible que el regex fallara o que la línea esté mal.
-                if (values.length !== numHeaders) {
-                    // Si el archivo es Docentes.csv y tiene 4 campos (error común al haber un campo extra)
-                    if (dataType === 'docentes' && values.length === 4) {
-                        // Ignoramos el último campo si el número de valores no coincide con el encabezado de 3 campos
-                         values = values.slice(0, 3);
-                    } else if (dataType === 'cursos' && values.length > numHeaders) {
-                        // Para cursos, si hay más, podría ser porque un NombreCurso tenía más comas de lo esperado o una línea incompleta.
-                         console.warn(`[CSV_WARN] Línea omitida en ${dataType} por desajuste: Esperado ${numHeaders}, encontrado ${values.length}. Línea: ${line}`);
-                         continue; 
-                    } else if (values.length !== numHeaders) {
-                         console.warn(`[CSV_WARN] Línea omitida en ${dataType} por desajuste: Esperado ${numHeaders}, encontrado ${values.length}. Línea: ${line}`);
-                         continue; 
-                    }
+                if (values.length !== numExpectedHeaders) {
+                    console.warn(`[CSV_WARN] Línea omitida en ${dataType} por desajuste: Esperado ${numExpectedHeaders}, encontrado ${values.length}. Línea: ${line}`);
+                    continue; 
                 }
                 
                 const obj = {};
-                for (let j = 0; j < numHeaders; j++) {
+                for (let j = 0; j < numExpectedHeaders; j++) {
                     let val = (values[j] || '').trim();
                     
-                    // Limpiar comillas dobles circundantes
                     if (val.startsWith('"') && val.endsWith('"') && val.length > 1) {
                         val = val.substring(1, val.length - 1).replace(/""/g, '"').trim();
                     }
@@ -291,7 +295,6 @@
                     obj[headers[j]] = val;
                 }
 
-                // Solo añadir si el primer campo no está vacío
                 const firstHeader = headers[0];
                 if (obj[firstHeader] && obj[firstHeader].trim() !== '') { 
                     result.push(obj);
@@ -300,52 +303,59 @@
             return result;
         }
 
-        // --- Funciones de Carga de Datos desde GitHub (SIN CAMBIOS, usa la nueva parseCSV) ---
+        // --- Funciones de Carga de Datos desde GitHub (APLICANDO NORMALIZACIÓN) ---
         async function loadExternalData() {
             try {
                 // Función auxiliar para cargar y parsear cualquier CSV
                 const fetchAndParseCSV = async (url, type) => {
                     const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`Fallo al cargar la URL: ${url} (Estado: ${response.status})`);
+                    }
                     const csvText = await response.text();
                     return parseCSV(csvText, type);
                 };
 
                 // 1. Cargar Cursos (CSV)
                 const rawCourses = await fetchAndParseCSV(COURSES_URL, 'cursos');
-                // Aseguramos que NombreCurso exista y sea string válido
-                COURSES = rawCourses.filter(c => c.NombreCurso && typeof c.NombreCurso === 'string' && c.NombreCurso.trim() !== '');
+                // IMPORTANTE: Normalizar solo el NombreCurso
+                COURSES = rawCourses.map(c => ({
+                    ...c,
+                    NombreCurso: normalizeString(c.NombreCurso || '') // Usar normalización estricta aquí también
+                })).filter(c => c.NombreCurso.length > 0);
                 
                 // 2. Cargar Departamentos (CSV)
                 const rawDepartments = await fetchAndParseCSV(DEPARTMENTS_URL, 'departamentos');
-                // Mapeamos solo el valor del departamento y filtramos strings no vacíos
-                DEPARTMENTS = rawDepartments.map(d => d.NombreDepartamento).filter(d => typeof d === 'string' && d.trim() !== ''); 
+                DEPARTMENTS = rawDepartments.map(d => (d.NombreDepartamento || '').trim()).filter(d => d.length > 0); 
                 
                 // 3. Cargar Docentes (CSV)
                 const docentesData = await fetchAndParseCSV(DOCENTES_URL, 'docentes');
-                DOCENTES_LIST = docentesData; 
+                // APLICAR NORMALIZACIÓN ESTRICTA A NOMBRE Y CURP
+                DOCENTES_LIST = docentesData.map(doc => ({
+                    NombreCompleto: normalizeString(doc.NombreCompleto), // <--- NORMALIZACIÓN APLICADA AQUÍ
+                    Curp: normalizeString(doc.Curp),                     // <--- NORMALIZACIÓN APLICADA AQUÍ
+                    Email: (doc.Email || '').toLowerCase().trim(),     // Email sigue solo con lowercase/trim
+                }));
                 
                 // Crear el mapa de búsqueda para autocompletado/validación
-                DOCENTES_MAP = docentesData.reduce((acc, doc) => {
-                    // Mapeo por Nombre Completo
-                    const nombreUpper = (doc.NombreCompleto || '').toUpperCase();
-                    if (nombreUpper) acc[nombreUpper] = doc;
-                    
-                    // Mapeo por CURP (si existe)
-                    if (doc.Curp && doc.Curp.trim() !== '') acc[doc.Curp.toUpperCase()] = doc;
-                    
-                    // Mapeo por Email (si existe)
-                    if (doc.Email && doc.Email.trim() !== '') acc[doc.Email.toLowerCase()] = doc;
-                    
+                DOCENTES_MAP = DOCENTES_LIST.reduce((acc, doc) => {
+                    if (doc.NombreCompleto) acc[doc.NombreCompleto] = doc;
+                    if (doc.Curp) acc[doc.Curp] = doc;
+                    if (doc.Email) acc[doc.Email] = doc;
                     return acc;
                 }, {});
 
+                console.log(`[CONSOLE_DEBUG] Cursos cargados: ${COURSES.length}`);
+                console.log(`[CONSOLE_DEBUG] Departamentos cargados: ${DEPARTMENTS.length}`);
+                console.log(`[CONSOLE_DEBUG] Docentes cargados: ${DOCENTES_LIST.length}`);
+                // console.log("Ejemplo de Docente Normalizado:", DOCENTES_LIST.find(d => d.NombreCompleto.includes('AGUEDA')));
+
                 // Validación de datos mínimos
                 if (COURSES.length === 0 || DEPARTMENTS.length === 0 || DOCENTES_LIST.length === 0) {
-                     console.error("[CONSOLE_ERROR] Algunos datos esenciales están vacíos después del parseo.");
+                     console.error("[CONSOLE_ERROR] Activando mensaje de error: Algunos datos esenciales están vacíos después del parseo.");
                      loadingMessage.textContent = "Error: Faltan datos esenciales (cursos, docentes o departamentos). Verifica los archivos CSV.";
+                     loadingMessage.classList.remove('bg-yellow-100', 'text-yellow-800');
                      loadingMessage.classList.add('bg-red-100', 'text-red-800');
-                     // Mostrar los conteos para depuración
-                     console.log(`Cursos cargados: ${COURSES.length}, Departamentos cargados: ${DEPARTMENTS.length}, Docentes cargados: ${DOCENTES_LIST.length}`);
                      return;
                 }
 
@@ -359,24 +369,27 @@
 
             } catch (error) {
                 console.error("Error al cargar los datos desde GitHub:", error);
-                loadingMessage.textContent = "Error al cargar los datos. Por favor, verifica las URL de los archivos CSV.";
+                loadingMessage.textContent = `Error al cargar los datos. Por favor, verifica las URL de los archivos CSV. Detalle: ${error.message}`;
+                loadingMessage.classList.remove('bg-yellow-100', 'text-yellow-800');
                 loadingMessage.classList.add('bg-red-100', 'text-red-800');
                 populateDropdowns(); 
             }
         }
 
 
-        // --- Funciones de Autocompletado y Utilidad (SIN CAMBIOS FUNCIONALES) ---
+        // --- Funciones de Autocompletado y Utilidad ---
 
         // Función para poblar la lista de autocompletado de docentes
         function populateDocentesDatalist() {
             const datalist = document.getElementById('docentesList');
             datalist.innerHTML = '';
             
+            // Usamos la lista de docentes normalizada
             DOCENTES_LIST.forEach(doc => {
                 if (doc.NombreCompleto) {
                     const option = document.createElement('option');
-                    option.value = doc.NombreCompleto.toUpperCase();
+                    // Usar el valor ya normalizado (sin acentos, en mayúsculas) para la opción
+                    option.value = doc.NombreCompleto; 
                     datalist.appendChild(option);
                 }
             });
@@ -384,17 +397,19 @@
         
         // Función para autocompletar campos cuando se selecciona un docente
         window.autofillDocente = function(selectedName) {
-            const upperName = selectedName.toUpperCase();
-            // Buscar por nombre
-            const docente = DOCENTES_LIST.find(doc => (doc.NombreCompleto || '').toUpperCase() === upperName);
+            // Normalizamos la entrada del usuario con la función estricta
+            const normalizedName = normalizeString(selectedName);
+            
+            // Buscar por nombre normalizado
+            const docente = DOCENTES_MAP[normalizedName];
             
             if (docente) {
                 const curpField = document.getElementById('curp');
                 const emailField = document.getElementById('email');
 
-                // Autocompletar y bloquear si el valor existe en el CSV
-                const curpValue = (docente.Curp || '').toUpperCase().trim();
-                const emailValue = (docente.Email || '').toLowerCase().trim();
+                // Autocompletar con los valores ya normalizados (sin acento)
+                const curpValue = docente.Curp; // Ya está normalizado (upper/trim/sin acento)
+                const emailValue = docente.Email; // Ya está normalizado (lower/trim)
                 
                 curpField.value = curpValue;
                 emailField.value = emailValue;
@@ -403,7 +418,6 @@
                 setFieldDisabled(curpField, curpValue !== '');
                 setFieldDisabled(emailField, emailValue !== '');
                 
-                // Si la columna 'Departamento' existe en el CSV de Docentes, la usamos (aunque tu CSV no la tiene)
                 const departamentoSelect = document.getElementById('departamento');
                 if (docente.Departamento && departamentoSelect) { 
                     departamentoSelect.value = docente.Departamento || ''; 
@@ -415,8 +429,8 @@
                 setFieldDisabled(document.getElementById('email'), false);
             }
             
-            // Asegurar que el campo de Nombre Completo siempre esté en mayúsculas
-            document.getElementById('nombreCompleto').value = upperName;
+            // Asegurar que el campo de Nombre Completo se vea en MAYÚSCULAS y SIN ACENTOS (la versión normalizada)
+            document.getElementById('nombreCompleto').value = normalizedName;
         }
 
         /**
@@ -438,22 +452,16 @@
         // Función para habilitar/deshabilitar campos de información personal
         function setPersonalInfoFieldsDisabled(isDisabled) {
             
-            // Campos que DEBEN bloquearse al tener cursos registrados: CURP y Email.
-            // Esto asegura que el mismo docente envíe todos los cursos.
             const curpField = document.getElementById('curp');
             const emailField = document.getElementById('email');
 
-            // Itera sobre los campos de input (CURP, Email)
             [curpField, emailField].forEach(field => {
-                // Solo bloquear si tiene contenido. Si el contenido está vacío (porque vino vacío del CSV), 
-                // entonces forzamos la NO desactivación para que el usuario pueda escribir.
                 if (field) {
                     const shouldBeReadOnly = isDisabled && field.value.trim() !== '';
                     setFieldDisabled(field, shouldBeReadOnly);
                 }
             });
             
-            // Departamento y Genero SIEMPRE ACTIVOS (disabled=false)
             const activeFields = [
                 document.getElementById('departamento'),
                 document.getElementById('genero')
@@ -466,7 +474,6 @@
                 }
             });
             
-            // El campo de curso (#curso) SIEMPRE ACTIVO
             document.getElementById('curso').disabled = false;
         }
 
@@ -486,25 +493,20 @@
             });
 
             // 2. Cursos (Revisión de Data)
-            cursoSelect.innerHTML = ''; // Limpiar completamente
+            cursoSelect.innerHTML = ''; 
 
-            // Si después del filtro, no hay cursos válidos
             if (COURSES.length === 0) {
-                // Si no hay cursos cargados, actualizar el mensaje del placeholder con error
                 cursoSelect.innerHTML = '<option value="" disabled>ERROR: No se encontraron cursos con nombre válido</option>';
                 console.error("Los datos de cursos se cargaron, pero no contenían nombres válidos.");
-                // Estilo visual de error
                 cursoSelect.classList.add('border-red-500', 'text-red-500', 'focus:ring-red-500', 'focus:border-red-500');
-                return; // Salir de la función
+                return; 
             }
             
-            // Añadir placeholder inicial
             cursoSelect.innerHTML = '<option value="">Selecciona un curso</option>';
             cursoSelect.classList.remove('border-red-500', 'text-red-500', 'focus:ring-red-500', 'focus:border-red-500');
 
             // Agrupar cursos por FechaVisible
             const coursesByDate = COURSES.reduce((acc, course) => {
-                // Asegurar que solo se procesen objetos con un NombreCurso válido aquí también
                 if (course.NombreCurso) { 
                     const dateKey = course.FechaVisible ? String(course.FechaVisible).trim() : 'Sin Fecha';
                     if (!acc[dateKey]) {
@@ -516,13 +518,11 @@
             }, {});
 
             let groupIndex = 1;
-            // Ordenar las fechas para que los grupos aparezcan ordenados
             const sortedDates = Object.keys(coursesByDate).sort(); 
 
             sortedDates.forEach(date => {
                 const coursesInGroup = coursesByDate[date];
                 
-                // Si hay cursos válidos en el grupo
                 if (coursesInGroup.length > 0) {
                     const optgroup = document.createElement('optgroup');
                     optgroup.label = `--- ${date} ---`;
@@ -530,18 +530,16 @@
 
                     coursesInGroup.forEach(curso => {
                         const option = document.createElement('option');
-                        option.value = curso.NombreCurso;
+                        option.value = curso.NombreCurso; // Valor ya normalizado
                         option.textContent = curso.NombreCurso;
                         optgroup.appendChild(option);
                     });
                     
                     cursoSelect.appendChild(optgroup);
-                    // Alternar el color del grupo (1, 2, 3)
                     groupIndex = groupIndex % 3 + 1;
                 }
             });
             
-            // Post-check: Si solo queda el placeholder, es un problema de datos
             if (cursoSelect.children.length === 1 && cursoSelect.children[0].value === "") {
                 console.warn("Advertencia: El selector de cursos sigue vacío tras intentar poblarlo.");
             }
@@ -551,11 +549,11 @@
         function updateCourseDetails() {
             const cursoSelect = document.getElementById('curso');
             const selectedCourseName = cursoSelect.value;
-            // Buscar el curso por el nombre (NombreCurso)
+            // Buscar el curso por el nombre (NombreCurso), que ahora también está normalizado
             const curso = COURSES.find(c => c.NombreCurso === selectedCourseName); 
 
             if (curso && selectedCourseName !== '') {
-                // FIX: Usar el operador OR (|| '') para asegurar que no se asignen valores 'undefined'
+                
                 const fechaVisible = curso.FechaVisible || '';
                 const lugar = curso.Lugar || '';
                 const horario = curso.Horario || '';
@@ -611,10 +609,8 @@
 
             } else {
                 container.classList.add('hidden');
-                // Habilitar CURP y Email si no hay cursos registrados
-                // Esto se hace en autofillDocente() al limpiar el campo o si no se encuentra el docente
-                // Aquí solo aseguramos que no se bloqueen por el contador.
-                // La lógica de bloqueo por contenido la maneja autofillDocente y setFieldDisabled.
+                // Al vaciar la lista, desbloquear los campos para que el usuario pueda escribir/autocompletar
+                setPersonalInfoFieldsDisabled(false); 
                 aceptarButton.textContent = 'Aceptar'; 
             }
         }
@@ -636,21 +632,21 @@
         }
         
         // Función de validación de existencia de docente
-        function validateDocenteExistence(curp, email, nombre) {
-             // Buscamos por Nombre Completo
-            const nameFound = DOCENTES_LIST.find(doc => (doc.NombreCompleto || '').toUpperCase() === nombre.toUpperCase());
+        function validateDocenteExistence(nombre) {
+             // Normalizamos el nombre ingresado usando la misma función estricta
+            const nombreNormalizado = normalizeString(nombre);
+            const docenteFound = DOCENTES_MAP[nombreNormalizado];
 
-            if (nameFound) {
-                // Si el nombre existe, el docente es válido. 
-                // La CURP y Email deben llenarse si o si gracias al atributo 'required' en el HTML.
+            if (docenteFound) {
                 return null; // Docente encontrado
             }
-            return "Tu Nombre Completo no fue encontrado en la base de datos de Docentes. Por favor, verifica tus datos o contacta a la administración.";
+            return "Tu **Nombre Completo** no fue encontrado en la base de datos de Docentes. Por favor, verifica tu nombre (mayúsculas, acentos, espacios) o contacta a la administración.";
         }
 
 
         // Función de validación de traslape
         function checkOverlap(newCourseName) {
+            // Buscamos con el nombre ya normalizado (valor de option.value)
             const newCourseData = COURSES.find(c => c.NombreCurso === newCourseName);
             
             if (!newCourseData || newCourseName === '') { 
@@ -659,7 +655,7 @@
 
             // Regla 1: Curso ya en la lista
             if (registeredCourses.some(reg => reg.cursoSeleccionado === newCourseData.NombreCurso)) {
-                return `El curso "${newCourseData.NombreCurso}" ya está en tu lista de inscripciones temporales.`;
+                return `El curso **"${newCourseData.NombreCurso}"** ya está en tu lista de inscripciones temporales.`;
             }
 
             // Regla 2: No empalme de Fecha y Horario
@@ -668,7 +664,7 @@
             );
             
             if (overlap) {
-                return `El curso se empalma con "${overlap.cursoSeleccionado}", que tiene la misma fecha y horario (${overlap.fechaVisible} | ${overlap.horario}).`;
+                return `El curso se empalma con **"${overlap.cursoSeleccionado}"**, que tiene la misma fecha y horario (${overlap.fechaVisible} | ${overlap.horario}).`;
             }
 
             // Regla 3: Máximo 3 cursos
@@ -683,7 +679,7 @@
         function showModal(title, message, buttonText, actionFunction = null) {
             const modal = document.getElementById('customModal');
             document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('modalMessage').innerHTML = message;
             const buttonsContainer = document.getElementById('modalButtons');
             buttonsContainer.innerHTML = '';
             
@@ -747,22 +743,22 @@
             const currentData = Object.fromEntries(formData.entries());
 
             // 1. VALIDACIONES DE INFORMACIÓN PERSONAL 
-            // Esto solo se valida si es la primera inscripción O si los campos de identificación no están bloqueados
-            // O si hay un campo que debe rellenarse
-            if (registeredCourses.length === 0 || !document.getElementById('curp').readOnly || !document.getElementById('email').readOnly) {
+            // Solo se ejecuta esta sección si NO hay cursos en la lista O si el campo de nombre NO está bloqueado 
+            // (lo cual permite validar al inicio o si el usuario cambia el nombre)
+            if (registeredCourses.length === 0 || !document.getElementById('nombreCompleto').readOnly) {
                  // A. Validación de Email (Dominio específico)
                 if (!validateEmailDomain(currentData.email)) {
-                    showModal('Error de Validación', 'El correo electrónico debe ser de dominio @itdurango.edu.mx o @gmail.com.', 'Entendido');
+                    showModal('Error de Validación', 'El correo electrónico debe ser de dominio **@itdurango.edu.mx** o **@gmail.com**.', 'Entendido');
                     return;
                 }
                 
-                // B. Validación de Docente (solo se valida que el nombre exista en el DOCENTES_LIST)
+                // B. Validación de Docente (existencia)
                 if (DOCENTES_LIST.length === 0) {
                     showModal('Cargando Datos', 'La base de datos de docentes aún se está cargando. Por favor, espera un momento y vuelve a intentarlo.', 'Entendido');
                     return;
                 }
                 
-                const docenteError = validateDocenteExistence(currentData.curp, currentData.email, currentData.nombreCompleto);
+                const docenteError = validateDocenteExistence(currentData.nombreCompleto);
                 if (docenteError) {
                     showModal('Acceso Denegado', docenteError, 'Entendido');
                     return;
@@ -787,6 +783,7 @@
             }
             
             // 3. Agregar curso a la lista temporal
+            // Buscamos el curso por el nombre ya normalizado (que es el valor que está en el select)
             const courseDetails = COURSES.find(c => c.NombreCurso === currentData.cursoSeleccionado);
             
             registeredCourses.push({
@@ -828,21 +825,24 @@
             }
 
             aceptarButton.disabled = true;
-            aceptarButton.textContent = 'Enviando (1/3)...';
+            aceptarButton.textContent = 'Iniciando envío...';
 
             let successCount = 0;
+            const totalCourses = registeredCourses.length;
 
-            for (let i = 0; i < registeredCourses.length; i++) {
+            for (let i = 0; i < totalCourses; i++) {
                 const courseData = registeredCourses[i];
-                aceptarButton.textContent = `Enviando Curso ${i + 1} de ${registeredCourses.length}...`;
+                aceptarButton.textContent = `Enviando Curso ${i + 1} de ${totalCourses}...`;
 
                 try {
                     // Crear un FormData para el envío individual
                     const individualFormData = new FormData();
                     for (const key in courseData) {
-                         // Asegurar que nombre y CURP estén en mayúsculas al enviar
+                         // Asegurar que nombre y CURP estén en MAYÚSCULAS Y SIN ACENTOS al enviar, 
+                         // usando los valores que ya están normalizados en courseData.
                         if (key === 'nombreCompleto' || key === 'curp') {
-                            individualFormData.append(key, (courseData[key] || '').toUpperCase());
+                            // Los valores en courseData ya están limpios y normalizados a mayúsculas sin acentos
+                            individualFormData.append(key, courseData[key] || '');
                         } else {
                             individualFormData.append(key, courseData[key] || ''); 
                         }
@@ -855,22 +855,22 @@
                     });
 
                     successCount++;
-                    console.log(`Envío de curso ${i + 1} completado.`);
+                    console.log(`[CONSOLE_DEBUG] Envío de curso ${i + 1} completado: ${courseData.cursoSeleccionado}`);
 
                 } catch (error) {
-                    console.error("Error al enviar el curso:", courseData.cursoSeleccionado, error);
+                    console.error("[CONSOLE_ERROR] Error al enviar el curso:", courseData.cursoSeleccionado, error);
                 }
             }
             
             // Lógica de finalización
-            if (successCount === registeredCourses.length) {
+            if (successCount === totalCourses) {
                 localStorage.removeItem('registeredCourses');
                 registeredCourses = [];
                 renderRegisteredCourses();
                 successMessage.classList.remove('hidden');
                 form.reset();
             } else {
-                showModal('Error Parcial', `Solo se lograron enviar ${successCount} de ${registeredCourses.length} cursos. Revisa los detalles en tu lista y vuelve a intentarlo.`, 'Cerrar');
+                showModal('Error Parcial', `Solo se lograron enviar **${successCount} de ${totalCourses}** cursos. Revisa los detalles en tu lista y vuelve a intentarlo.`, 'Cerrar');
             }
 
             aceptarButton.disabled = false;
@@ -885,10 +885,18 @@
         
         // Al interactuar con el campo NombreCompleto, forzar el re-autocompletado/chequeo del bloqueo
         document.getElementById('nombreCompleto').addEventListener('input', function() {
+            // Llama a autofillDocente en cada entrada, incluso si no selecciona de la lista,
+            // para mantener la normalización del campo y el chequeo de bloqueo.
+            autofillDocente(this.value); 
+
             // Si el usuario borra el campo, debemos re-habilitar todos
             if (this.value.trim() === '') {
                  setFieldDisabled(document.getElementById('curp'), false);
                  setFieldDisabled(document.getElementById('email'), false);
+                 // Adicionalmente, forzamos la eliminación de bloqueo si la lista de cursos está vacía
+                 if (registeredCourses.length === 0) {
+                    setPersonalInfoFieldsDisabled(false);
+                 }
             }
         });
 
