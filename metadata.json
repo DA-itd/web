@@ -1,0 +1,5 @@
+{
+  "name": "Sistema de Inscripción de Cursos para Docentes",
+  "description": "Una aplicación web para que los docentes se inscriban en cursos de formación. Gestiona la autenticación, el registro de docentes, la visualización de cursos y las inscripciones, interactuando con una base de datos de Firestore.",
+  "requestFramePermissions": []
+}
