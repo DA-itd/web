@@ -9,20 +9,25 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <!--
-    CORRECCIÓN DEFINITIVA: Se eliminaron las entradas conflictivas y antiguas.
-    Ahora el importmap está limpio, es coherente y no tiene duplicados.
+    CORRECCIÓN FINAL: Se ajustó el importmap para ser compatible con el nuevo runtime de JSX de React 18.
+    Esto soluciona el error de la pantalla en blanco.
   -->
   <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@18.2.0",
     "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
     "firebase/app": "https://esm.sh/firebase@10.12.2/app",
     "firebase/auth": "https://esm.sh/firebase@10.12.2/auth",
     "firebase/firestore": "https://esm.sh/firebase@10.12.2/firestore",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "firebase/": "https://aistudiocdn.com/firebase@^12.3.0/"
   }
 }
 </script>
+<link rel="stylesheet" href="/index.css">
 </head>
 <body class="bg-gray-100">
   <div id="root"></div>
@@ -47,5 +52,6 @@
   <!-- 2. Cambiar el tipo de script a "text/babel" y añadir presets -->
   <!-- Esto le dice a Babel que procese este archivo antes de que el navegador lo ejecute -->
   <script type="text/babel" data-type="module" data-presets="typescript,react" src="./index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
 </body>
 </html>

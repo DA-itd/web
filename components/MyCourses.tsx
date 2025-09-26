@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { getInscripcionesPorDocente, anularInscripcion } from '../services/firebaseService';
 import type { Inscripcion, Docente } from '../types';
