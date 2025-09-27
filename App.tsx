@@ -1,6 +1,6 @@
 
 import React from 'react';
-import RegistrationForm from './components/RegistrationForm';
+import RegistrationForm from './components/RegistrationForm.tsx';
 import { Toaster } from 'react-hot-toast';
 
 const App: React.FC = () => {

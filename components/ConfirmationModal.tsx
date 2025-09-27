@@ -1,6 +1,6 @@
 
 import React from 'react';
-import type { Course } from '../types';
+import type { Course } from '../types.ts';
 import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/solid';
 
 interface ConfirmationModalProps {

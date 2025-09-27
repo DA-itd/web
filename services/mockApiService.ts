@@ -1,5 +1,5 @@
 
-import type { Teacher, Department, Course } from '../types';
+import type { Teacher, Department, Course } from '../types.ts';
 
 const teachers: Teacher[] = [
   { id: 1, name: 'Dra. Ana María López Hernández', curp: 'LOHA800115HMCXXXX', email: 'ana.lopez@example.com', departmentId: 1 },

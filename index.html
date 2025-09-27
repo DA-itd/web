@@ -37,6 +37,7 @@
   }
 }
 </script>
+<link rel="stylesheet" href="/index.css">
 </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -46,6 +47,7 @@
       El atributo `data-presets` le dice a Babel que use las reglas para React y TypeScript.
       Babel se encargará de buscar y transpilar todos los módulos importados (.tsx, .ts).
     -->
-    <script type="text/babel" data-presets="react,typescript" data-type="module" src="./src/index.tsx"></script>
-  </body>
+    <script type="text/babel" data-presets="react,typescript" data-type="module" src="./index.tsx"></script>
+  <script type="module" src="/index.tsx"></script>
+</body>
 </html>

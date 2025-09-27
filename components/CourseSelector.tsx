@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import type { Course } from '../types';
+import type { Course } from '../types.ts';
 import toast from 'react-hot-toast';
 import { XCircleIcon, PlusCircleIcon, BookOpenIcon, ClockIcon, CalendarIcon } from '@heroicons/react/24/outline';
 

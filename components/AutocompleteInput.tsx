@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import type { Teacher } from '../types';
+import type { Teacher } from '../types.ts';
 import { UserIcon } from '@heroicons/react/24/outline';
 
 interface AutocompleteInputProps {

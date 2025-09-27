@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import toast from 'react-hot-toast';
-import type { Teacher, Department, Course } from '../types';
-import api from '../services/csvApiService';
-import AutocompleteInput from './AutocompleteInput';
-import CourseSelector from './CourseSelector';
-import ConfirmationModal from './ConfirmationModal';
+import type { Teacher, Department, Course } from '../types.ts';
+import api from '../services/csvApiService.ts';
+import AutocompleteInput from './AutocompleteInput.tsx';
+import CourseSelector from './CourseSelector.tsx';
+import ConfirmationModal from './ConfirmationModal.tsx';
 
 const RegistrationForm: React.FC = () => {
     // State for data

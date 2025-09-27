@@ -1,4 +1,4 @@
-import type { Teacher, Department, Course } from '../types';
+import type { Teacher, Department, Course } from '../types.ts';
 
 const BASE_URL = 'https://raw.githubusercontent.com/DA-itd/web/main/';
 
