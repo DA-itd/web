@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <meta charset="UTF-t" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registro de Cursos para Docentes</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,7 +19,14 @@
         }
       }
     </script>
-  <script type="importmap">
+
+    <!--
+      Babel Standalone: Este script transpila JSX y TypeScript (.tsx, .ts) directamente en el navegador.
+      Es necesario para que la app se ejecute en un hosting estático como GitHub Pages sin un paso de compilación.
+    -->
+    <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+
+    <script type="importmap">
 {
   "imports": {
     "react": "https://aistudiocdn.com/react@^19.1.1",
@@ -30,12 +37,15 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <script type="module" src="/src/index.tsx"></script>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <!--
+      El tipo de script se cambia a "text/babel" para que Babel lo procese.
+      El atributo `data-presets` le dice a Babel que use las reglas para React y TypeScript.
+      Babel se encargará de buscar y transpilar todos los módulos importados (.tsx, .ts).
+    -->
+    <script type="text/babel" data-presets="react,typescript" data-type="module" src="./src/index.tsx"></script>
+  </body>
 </html>
