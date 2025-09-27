@@ -21,23 +21,35 @@
     </script>
 
     <!--
-      Babel Standalone: Este script transpila JSX y TypeScript (.tsx, .ts) directamente en el navegador.
-      Es necesario para que la app se ejecute en un hosting estático como GitHub Pages sin un paso de compilación.
+      ES Module Shims: Polyfill para hacer que los import maps funcionen de manera fiable en todos los navegadores.
+      Es crucial para que nuestra configuración sin compilación resuelva correctamente dependencias como React.
+      DEBE ser el primer script en el <head>.
+    -->
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
+    
+    <!--
+      Babel Standalone: Transpila JSX y TypeScript directamente en el navegador.
     -->
     <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
 
+    <!--
+      Import Map: Define atajos para las dependencias externas.
+      Se usa esm.sh por ser un CDN optimizado para módulos ES.
+    -->
     <script type="importmap">
 {
   "imports": {
-    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react": "https://esm.sh/react@18.3.1",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+    "react-hot-toast": "https://esm.sh/react-hot-toast@2.4.1",
+    "@heroicons/react/24/outline": "https://esm.sh/@heroicons/react@2.1.3/24/outline",
+    "@heroicons/react/24/solid": "https://esm.sh/@heroicons/react@2.1.3/24/solid",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
     "react/": "https://aistudiocdn.com/react@^19.1.1/",
-    "react-hot-toast": "https://aistudiocdn.com/react-hot-toast@^2.6.0",
     "@heroicons/react/": "https://aistudiocdn.com/@heroicons/react@^2.2.0/"
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -47,7 +59,6 @@
       El atributo `data-presets` le dice a Babel que use las reglas para React y TypeScript.
       Babel se encargará de buscar y transpilar todos los módulos importados (.tsx, .ts).
     -->
-    <script type="text/babel" data-presets="react,typescript" data-type="module" src="./index.tsx"></script>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <script type="text/babel" data-presets="react,typescript" src="./index.tsx"></script>
+  </body>
 </html>
