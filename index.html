@@ -3,50 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prueba de Conexión</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #1a1a1a;
-            color: #f0f0f0;
-            text-align: center;
+    <title>Registro de Cursos para Docentes</title>
+    
+    <!-- 1. Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Custom theme configuration for Tailwind to match component styles
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'brand-dark': '#0D1B2A',
+              'brand-blue': '#1B263B',
+              'brand-lightblue': '#E0E1DD',
+              'brand-accent': '#415A77',
+            }
+          }
         }
-        .container {
-            padding: 2rem 4rem;
-            border: 2px dashed #444;
-            border-radius: 15px;
-        }
-        h1 {
-            font-size: 4rem;
-            margin: 0;
-        }
-        p {
-            margin-top: 0.5rem;
-            font-size: 1.2rem;
-            color: #888;
-        }
-    </style>
-<script type="importmap">
+      }
+    </script>
+    
+    <!-- 2. ES Module Shims for importmap compatibility -->
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
+
+    <!-- 3. Clean Import Map for dependencies -->
+    <script type="importmap">
 {
   "imports": {
-    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react": "https://esm.sh/react@18.3.1",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+    "@heroicons/react/24/outline": "https://esm.sh/@heroicons/react@2.1.3/24/outline",
+    "@heroicons/react/24/solid": "https://esm.sh/@heroicons/react@2.1.3/24/solid",
+    "react-hot-toast": "https://esm.sh/react-hot-toast@2.4.1",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
     "react/": "https://aistudiocdn.com/react@^19.1.1/",
-    "@heroicons/react/": "https://aistudiocdn.com/@heroicons/react@^2.2.0/",
-    "react-hot-toast": "https://aistudiocdn.com/react-hot-toast@^2.6.0"
+    "@heroicons/react/": "https://aistudiocdn.com/@heroicons/react@^2.2.0/"
   }
 }
 </script>
+    
+    <!-- 4. Babel Standalone for TSX/JSX transpilation -->
+    <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
 </head>
-<body>
-    <div class="container">
-        <h1>Hola Mundo! 👋</h1>
-        <p>La conexión con GitHub Pages funciona correctamente.</p>
-    </div>
+<body class="bg-gray-100">
+    
+    <!-- 5. Root element for React app -->
+    <div id="root"></div>
+    
+    <!-- 6. Main application script with cache-busting -->
+    <script type="text/babel" data-type="module" src="index.tsx?v=2"></script>
+    
 </body>
 </html>
