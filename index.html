@@ -32,14 +32,21 @@
     <!-- React Hot Toast from CDN (available as global 'toast' and 'Toaster') -->
     <script src="https://unpkg.com/react-hot-toast@2.4.1/dist/react-hot-toast.js"></script>
 
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.1.1/"
+  }
+}
+</script>
 <link rel="stylesheet" href="/index.css">
 </head>
 <body class="bg-gray-100">
     
     <div id="root"></div>
     
-    <!-- Load the single application bundle -->
-    <script type="text/babel" data-presets="react,typescript" src="bundle.js?v=16"></script>
+    <!-- Load the main application script -->
+    <script type="text/babel" data-presets="react,typescript" src="index.tsx"></script>
     
 <script type="module" src="/index.tsx"></script>
 </body>
