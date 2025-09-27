@@ -1,5 +1,5 @@
 {
-  "name": "ITD Teacher Course Registration",
-  "description": "An application for teachers at the Instituto Tecnologico de Durango to register for professional development courses. The app features autocompletion for teacher data, multi-course registration, and schedule validation.",
+  "name": "Registro de Cursos para Docentes",
+  "description": "Una aplicación para que los docentes se registren en cursos de actualización. Autocompleta los datos del usuario, gestiona la selección de cursos y valida los conflictos de horarios.",
   "requestFramePermissions": []
 }
