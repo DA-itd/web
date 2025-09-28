@@ -9,31 +9,20 @@ let docentes = [];
 let departamentos = [];
 let cursos = [];
 
-// --- FUNCIONES AUXILIARES ---
+// --- CARGAR CSV CON PapaParse ---
 async function cargarCSV(url) {
-  const res = await fetch(url);
-  const text = await res.text();
-  const lines = text.split("\n");
-  return lines.map(line => line.split(","));
+  return new Promise((resolve, reject) => {
+    Papa.parse(url, {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => resolve(results.data),
+      error: (err) => reject(err)
+    });
+  });
 }
 
-function autocompletarDocente(nombre) {
-  const doc = docentes.find(d => d[0].toUpperCase() === nombre.toUpperCase());
-  if (doc) {
-    document.getElementById("curp").value = doc[1] || "";
-    document.getElementById("email").value = doc[2] || "";
-  }
-}
-
-function validarCURP(curp) {
-  return curp.length === 18;
-}
-
-function generarID(consecutivo) {
-  return `TNM-054-01-2026-${consecutivo}`;
-}
-
-// --- CARGAR DATOS INICIALES ---
+// --- INICIALIZACIÓN ---
 async function init() {
   docentes = await cargarCSV(DOCENTES_CSV);
   departamentos = await cargarCSV(DEPARTAMENTOS_CSV);
@@ -42,25 +31,35 @@ async function init() {
   // Llenar departamentos
   const deptSelect = document.getElementById("departamento");
   departamentos.forEach(d => {
-    deptSelect.innerHTML += `<option value="${d[0]}">${d[0]}</option>`;
+    deptSelect.innerHTML += `<option value="${d.departamento}">${d.departamento}</option>`;
   });
 
-  // Llenar cursos
+  // Llenar cursos con colores por periodo
   const cursosSelect = document.getElementById("cursos");
   cursos.forEach(c => {
-    const periodoClass = c[2] === "periodo_1" ? "periodo_1" : "periodo_2";
-    cursosSelect.innerHTML += `<option value="${c[0]}" class="${periodoClass}">${c[1]}</option>`;
+    const periodoClass = c.periodo === "periodo_1" ? "periodo_1" : "periodo_2";
+    cursosSelect.innerHTML += `<option value="${c.id}" class="${periodoClass}">${c.nombre}</option>`;
   });
 }
 
 init();
 
-// --- EVENTOS ---
+// --- AUTOCOMPLETADO DOCENTE ---
 document.getElementById("nombre").addEventListener("blur", (e) => {
   e.target.value = e.target.value.toUpperCase();
-  autocompletarDocente(e.target.value);
+  const nombre = e.target.value;
+  const doc = docentes.find(d => d.nombre.toUpperCase() === nombre);
+  if (doc) {
+    document.getElementById("curp").value = doc.curp || "";
+    document.getElementById("email").value = doc.email || "";
+  }
 });
 
+// --- VALIDACIONES ---
+function validarCURP(curp) { return curp.length === 18; }
+function generarID(consecutivo) { return `TNM-054-01-2026-${consecutivo}`; }
+
+// --- SUBMIT FORM ---
 document.getElementById("formRegistro").addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -75,16 +74,8 @@ document.getElementById("formRegistro").addEventListener("submit", (e) => {
     alert("Todos los campos son obligatorios.");
     return;
   }
-
-  if (!validarCURP(curp)) {
-    alert("CURP debe tener 18 caracteres.");
-    return;
-  }
-
-  if (cursosSelect.length > 3) {
-    alert("Solo puedes seleccionar máximo 3 cursos.");
-    return;
-  }
+  if (!validarCURP(curp)) { alert("CURP debe tener 18 caracteres."); return; }
+  if (cursosSelect.length > 3) { alert("Solo puedes seleccionar máximo 3 cursos."); return; }
 
   // Mostrar confirmación
   document.getElementById("formRegistro").classList.add("hidden");
@@ -99,25 +90,27 @@ document.getElementById("formRegistro").addEventListener("submit", (e) => {
   `;
   document.getElementById("confirmacion").classList.remove("hidden");
 
-  // Botones
+  // Botones de Confirmación
   document.getElementById("regresar").onclick = () => {
     document.getElementById("formRegistro").classList.remove("hidden");
     document.getElementById("confirmacion").classList.add("hidden");
   };
 
   document.getElementById("enviar").onclick = async () => {
-    const idGenerado = generarID(Math.floor(Math.random()*30 + 1));
+    const idGenerado = generarID(Math.floor(Math.random() * 30 + 1));
+    const data = { id: idGenerado, nombre, curp, email, departamento, genero, cursos: cursosSelect };
 
-    const data = {
-      id: idGenerado,
-      nombre,
-      curp,
-      email,
-      departamento,
-      genero,
-      cursos: cursosSelect
-    };
-
-    const resp = await fetch(URL_SCRIPT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json
+    try {
+      const resp = await fetch(URL_SCRIPT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      const result = await resp.json();
+      alert(result.status === "success" ? "Inscripción guardada correctamente." : "Error: " + result.message);
+      window.location.reload();
+    } catch (error) {
+      alert("Error al enviar la inscripción: " + error.message);
+    }
+  };
+});
