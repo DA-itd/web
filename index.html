@@ -3,63 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Inscripción a Cursos Docentes</title>
+  <title>Sistema de Inscripción</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <img src="assets/logo_itdurango.png" alt="Logo IT Durango" class="logo">
+    <img src="https://github.com/DA-itd/web/blob/main/logo_itdurango.png?raw=true" alt="Logo ITD" class="logo">
     <div class="header-text">
       <h1>SISTEMA DE INSCRIPCIÓN A CURSOS DE ACTUALIZACIÓN DOCENTE</h1>
-      <h2>INSTITUTO TECNOLÓGICO DE DURANGO</h2>
+      <p>INSTITUTO TECNOLÓGICO DE DURANGO</p>
     </div>
   </header>
 
   <main>
-    <form id="formRegistro">
-      <label>Nombre completo:</label>
-      <input type="text" id="nombre" required>
+    <div class="form-container">
+      <form id="registroForm">
+        <label for="nombre">Nombre Completo:</label>
+        <input type="text" id="nombre" placeholder="ESCRIBE TU NOMBRE COMPLETO" required>
 
-      <label>CURP:</label>
-      <input type="text" id="curp" maxlength="18" required>
+        <label for="curp">CURP:</label>
+        <input type="text" id="curp" maxlength="18" placeholder="18 CARACTERES" required>
 
-      <label>Email (@itdurango.edu.mx):</label>
-      <input type="email" id="email" required>
+        <label for="email">Correo Institucional:</label>
+        <input type="email" id="email" placeholder="ejemplo@itdurango.edu.mx" required>
 
-      <label>Departamento:</label>
-      <select id="departamento" required>
-        <option value="">Seleccione...</option>
-      </select>
+        <label for="genero">Género:</label>
+        <select id="genero" required>
+          <option value="">Seleccione...</option>
+          <option value="Mujer">Mujer</option>
+          <option value="Hombre">Hombre</option>
+          <option value="Otro">Otro</option>
+        </select>
 
-      <label>Género:</label>
-      <select id="genero" required>
-        <option value="">Seleccione...</option>
-        <option value="Mujer">Mujer</option>
-        <option value="Hombre">Hombre</option>
-        <option value="Otro">Otro</option>
-      </select>
+        <label for="departamento">Departamento:</label>
+        <select id="departamento" required>
+          <option value="">Cargando...</option>
+        </select>
 
-      <label>Cursos (máximo 3):</label>
-      <select id="cursos" multiple required>
-        <!-- Se llenará dinámicamente -->
-      </select>
+        <label for="curso">Curso:</label>
+        <select id="curso" required>
+          <option value="">Cargando...</option>
+        </select>
 
-      <button type="submit">Registrar</button>
-    </form>
-
-    <div id="confirmacion" class="hidden">
-      <h3>Confirmación de Inscripción</h3>
-      <div id="resumen"></div>
-      <button id="regresar">Regresar</button>
-      <button id="enviar">Enviar</button>
+        <button type="submit">Registrar</button>
+      </form>
+      <p id="mensaje"></p>
     </div>
   </main>
 
   <footer>
-    COORDINACIÓN DE ACTUALIZACIÓN DOCENTE - Desarrollo Académico<br>
-    Todos los derechos reservados 2026
+    <p>COORDINACIÓN DE ACTUALIZACIÓN DOCENTE - Desarrollo Académico</p>
+    <p>Todos los derechos reservados 2026</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>

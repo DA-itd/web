@@ -1,118 +1,96 @@
-const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzmsbmlBizGWA58RXn8-8Y7scW5hwakCSMNAwFQ0rCnN1Eu49QdaYl8lfWpEm21R3C2/exec";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-let docentes = [];
-let departamentos = [];
-let cursos = [];
+const firebaseConfig = {
+  apiKey: "AIzaSyBYC-9dyv1Ulp9Oe13ePDJoahWBZNJ6-Wc",
+  authDomain: "actualizacion-docente-itd.firebaseapp.com",
+  projectId: "actualizacion-docente-itd",
+  storageBucket: "actualizacion-docente-itd.firebasestorage.app",
+  messagingSenderId: "979604726632",
+  appId: "1:979604726632:web:7e5cdd2d8f4b8cb9a32cdd",
+  measurementId: "G-V2V4CT2C69"
+};
 
-// Cargar archivos JSON locales
-async function cargarJSON(url) {
-  const resp = await fetch(url);
-  return await resp.json();
-}
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-async function init() {
-  try {
-    docentes = await cargarJSON('./docentes.json');
-    departamentos = await cargarJSON('./departamentos.json');
-    cursos = await cargarJSON('./cursos.json');
+const nombreInput = document.getElementById("nombre");
+const curpInput = document.getElementById("curp");
+const emailInput = document.getElementById("email");
+const generoSelect = document.getElementById("genero");
+const deptoSelect = document.getElementById("departamento");
+const cursoSelect = document.getElementById("curso");
+const form = document.getElementById("registroForm");
+const mensaje = document.getElementById("mensaje");
 
-    // Llenar departamentos
-    const deptSelect = document.getElementById("departamento");
-    departamentos.forEach(d => {
-      deptSelect.innerHTML += `<option value="${d.departamento}">${d.departamento}</option>`;
-    });
-
-    // Llenar cursos
-    const cursosSelect = document.getElementById("cursos");
-    cursos.forEach(c => {
-      const clase = c.periodo === "periodo_1" ? "periodo_1" : "periodo_2";
-      cursosSelect.innerHTML += `<option value="${c.id}" class="${clase}">${c.nombre}</option>`;
-    });
-  } catch (e) {
-    console.error("Error cargando JSON:", e);
-  }
-}
-
-init();
-
-// Autocompletar datos
-document.getElementById("nombre").addEventListener("input", (e) => {
-  const input = e.target;
-  input.value = input.value.toUpperCase();
-  const doc = docentes.find(d => d.nombre.toUpperCase() === input.value.trim());
-  if (doc) {
-    document.getElementById("curp").value = doc.curp || "";
-    document.getElementById("email").value = doc.email || "";
-  }
+// Convertir a mayúsculas automáticamente
+[nombreInput, curpInput].forEach(input => {
+  input.addEventListener("input", () => {
+    input.value = input.value.toUpperCase();
+  });
 });
 
-// Validación de CURP
-function validarCURP(curp) {
-  return curp.length === 18;
+// Cargar departamentos
+async function cargarDepartamentos() {
+  deptoSelect.innerHTML = `<option value="">Seleccione...</option>`;
+  const snapshot = await getDocs(collection(db, "departamentos"));
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    const option = document.createElement("option");
+    option.value = data.Nombre || doc.id;
+    option.textContent = data.Nombre || doc.id;
+    deptoSelect.appendChild(option);
+  });
 }
 
-// Generar ID
-function generarID(consec) {
-  return `TNM-054-01-2026-${consec}`;
+// Cargar cursos
+async function cargarCursos() {
+  cursoSelect.innerHTML = `<option value="">Seleccione...</option>`;
+  const snapshot = await getDocs(collection(db, "cursos"));
+  const cursosOrdenados = [];
+  snapshot.forEach(doc => cursosOrdenados.push(doc.data()));
+
+  // Ordenar primero periodo_1
+  cursosOrdenados.sort((a, b) => a.Periodo.localeCompare(b.Periodo));
+
+  cursosOrdenados.forEach(data => {
+    const option = document.createElement("option");
+    option.value = data.Id_Curso;
+    option.textContent = `${data.Nombre_curso} (${data.FechaVisible})`;
+    option.style.color = data.Periodo === "PERIODO_1" ? "blue" : "green";
+    cursoSelect.appendChild(option);
+  });
 }
 
-// Enviar formulario
-document.getElementById("formRegistro").addEventListener("submit", (e) => {
+// Registrar
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const nombre = document.getElementById("nombre").value.trim().toUpperCase();
-  const curp = document.getElementById("curp").value.trim().toUpperCase();
-  const email = document.getElementById("email").value.trim();
-  const departamento = document.getElementById("departamento").value;
-  const genero = document.getElementById("genero").value;
-  const cursosSelect = Array.from(document.getElementById("cursos").selectedOptions).map(opt => opt.value);
-
-  if (!nombre || !curp || !email || !departamento || !genero || cursosSelect.length === 0) {
-    alert("Todos los campos son obligatorios.");
-    return;
-  }
-  if (!validarCURP(curp)) {
-    alert("La CURP debe tener 18 caracteres.");
-    return;
-  }
-  if (cursosSelect.length > 3) {
-    alert("Solo puedes seleccionar máximo 3 cursos.");
+  if (curpInput.value.length !== 18) {
+    mensaje.textContent = "❌ La CURP debe tener 18 caracteres.";
+    mensaje.style.color = "red";
     return;
   }
 
-  // Mostrar confirmación
-  document.getElementById("formRegistro").classList.add("hidden");
-  const resumen = document.getElementById("resumen");
-  resumen.innerHTML = `
-    <p><strong>Nombre:</strong> ${nombre}</p>
-    <p><strong>CURP:</strong> ${curp}</p>
-    <p><strong>Email:</strong> ${email}</p>
-    <p><strong>Departamento:</strong> ${departamento}</p>
-    <p><strong>Género:</strong> ${genero}</p>
-    <p><strong>Cursos:</strong> ${cursosSelect.join(", ")}</p>
-  `;
-  document.getElementById("confirmacion").classList.remove("hidden");
-
-  document.getElementById("regresar").onclick = () => {
-    document.getElementById("formRegistro").classList.remove("hidden");
-    document.getElementById("confirmacion").classList.add("hidden");
-  };
-
-  document.getElementById("enviar").onclick = async () => {
-    const idGenerado = generarID(Math.floor(Math.random() * 30 + 1));
-    const data = { id: idGenerado, nombre, curp, email, departamento, genero, cursos: cursosSelect };
-
-    try {
-      const resp = await fetch(URL_SCRIPT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-      const result = await resp.json();
-      alert(result.status === "success" ? "Inscripción guardada correctamente." : "Error: " + result.message);
-      window.location.reload();
-    } catch (error) {
-      alert("Error al enviar la inscripción: " + error.message);
-    }
-  };
+  try {
+    await addDoc(collection(db, "inscripciones"), {
+      nombre: nombreInput.value,
+      curp: curpInput.value,
+      email: emailInput.value,
+      genero: generoSelect.value,
+      departamento: deptoSelect.value,
+      curso: cursoSelect.value,
+      fecha: new Date().toISOString()
+    });
+    mensaje.textContent = "✅ Registro guardado correctamente.";
+    mensaje.style.color = "green";
+    form.reset();
+  } catch (error) {
+    mensaje.textContent = "❌ Error al registrar: " + error.message;
+    mensaje.style.color = "red";
+  }
 });
+
+// Ejecutar al cargar
+cargarDepartamentos();
+cargarCursos();

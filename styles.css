@@ -1,68 +1,85 @@
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fa;
+  color: #333;
 }
 
 header {
+  background-color: #003366;
+  color: white;
   display: flex;
   align-items: center;
-  background-color: #004080;
-  color: white;
-  padding: 10px;
+  padding: 10px 20px;
 }
 
-header .logo {
-  height: 60px;
+.logo {
+  width: 80px;
   margin-right: 20px;
 }
 
-header h1 {
+.header-text h1 {
+  font-size: 1.2em;
   margin: 0;
-  font-size: 18px;
 }
 
-header h2 {
-  margin: 0;
-  font-size: 14px;
-  font-weight: normal;
+.header-text p {
+  font-size: 0.9em;
+  margin: 2px 0 0 0;
 }
 
 main {
-  padding: 20px;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.form-container {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 form label {
   display: block;
-  margin-top: 10px;
+  margin-top: 15px;
+  font-weight: bold;
 }
 
-form input, form select {
+form input, form select, form button {
   width: 100%;
   padding: 8px;
-  margin-top: 4px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
-button {
-  margin-top: 15px;
-  padding: 10px 20px;
-  background-color: #004080;
+form button {
+  background: #0066cc;
   color: white;
   border: none;
+  margin-top: 20px;
   cursor: pointer;
+  font-size: 1em;
 }
 
-button:hover {
-  background-color: #0066cc;
+form button:hover {
+  background: #004c99;
 }
 
-.hidden { display: none; }
-
-#cursos option.periodo_1 { background-color: #d9f0ff; }
-#cursos option.periodo_2 { background-color: #ffd9d9; }
+#mensaje {
+  margin-top: 15px;
+  text-align: center;
+  font-weight: bold;
+}
 
 footer {
-  background-color: #f0f0f0;
   text-align: center;
-  padding: 10px;
+  margin-top: 40px;
+  font-size: 0.9em;
+  color: #555;
 }
