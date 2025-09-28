@@ -1,53 +1,65 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Cursos para Docentes</title>
-    
-    <!-- Tailwind CSS from CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'brand-dark': '#0D1B2A',
-              'brand-blue': '#1B263B',
-              'brand-lightblue': '#E0E1DD',
-              'brand-accent': '#415A77',
-            }
-          }
-        }
-      }
-    </script>
-
-    <!-- Babel Standalone for JSX transpilation -->
-    <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
-
-    <!-- React and ReactDOM from CDN (available as global variables) -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    
-    <!-- React Hot Toast from CDN (available as global 'toast' and 'Toaster') -->
-    <script src="https://unpkg.com/react-hot-toast@2.4.1/dist/react-hot-toast.js"></script>
-
-<script type="importmap">
-{
-  "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.1.1/"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Inscripción a Cursos Docentes</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-100">
-    
-    <div id="root"></div>
-    
-    <!-- Load the main application script -->
-    <script type="text/babel" data-presets="react,typescript" src="index.tsx"></script>
-    
-<script type="module" src="/index.tsx"></script>
+<body>
+  <header>
+    <img src="assets/logo_itdurango.png" alt="Logo IT Durango" class="logo">
+    <div class="header-text">
+      <h1>SISTEMA DE INSCRIPCIÓN A CURSOS DE ACTUALIZACIÓN DOCENTE</h1>
+      <h2>INSTITUTO TECNOLÓGICO DE DURANGO</h2>
+    </div>
+  </header>
+
+  <main>
+    <form id="formRegistro">
+      <label>Nombre completo:</label>
+      <input type="text" id="nombre" required>
+
+      <label>CURP:</label>
+      <input type="text" id="curp" maxlength="18" required>
+
+      <label>Email (@itdurango.edu.mx):</label>
+      <input type="email" id="email" required>
+
+      <label>Departamento:</label>
+      <select id="departamento" required>
+        <option value="">Seleccione...</option>
+      </select>
+
+      <label>Género:</label>
+      <select id="genero" required>
+        <option value="">Seleccione...</option>
+        <option value="Mujer">Mujer</option>
+        <option value="Hombre">Hombre</option>
+        <option value="Otro">Otro</option>
+      </select>
+
+      <label>Cursos (máximo 3):</label>
+      <select id="cursos" multiple required>
+        <!-- Se llenará dinámicamente -->
+      </select>
+
+      <button type="submit">Registrar</button>
+    </form>
+
+    <div id="confirmacion" class="hidden">
+      <h3>Confirmación de Inscripción</h3>
+      <div id="resumen"></div>
+      <button id="regresar">Regresar</button>
+      <button id="enviar">Enviar</button>
+    </div>
+  </main>
+
+  <footer>
+    COORDINACIÓN DE ACTUALIZACIÓN DOCENTE - Desarrollo Académico<br>
+    Todos los derechos reservados 2026
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>

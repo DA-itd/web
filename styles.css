@@ -1,33 +1,68 @@
 body {
-  background-color: #f5f6fa;
-  font-family: "Arial", sans-serif;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-.hero {
-  background: #002855; /* Azul institucional */
+header {
+  display: flex;
+  align-items: center;
+  background-color: #004080;
   color: white;
-  padding: 2rem;
-  text-align: center;
+  padding: 10px;
 }
 
-.logo {
-  width: 120px;
-  margin-bottom: 15px;
+header .logo {
+  height: 60px;
+  margin-right: 20px;
 }
 
-.form-card {
-  background: white;
-  border-radius: 10px;
-  padding: 2rem;
-  box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+header h1 {
+  margin: 0;
+  font-size: 18px;
 }
 
-footer p {
-  margin: 0.2rem 0;
-  color: #555;
-}
-
-.creditos {
+header h2 {
+  margin: 0;
   font-size: 14px;
-  color: #333;
+  font-weight: normal;
+}
+
+main {
+  padding: 20px;
+}
+
+form label {
+  display: block;
+  margin-top: 10px;
+}
+
+form input, form select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+}
+
+button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #004080;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0066cc;
+}
+
+.hidden { display: none; }
+
+#cursos option.periodo_1 { background-color: #d9f0ff; }
+#cursos option.periodo_2 { background-color: #ffd9d9; }
+
+footer {
+  background-color: #f0f0f0;
+  text-align: center;
+  padding: 10px;
 }
