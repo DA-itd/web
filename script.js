@@ -1,94 +1,62 @@
-// --- CONFIGURACIÓN ---
 const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzmsbmlBizGWA58RXn8-8Y7scW5hwakCSMNAwFQ0rCnN1Eu49QdaYl8lfWpEm21R3C2/exec";
-
-const DOCENTES_CSV = "https://raw.githubusercontent.com/DA-itd/web/main/docentes.csv";
-const DEPARTAMENTOS_CSV = "https://raw.githubusercontent.com/DA-itd/web/main/departamentos.csv";
-const CURSOS_CSV = "https://raw.githubusercontent.com/DA-itd/web/main/cursos.csv";
 
 let docentes = [];
 let departamentos = [];
 let cursos = [];
 
-// --- CARGAR CSV ---
-async function cargarCSV(url) {
-  return new Promise((resolve, reject) => {
-    Papa.parse(url, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: (results) => resolve(results.data),
-      error: (err) => reject(err)
-    });
-  });
+// Cargar archivos JSON locales
+async function cargarJSON(url) {
+  const resp = await fetch(url);
+  return await resp.json();
 }
 
-// --- INICIALIZACIÓN ---
 async function init() {
   try {
-    docentes = await cargarCSV(DOCENTES_CSV);
-    departamentos = await cargarCSV(DEPARTAMENTOS_CSV);
-    cursos = await cargarCSV(CURSOS_CSV);
-
-    // Normalizar claves a minúsculas para evitar undefined
-    docentes = docentes.map(d => ({
-      nombre: d.nombre?.trim() || "",
-      curp: d.curp?.trim() || "",
-      email: d.email?.trim() || ""
-    }));
-
-    departamentos = departamentos.map(d => ({
-      departamento: d.departamento?.trim() || ""
-    }));
-
-    cursos = cursos.map(c => ({
-      id: c.id?.trim() || "",
-      nombre: c.nombre?.trim() || "",
-      periodo: c.periodo?.trim() || ""
-    }));
+    docentes = await cargarJSON('./docentes.json');
+    departamentos = await cargarJSON('./departamentos.json');
+    cursos = await cargarJSON('./cursos.json');
 
     // Llenar departamentos
     const deptSelect = document.getElementById("departamento");
     departamentos.forEach(d => {
-      if(d.departamento) deptSelect.innerHTML += `<option value="${d.departamento}">${d.departamento}</option>`;
+      deptSelect.innerHTML += `<option value="${d.departamento}">${d.departamento}</option>`;
     });
 
     // Llenar cursos
     const cursosSelect = document.getElementById("cursos");
     cursos.forEach(c => {
-      if(c.id && c.nombre){
-        const periodoClass = c.periodo === "periodo_1" ? "periodo_1" : "periodo_2";
-        cursosSelect.innerHTML += `<option value="${c.id}" class="${periodoClass}">${c.nombre}</option>`;
-      }
+      const clase = c.periodo === "periodo_1" ? "periodo_1" : "periodo_2";
+      cursosSelect.innerHTML += `<option value="${c.id}" class="${clase}">${c.nombre}</option>`;
     });
-
-  } catch (error) {
-    console.error("Error cargando CSV:", error);
+  } catch (e) {
+    console.error("Error cargando JSON:", e);
   }
 }
 
 init();
 
-// --- AUTOCOMPLETADO DOCENTE ---
+// Autocompletar datos
 document.getElementById("nombre").addEventListener("input", (e) => {
   const input = e.target;
-  // Convertir a mayúsculas mientras se escribe
   input.value = input.value.toUpperCase();
-
-  const nombre = input.value.trim();
-  if(nombre.length === 0) return;
-
-  const doc = docentes.find(d => d.nombre.toUpperCase() === nombre);
+  const doc = docentes.find(d => d.nombre.toUpperCase() === input.value.trim());
   if (doc) {
-    document.getElementById("curp").value = doc.curp;
-    document.getElementById("email").value = doc.email;
+    document.getElementById("curp").value = doc.curp || "";
+    document.getElementById("email").value = doc.email || "";
   }
 });
 
-// --- VALIDACIONES ---
-function validarCURP(curp) { return curp.length === 18; }
-function generarID(consecutivo) { return `TNM-054-01-2026-${consecutivo}`; }
+// Validación de CURP
+function validarCURP(curp) {
+  return curp.length === 18;
+}
 
-// --- SUBMIT FORM ---
+// Generar ID
+function generarID(consec) {
+  return `TNM-054-01-2026-${consec}`;
+}
+
+// Enviar formulario
 document.getElementById("formRegistro").addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -103,13 +71,19 @@ document.getElementById("formRegistro").addEventListener("submit", (e) => {
     alert("Todos los campos son obligatorios.");
     return;
   }
-  if (!validarCURP(curp)) { alert("CURP debe tener 18 caracteres."); return; }
-  if (cursosSelect.length > 3) { alert("Solo puedes seleccionar máximo 3 cursos."); return; }
+  if (!validarCURP(curp)) {
+    alert("La CURP debe tener 18 caracteres.");
+    return;
+  }
+  if (cursosSelect.length > 3) {
+    alert("Solo puedes seleccionar máximo 3 cursos.");
+    return;
+  }
 
   // Mostrar confirmación
   document.getElementById("formRegistro").classList.add("hidden");
-  const resumenDiv = document.getElementById("resumen");
-  resumenDiv.innerHTML = `
+  const resumen = document.getElementById("resumen");
+  resumen.innerHTML = `
     <p><strong>Nombre:</strong> ${nombre}</p>
     <p><strong>CURP:</strong> ${curp}</p>
     <p><strong>Email:</strong> ${email}</p>
