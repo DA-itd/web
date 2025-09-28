@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+// FIX: Import toast from react-hot-toast to display notifications.
 import toast from 'react-hot-toast';
 import type { Teacher, Department, Course } from '../types.ts';
 import api from '../services/csvApiService.ts';
@@ -6,7 +7,7 @@ import AutocompleteInput from './AutocompleteInput.tsx';
 import CourseSelector from './CourseSelector.tsx';
 import ConfirmationModal from './ConfirmationModal.tsx';
 
-const RegistrationForm: React.FC = () => {
+const RegistrationForm = () => {
     // State for data
     const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [departments, setDepartments] = useState<Department[]>([]);

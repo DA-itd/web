@@ -1,9 +1,9 @@
-
 import React from 'react';
 import RegistrationForm from './components/RegistrationForm.tsx';
+// FIX: Import the Toaster component from react-hot-toast to display notifications.
 import { Toaster } from 'react-hot-toast';
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
       <Toaster position="top-center" reverseOrder={false} />

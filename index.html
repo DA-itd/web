@@ -1,61 +1,48 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Inscripción</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Cursos para Docentes</title>
+    
+    <!-- Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'brand-dark': '#0D1B2A',
+              'brand-blue': '#1B263B',
+              'brand-lightblue': '#E0E1DD',
+              'brand-accent': '#415A77',
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- Babel Standalone for TSX/JSX transpilation -->
+    <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+
+    <!-- 
+      NOTE: We are intentionally NOT loading React/ReactDOM via <script> tags anymore.
+      We will rely ONLY on the <script type="importmap"> that the environment
+      is automatically injecting to prevent version conflicts.
+    -->
+
+<link rel="stylesheet" href="/index.css">
 </head>
-<body>
-  <header>
-    <img src="https://github.com/DA-itd/web/blob/main/logo_itdurango.png?raw=true" alt="Logo ITD" class="logo">
-    <div class="header-text">
-      <h1>SISTEMA DE INSCRIPCIÓN A CURSOS DE ACTUALIZACIÓN DOCENTE</h1>
-      <p>INSTITUTO TECNOLÓGICO DE DURANGO</p>
-    </div>
-  </header>
-
-  <main>
-    <div class="form-container">
-      <form id="registroForm">
-        <label for="nombre">Nombre Completo:</label>
-        <input type="text" id="nombre" placeholder="ESCRIBE TU NOMBRE COMPLETO" required>
-
-        <label for="curp">CURP:</label>
-        <input type="text" id="curp" maxlength="18" placeholder="18 CARACTERES" required>
-
-        <label for="email">Correo Institucional:</label>
-        <input type="email" id="email" placeholder="ejemplo@itdurango.edu.mx" required>
-
-        <label for="genero">Género:</label>
-        <select id="genero" required>
-          <option value="">Seleccione...</option>
-          <option value="Mujer">Mujer</option>
-          <option value="Hombre">Hombre</option>
-          <option value="Otro">Otro</option>
-        </select>
-
-        <label for="departamento">Departamento:</label>
-        <select id="departamento" required>
-          <option value="">Cargando...</option>
-        </select>
-
-        <label for="curso">Curso:</label>
-        <select id="curso" required>
-          <option value="">Cargando...</option>
-        </select>
-
-        <button type="submit">Registrar</button>
-      </form>
-      <p id="mensaje"></p>
-    </div>
-  </main>
-
-  <footer>
-    <p>COORDINACIÓN DE ACTUALIZACIÓN DOCENTE - Desarrollo Académico</p>
-    <p>Todos los derechos reservados 2026</p>
-  </footer>
-
-  <script type="module" src="script.js"></script>
+<body class="bg-gray-100">
+    
+    <div id="root"></div>
+    
+    <!-- 
+      The main script. Babel will transpile it, and the resulting Javascript
+      will use the 'import' statements that the environment's importmap will resolve.
+    -->
+    <script type="text/babel" data-presets="react,typescript" src="index.tsx?v=15"></script>
+    
+<script type="module" src="/index.tsx"></script>
 </body>
 </html>
