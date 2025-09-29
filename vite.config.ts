@@ -1,23 +1,22 @@
-import path from 'path';
-import { defineConfig, loadEnv } from 'vite';
+import path from "path";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { cloudflare } from "@cloudflare/vite-plugin";
+import { mochaPlugins } from "@getmocha/vite-plugins";
 
-
-export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, '.', '');
-    return {
-      server: {
-        port: 3000,
-        host: '0.0.0.0',
-      },
-      plugins: [],
-      define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
-      },
-      resolve: {
-        alias: {
-          '@': path.resolve(__dirname, '.'),
-        }
-      }
-    };
+export default defineConfig({
+  base: "/web/", // <--- ¡Añade esta línea!
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  plugins: [...mochaPlugins(process.env as any), react(), cloudflare()],
+  server: {
+    allowedHosts: true,
+  },
+  build: {
+    chunkSizeWarningLimit: 5000,
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
 });

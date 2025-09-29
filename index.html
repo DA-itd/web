@@ -1,48 +1,46 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Cursos para Docentes</title>
-    
-    <!-- Tailwind CSS from CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'brand-dark': '#0D1B2A',
-              'brand-blue': '#1B263B',
-              'brand-lightblue': '#E0E1DD',
-              'brand-accent': '#415A77',
-            }
-          }
-        }
-      }
-    </script>
-    
-    <!-- Babel Standalone for TSX/JSX transpilation -->
-    <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
-
-    <!-- 
-      NOTE: We are intentionally NOT loading React/ReactDOM via <script> tags anymore.
-      We will rely ONLY on the <script type="importmap"> that the environment
-      is automatically injecting to prevent version conflicts.
-    -->
-
-<link rel="stylesheet" href="/index.css">
-</head>
-<body class="bg-gray-100">
-    
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="Sistema de Inscripción - ITD" />
+    <meta property="og:description" content="Sistema de Inscripción a Cursos de Actualización Docente - Instituto Tecnológico de Durango" />
+    <meta
+      property="og:image"
+      content="https://mocha-cdn.com/og.png"
+      type="image/png"
+    />
+    <meta
+      property="og:url"
+      content="https://getmocha.com"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:author" content="Mocha" />
+    <meta property="og:site_name" content="Mocha" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:site" content="@get_mocha" />
+    <meta property="twitter:title" content="Mocha" />
+    <meta property="twitter:description" content="AI-powered no-code app builder" />
+    <meta
+      property="twitter:image"
+      content="https://mocha-cdn.com/og.png"
+      type="image/png"
+    />
+    <link
+      rel="shortcut icon"
+      href="https://mocha-cdn.com/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="https://mocha-cdn.com/apple-touch-icon.png"
+      type="image/png"
+    />
+    <title>Sistema de Inscripción - ITD</title>
+  </head>
+  <body>
     <div id="root"></div>
-    
-    <!-- 
-      The main script. Babel will transpile it, and the resulting Javascript
-      will use the 'import' statements that the environment's importmap will resolve.
-    -->
-    <script type="text/babel" data-presets="react,typescript" src="index.tsx?v=15"></script>
-    
-<script type="module" src="/index.tsx"></script>
-</body>
+    <script type="module" src="/src/react-app/main.tsx"></script>
+  </body>
 </html>
