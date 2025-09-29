@@ -11,6 +11,13 @@
         font-family: 'Inter', sans-serif;
       }
       @import url('https://rsms.me/inter/inter.css');
+      .animate-fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
     </style>
   <script type="importmap">
 {
@@ -21,10 +28,740 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
   <body class="bg-gray-50">
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+    <script type="module">
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import ReactDOM from 'react-dom/client';
+
+// --- From types.ts ---
+var Step;
+(function (Step) {
+    Step[Step["PersonalInfo"] = 1] = "PersonalInfo";
+    Step[Step["CourseSelection"] = 2] = "CourseSelection";
+    Step[Step["Confirmation"] = 3] = "Confirmation";
+    Step[Step["Success"] = 4] = "Success";
+})(Step || (Step = {}));
+
+// --- From services/api.ts ---
+const submitRegistration = async (url, formData, allCourses) => {
+    if (!url || url.includes('YOUR_DEPLOYMENT_ID')) {
+        console.warn("MODO DE SIMULACIÓN: La URL de Google Apps Script no está configurada. Se devolverá una respuesta simulada.");
+        const firstCourseId = formData.selectedCourses[0];
+        let courseNumber = 'XX';
+        if (firstCourseId) {
+            const parts = firstCourseId.split('-');
+            if (parts.length === 4) {
+                courseNumber = parts[2];
+            }
+        }
+        const consecutiveNumber = Math.floor(Math.random() * 30) + 1;
+        const simulatedId = `TNM-054-${courseNumber}-2026-${consecutiveNumber}`;
+        return new Promise(resolve => setTimeout(() => resolve({
+            status: 'success',
+            registrationId: simulatedId
+        }), 1000));
+    }
+    const selectedCourseDetails = formData.selectedCourses.map(id => {
+        const course = allCourses.find(c => c.id_curso === id);
+        return {
+            id: course?.id_curso || '',
+            name: course?.nombre_curso || '',
+            schedule: course?.horario || '',
+            dates: course?.fechas || '',
+            location: course?.lugar || '',
+        };
+    }).filter(c => c.id);
+    const payload = {
+        timestamp: new Date().toISOString(),
+        fullName: formData.fullName,
+        curp: formData.curp,
+        email: formData.email,
+        gender: formData.gender,
+        department: formData.department,
+        selectedCourses: selectedCourseDetails
+    };
+    const response = await fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify(payload),
+        redirect: 'follow',
+    });
+    if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+    }
+    return response.json();
+};
+
+// --- From components/Header.tsx ---
+const Header = () => (
+    React.createElement("header", { className: "bg-white text-blue-900" },
+        React.createElement("div", { className: "container mx-auto px-4 py-4 flex items-center" },
+            React.createElement("img", {
+                src: "https://raw.githubusercontent.com/DA-itd/web/main/logo_itdurango.png",
+                alt: "Logo ITD",
+                className: "h-16 md:h-20 mr-4"
+            }),
+            React.createElement("div", { className: "text-center flex-grow" },
+                React.createElement("h1", { className: "text-lg sm:text-xl md:text-2xl font-bold tracking-wide" },
+                    "SISTEMA DE INSCRIPCI\u00D3N A CURSOS DE ACTUALIZACI\u00D3N DOCENTE"),
+                React.createElement("p", { className: "text-sm md:text-base font-light" },
+                    "INSTITUTO TECNOL\u00D3GICO DE DURANGO"))))
+);
+
+// --- From components/Footer.tsx ---
+const Footer = () => (
+    React.createElement("footer", { className: "bg-blue-800 text-white text-center p-4" },
+        React.createElement("div", { className: "container mx-auto text-xs md:text-sm" },
+            React.createElement("p", null, "COORDINACI\u00D3N DE ACTUALIZACI\u00D3N DOCENTE - Desarrollo Acad\u00E9mico"),
+            React.createElement("p", null, "Todos los derechos reservados 2026.")))
+);
+
+// --- From components/Stepper.tsx ---
+const stepperSteps = [
+    { number: 1, title: 'Información Personal' },
+    { number: 2, title: 'Selección de Cursos' },
+    { number: 3, title: 'Confirmación' },
+    { number: 4, title: 'Registro Completo' }
+];
+const Stepper = ({ currentStep }) => {
+    return (
+        React.createElement("div", { className: "w-full py-4 px-2 md:px-8 mb-8" },
+            React.createElement("div", { className: "flex items-center" },
+                stepperSteps.map((step, index) => (
+                    React.createElement(React.Fragment, { key: step.number },
+                        React.createElement("div", { className: "flex-shrink-0" },
+                            React.createElement("div", {
+                                className: `w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-300
+                                ${currentStep >= step.number ? 'bg-rose-800 text-white' : 'bg-gray-300 text-gray-600'}
+                                ${currentStep === step.number ? 'ring-4 ring-rose-300' : ''}`
+                            },
+                                React.createElement("span", { className: "font-bold" }, step.number))),
+                        index < stepperSteps.length - 1 && (
+                            React.createElement("div", { className: `flex-auto border-t-2 transition-colors duration-300
+                                ${currentStep > step.number ? 'border-rose-800' : 'border-gray-300'}`
+                            })))
+                ))),
+            React.createElement("div", { className: "flex justify-between mt-2" },
+                stepperSteps.map((step) => (
+                    React.createElement("div", { key: step.number, className: "w-1/4 text-center px-1" },
+                        React.createElement("p", { className: `text-xs md:text-sm transition-colors duration-300 ${currentStep >= step.number ? 'text-gray-800 font-semibold' : 'text-gray-500'}` },
+                            step.title))))))
+    );
+};
+
+// --- From components/AutocompleteInput.tsx ---
+const AutocompleteInput = ({ id, name, value, onChange, onSelect, suggestions, placeholder }) => {
+    const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const wrapperRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+                setShowSuggestions(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const handleInputChange = (e) => {
+        onChange(e);
+        const userInput = e.currentTarget.value;
+        if (userInput) {
+            const filtered = suggestions.filter(
+                suggestion => suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+            );
+            setFilteredSuggestions(filtered.slice(0, 5));
+            setShowSuggestions(true);
+        } else {
+            setShowSuggestions(false);
+        }
+    };
+
+    const handleSuggestionClick = (suggestion) => {
+        onSelect(suggestion);
+        setShowSuggestions(false);
+    };
+
+    return (
+        React.createElement("div", { className: "relative", ref: wrapperRef },
+            React.createElement("input", {
+                type: "text",
+                id: id,
+                name: name,
+                value: value,
+                onChange: handleInputChange,
+                className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
+                placeholder: placeholder,
+                autoComplete: "off"
+            }),
+            showSuggestions && filteredSuggestions.length > 0 && (
+                React.createElement("ul", { className: "absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-auto shadow-lg" },
+                    filteredSuggestions.map((suggestion, index) => (
+                        React.createElement("li", {
+                            key: index,
+                            onClick: () => handleSuggestionClick(suggestion),
+                            className: "px-3 py-2 cursor-pointer hover:bg-gray-100"
+                        },
+                            suggestion)
+                    )))
+            ))
+    );
+};
+
+// --- From components/Step1PersonalInfo.tsx ---
+const Step1PersonalInfo = ({ formData, updateFormData, departments, teachers, onNext }) => {
+    const [errors, setErrors] = useState({});
+    const teacherNames = useMemo(() => teachers.map(t => t.nombreCompleto), [teachers]);
+
+    const handleSelectTeacher = (name) => {
+        const teacher = teachers.find(t => t.nombreCompleto === name);
+        if (teacher) {
+            updateFormData({
+                fullName: teacher.nombreCompleto,
+                curp: teacher.curp,
+                email: teacher.email
+            });
+        }
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        let processedValue = value;
+        if (name === 'fullName' || name === 'curp') {
+            processedValue = value.toUpperCase();
+        } else if (name === 'email') {
+            processedValue = value.toLowerCase();
+        }
+        updateFormData({ [name]: processedValue });
+    };
+
+    const validate = () => {
+        const newErrors = {};
+        if (!formData.fullName.trim()) newErrors.fullName = 'El nombre completo es obligatorio.';
+        if (!formData.curp.trim()) {
+            newErrors.curp = 'El CURP es obligatorio.';
+        } else if (formData.curp.length !== 18) {
+            newErrors.curp = 'El CURP debe tener 18 caracteres.';
+        }
+        if (!formData.email.trim()) {
+            newErrors.email = 'El email es obligatorio.';
+        } else if (!/\\S+@\\S+\\.\\S+/.test(formData.email)) {
+            newErrors.email = 'El formato del email no es válido.';
+        }
+        if (!formData.gender) newErrors.gender = 'Seleccione un género.';
+        if (!formData.department) newErrors.department = 'Seleccione un departamento.';
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleNext = () => {
+        if (validate()) {
+            onNext();
+        }
+    };
+
+    return (
+        React.createElement("div", { className: "bg-white p-6 md:p-8 rounded-lg shadow-lg animate-fade-in" },
+            React.createElement("h2", { className: "text-2xl font-bold text-gray-800 mb-6" }, "Informaci\u00F3n Personal"),
+            React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-6" },
+                React.createElement("div", null,
+                    React.createElement("label", { htmlFor: "fullName", className: "block text-sm font-medium text-gray-700 mb-1" }, "Nombre Completo *"),
+                    React.createElement(AutocompleteInput, {
+                        id: "fullName",
+                        name: "fullName",
+                        value: formData.fullName,
+                        onChange: handleChange,
+                        onSelect: handleSelectTeacher,
+                        suggestions: teacherNames,
+                        placeholder: "Escriba su nombre completo"
+                    }),
+                    errors.fullName && React.createElement("p", { className: "text-red-500 text-xs mt-1" }, errors.fullName)
+                ),
+                React.createElement("div", null,
+                    React.createElement("label", { htmlFor: "curp", className: "block text-sm font-medium text-gray-700 mb-1" }, "CURP *"),
+                    React.createElement("input", {
+                        type: "text",
+                        id: "curp",
+                        name: "curp",
+                        value: formData.curp,
+                        onChange: handleChange,
+                        maxLength: 18,
+                        className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
+                        placeholder: "18 caracteres"
+                    }),
+                    errors.curp && React.createElement("p", { className: "text-red-500 text-xs mt-1" }, errors.curp)
+                ),
+                React.createElement("div", null,
+                    React.createElement("label", { htmlFor: "email", className: "block text-sm font-medium text-gray-700 mb-1" }, "Email Institucional *"),
+                    React.createElement("input", {
+                        type: "email",
+                        id: "email",
+                        name: "email",
+                        value: formData.email,
+                        onChange: handleChange,
+                        className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
+                        placeholder: "nombre@itdurango.edu.mx"
+                    }),
+                    errors.email && React.createElement("p", { className: "text-red-500 text-xs mt-1" }, errors.email)
+                ),
+                React.createElement("div", null,
+                    React.createElement("label", { htmlFor: "gender", className: "block text-sm font-medium text-gray-700 mb-1" }, "G\u00E9nero *"),
+                    React.createElement("select", {
+                        id: "gender",
+                        name: "gender",
+                        value: formData.gender,
+                        onChange: handleChange,
+                        className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    },
+                        React.createElement("option", { value: "" }, "Seleccione una opci\u00F3n"),
+                        React.createElement("option", { value: "Mujer" }, "Mujer"),
+                        React.createElement("option", { value: "Hombre" }, "Hombre"),
+                        React.createElement("option", { value: "Otro" }, "Otro")),
+                    errors.gender && React.createElement("p", { className: "text-red-500 text-xs mt-1" }, errors.gender)
+                ),
+                React.createElement("div", { className: "md:col-span-2" },
+                    React.createElement("label", { htmlFor: "department", className: "block text-sm font-medium text-gray-700 mb-1" }, "Departamento *"),
+                    React.createElement("select", {
+                        id: "department",
+                        name: "department",
+                        value: formData.department,
+                        onChange: handleChange,
+                        className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    },
+                        React.createElement("option", { value: "" }, "Seleccione un departamento"),
+                        departments.map(d => React.createElement("option", { key: d.departamento, value: d.departamento }, d.departamento))),
+                    errors.department && React.createElement("p", { className: "text-red-500 text-xs mt-1" }, errors.department)
+                )),
+            React.createElement("div", { className: "mt-8 text-right" },
+                React.createElement("button", {
+                    onClick: handleNext,
+                    className: "bg-rose-800 text-white font-bold py-2 px-6 rounded-md hover:bg-rose-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-colors"
+                },
+                    "Continuar"))
+        )
+    );
+};
+
+// --- From components/Step2CourseSelection.tsx ---
+const parseTime = (timeStr) => {
+    const match = timeStr.match(/(\d{1,2}):(\d{2})/g);
+    if (!match || match.length < 2) return null;
+    const [start, end] = match.map(t => {
+        const [h, m] = t.split(':').map(Number);
+        return h * 60 + m;
+    });
+    return [start, end];
+};
+
+const checkConflict = (newCourse, selectedCourses) => {
+    const newCourseTimes = parseTime(newCourse.horario);
+    for (const selected of selectedCourses) {
+        if (selected.fechas.trim().toLowerCase() === newCourse.fechas.trim().toLowerCase()) {
+            const selectedTimes = parseTime(selected.horario);
+            if (newCourseTimes && selectedTimes) {
+                if (newCourseTimes[0] < selectedTimes[1] && newCourseTimes[1] > selectedTimes[0]) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+};
+
+const Step2CourseSelection = ({ formData, updateFormData, courses, onNext, onBack }) => {
+    const [error, setError] = useState(null);
+    const selectedPeriods = useMemo(() => new Set(
+        formData.selectedCourses
+            .map(id => courses.find(c => c.id_curso === id))
+            .filter((c) => !!c)
+            .map(c => c.periodo)
+    ), [formData.selectedCourses, courses]);
+
+    const handleSelectCourse = (courseId) => {
+        setError(null);
+        const isSelected = formData.selectedCourses.includes(courseId);
+        let newSelectedCourses;
+        if (isSelected) {
+            newSelectedCourses = formData.selectedCourses.filter(id => id !== courseId);
+        } else {
+            if (formData.selectedCourses.length >= 3) {
+                setError('Puede seleccionar un máximo de 3 cursos.');
+                return;
+            }
+            const courseToAdd = courses.find(c => c.id_curso === courseId);
+            const currentlySelected = formData.selectedCourses.map(id => courses.find(c => c.id_curso === id)).filter(Boolean);
+            if (courseToAdd && checkConflict(courseToAdd, currentlySelected)) {
+                setError('El horario de este curso se empalma con otro curso ya seleccionado.');
+                return;
+            }
+            newSelectedCourses = [...formData.selectedCourses, courseId];
+        }
+        updateFormData({ selectedCourses: newSelectedCourses });
+    };
+
+    return (
+        React.createElement("div", { className: "bg-white p-6 md:p-8 rounded-lg shadow-lg animate-fade-in" },
+            React.createElement("h2", { className: "text-2xl font-bold text-gray-800 mb-2" }, "Selecci\u00F3n de Cursos"),
+            React.createElement("p", { className: "text-gray-600 mb-4" }, "Seleccione hasta 3 cursos de actualizaci\u00F3n. Los cursos est\u00E1n organizados por periodo."),
+            React.createElement("div", { className: "bg-blue-50 border border-blue-200 text-blue-800 rounded-md p-3 mb-6 text-center" },
+                React.createElement("p", { className: "font-semibold" }, `Cursos seleccionados: ${formData.selectedCourses.length} / 3`)),
+            error && (
+                React.createElement("div", { className: "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md my-4", role: "alert" },
+                    React.createElement("p", null, error))),
+            React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" },
+                courses.map(course => {
+                    const isSelected = formData.selectedCourses.includes(course.id_curso);
+                    const isDimmed = !isSelected && selectedPeriods.has(course.periodo);
+                    const isPeriod1 = course.periodo.toUpperCase().includes('1');
+                    let cardClasses = 'p-3 rounded-lg border-2 cursor-pointer transition-all duration-200';
+                    let textClasses = 'font-bold text-sm mb-1';
+                    let checkboxClasses = 'w-5 h-5 flex-shrink-0 rounded border flex items-center justify-center transition-colors';
+                    if (isSelected) {
+                        const ringColor = isPeriod1 ? 'ring-teal-500' : 'ring-indigo-500';
+                        const cardBg = isPeriod1 ? 'bg-teal-50' : 'bg-indigo-50';
+                        textClasses += isPeriod1 ? ' text-teal-800' : ' text-indigo-800';
+                        cardClasses += ` ring-2 ${ringColor} border-transparent shadow-md ${cardBg}`;
+                        checkboxClasses += ' bg-rose-800 border-rose-800';
+                    } else if (isDimmed) {
+                        cardClasses += ' bg-gray-50 border-gray-200 opacity-50';
+                        textClasses += ' text-gray-500';
+                        checkboxClasses += ' border-gray-300 bg-gray-100';
+                    } else {
+                        const cardBg = isPeriod1 ? 'bg-teal-50' : 'bg-indigo-50';
+                        textClasses += isPeriod1 ? ' text-teal-800' : ' text-indigo-800';
+                        cardClasses += ` border-gray-200 hover:border-gray-400 ${cardBg}`;
+                        checkboxClasses += ' border-gray-400';
+                    }
+                    return (
+                        React.createElement("div", {
+                            key: course.id_curso,
+                            onClick: () => handleSelectCourse(course.id_curso),
+                            className: cardClasses
+                        },
+                            React.createElement("div", { className: "flex justify-between items-start" },
+                                React.createElement("div", { className: "flex-grow pr-2" },
+                                    React.createElement("h3", { className: textClasses }, course.nombre_curso),
+                                    React.createElement("p", { className: `text-xs ${isDimmed ? 'text-gray-400' : 'text-gray-500'}` }, "Fechas: ", course.fechas)),
+                                React.createElement("div", { className: checkboxClasses },
+                                    isSelected && React.createElement("svg", { className: "w-3 h-3 text-white", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" }, React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "3", d: "M5 13l4 4L19 7" }))))
+                        )
+                    );
+                })),
+            React.createElement("div", { className: "mt-8 flex justify-between" },
+                React.createElement("button", {
+                    onClick: onBack,
+                    className: "bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors"
+                }, "Regresar"),
+                React.createElement("button", {
+                    onClick: onNext,
+                    className: "bg-rose-800 text-white font-bold py-2 px-6 rounded-md hover:bg-rose-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-colors"
+                }, "Continuar"))
+        )
+    );
+};
+
+// --- From components/Step3Confirmation.tsx ---
+const InfoItem = ({ label, value }) => (
+    React.createElement("div", null,
+        React.createElement("p", { className: "text-sm text-gray-500" }, label),
+        React.createElement("p", { className: "font-semibold text-gray-800" }, value))
+);
+
+const Step3Confirmation = ({ formData, courses, onConfirm, onBack, isLoading }) => {
+    const selectedCoursesDetails = formData.selectedCourses
+        .map(id => courses.find(c => c.id_curso === id))
+        .filter((c) => c !== undefined);
+
+    return (
+        React.createElement("div", { className: "bg-white p-6 md:p-8 rounded-lg shadow-lg animate-fade-in" },
+            React.createElement("h2", { className: "text-2xl font-bold text-gray-800 mb-6" }, "Confirmaci\u00F3n de Registro"),
+            React.createElement("div", { className: "border border-gray-200 rounded-lg p-4 mb-6" },
+                React.createElement("h3", { className: "text-lg font-semibold text-gray-700 mb-4" }, "Resumen de su Registro"),
+                React.createElement("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-4" },
+                    React.createElement(InfoItem, { label: "Nombre", value: formData.fullName }),
+                    React.createElement(InfoItem, { label: "Email", value: formData.email }),
+                    React.createElement(InfoItem, { label: "CURP", value: formData.curp }),
+                    React.createElement(InfoItem, { label: "Departamento", value: formData.department }),
+                    React.createElement(InfoItem, { label: "G\u00E9nero", value: formData.gender }))),
+            React.createElement("div", null,
+                React.createElement("h3", { className: "text-lg font-semibold text-gray-700 mb-4" }, "Cursos Seleccionados"),
+                React.createElement("div", { className: "space-y-4" },
+                    selectedCoursesDetails.length > 0 ? selectedCoursesDetails.map(course => (
+                        React.createElement("div", { key: course.id_curso, className: "bg-gray-50 border border-gray-200 rounded-lg p-4" },
+                            React.createElement("h4", { className: "font-bold text-blue-800" }, course.nombre_curso),
+                            React.createElement("div", { className: "grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 mt-2 text-sm text-gray-600" },
+                                React.createElement("div", null, React.createElement("span", { className: "font-medium" }, "Horario:"), " ", course.horario),
+                                React.createElement("div", null, React.createElement("span", { className: "font-medium" }, "Fechas:"), " ", course.fechas),
+                                React.createElement("div", null, React.createElement("span", { className: "font-medium" }, "Lugar:"), " ", course.lugar),
+                                course.horas && React.createElement("div", null, React.createElement("span", { className: "font-medium" }, "Horas:"), " ", course.horas)))
+                        )) : (
+                       React.createElement("p", { className: "text-gray-500" }, "No ha seleccionado ning\u00FAn curso.")
+                    ))),
+            React.createElement("div", { className: "mt-8 flex justify-between items-center" },
+                React.createElement("button", {
+                    onClick: onBack,
+                    disabled: isLoading,
+                    className: "bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors disabled:opacity-50"
+                }, "Regresar"),
+                React.createElement("button", {
+                    onClick: onConfirm,
+                    disabled: isLoading,
+                    className: "bg-rose-800 text-white font-bold py-2 px-6 rounded-md hover:bg-rose-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-colors disabled:bg-rose-400 flex items-center"
+                },
+                    isLoading ? (
+                        React.createElement(React.Fragment, null,
+                           React.createElement("svg", { className: "animate-spin -ml-1 mr-3 h-5 w-5 text-white", xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24" },
+                                React.createElement("circle", { className: "opacity-25", cx: "12", cy: "12", r: "10", stroke: "currentColor", strokeWidth: "4" }),
+                                React.createElement("path", { className: "opacity-75", fill: "currentColor", d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" })),
+                            "Procesando...")
+                    ) : 'Confirmar Registro'))
+        )
+    );
+};
+
+// --- From components/Step4Success.tsx ---
+const Step4Success = ({ registrationId }) => {
+    return (
+        React.createElement("div", { className: "bg-white p-6 md:p-8 rounded-lg shadow-lg animate-fade-in text-center" },
+            React.createElement("div", { className: "w-16 h-16 bg-green-100 rounded-full mx-auto flex items-center justify-center mb-4" },
+                 React.createElement("svg", { className: "w-10 h-10 text-green-600", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" },
+                    React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M5 13l4 4L19 7" }))),
+            React.createElement("h2", { className: "text-2xl md:text-3xl font-bold text-green-700" }, "\u00A1Registro Exitoso!"),
+            React.createElement("p", { className: "text-gray-600 mt-2 max-w-prose mx-auto" },
+                "Su registro ha sido procesado correctamente. Recibir\u00E1 un correo de confirmaci\u00F3n con los detalles de sus cursos seleccionados."),
+            registrationId && (
+                React.createElement("div", { className: "mt-6 bg-gray-100 border border-dashed border-gray-300 rounded-md p-3 inline-block" },
+                    React.createElement("span", { className: "text-sm text-gray-500" }, "ID de Registro:"),
+                    React.createElement("p", { className: "font-mono text-lg text-gray-800 tracking-wider" }, registrationId))))
+    );
+};
+
+// --- From App.tsx ---
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwMnsMsZr4F8CW1YM1GLkHa1jMVOdxiiZbqgLZz72e6zEpt5kixtdDEFAiBXref-bkq/exec';
+const DATA_URLS = {
+    courses: 'https://raw.githubusercontent.com/DA-itd/web/main/cursos.json',
+    teachers: 'https://raw.githubusercontent.com/DA-itd/web/main/docentes.json'
+};
+const hardcodedDepartments = [
+    { departamento: 'DEPARTAMENTO DE SISTEMAS Y COMPUTACION' },
+    { departamento: 'DEPARTAMENTO DE INGENIERÍA ELÉCTRICA Y ELECTRÓNICA' },
+    { departamento: 'DEPARTAMENTO DE CIENCIAS ECONOMICO-ADMINISTRATIVAS' },
+    { departamento: 'DEPARTAMENTO DE INGENIERÍA QUÍMICA-BIOQUÍMICA' },
+    { departamento: 'DEPARTAMENTO DE CIENCIAS DE LA TIERRA' },
+    { departamento: 'DEPARTAMENTO DE CIENCIAS BASICAS' },
+    { departamento: 'DEPARTAMENTO DE METAL-MECÁNICA' },
+    { departamento: 'DEPARTAMENTO DE INGENIERÍA INDUSTRIAL' },
+    { departamento: 'DIVISION DE ESTUDIOS DE POSGRADO E INVESTIGACION' },
+    { departamento: 'ADMINISTRATIVO' },
+    { departamento: 'EXTERNO' },
+];
+const bustCache = (url) => `${url}?t=${new Date().getTime()}`;
+
+const App = () => {
+    const [step, setStep] = useState(Step.PersonalInfo);
+    const [formData, setFormData] = useState({
+        fullName: '',
+        curp: '',
+        email: '',
+        gender: '',
+        department: '',
+        selectedCourses: [],
+        registrationId: ''
+    });
+    const [courses, setCourses] = useState([]);
+    const [teachers, setTeachers] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const fetchData = useCallback(async () => {
+        setIsLoading(true);
+        setError(null);
+        const cleanAndParseJson = (text) => {
+            if (text.charCodeAt(0) === 0xFEFF) {
+                text = text.substring(1);
+            }
+            return JSON.parse(text);
+        };
+        try {
+            const [crssRes, tchrsRes] = await Promise.all([
+                fetch(bustCache(DATA_URLS.courses)),
+                fetch(bustCache(DATA_URLS.teachers))
+            ]);
+            if (!crssRes.ok || !tchrsRes.ok) {
+                throw new Error(`Error de red al cargar los archivos de datos (códigos: ${crssRes.status}, ${tchrsRes.status}).`);
+            }
+            const [crssText, tchrsText] = await Promise.all([
+                crssRes.text(),
+                tchrsRes.text()
+            ]);
+            const crssData = cleanAndParseJson(crssText);
+            const tchrsData = cleanAndParseJson(tchrsText);
+            if (!Array.isArray(crssData) || !Array.isArray(tchrsData)) {
+                throw new Error("El formato de los datos JSON es incorrecto. Se esperaba un array.");
+            }
+            const findValue = (obj, possibleKeys) => {
+                const normalizeKey = (key) => key.replace(/^\uFEFF/, '').replace(/[\\s_]/g, '').toLowerCase();
+                const objectKeys = Object.keys(obj);
+                for (const pKey of possibleKeys) {
+                    const normalizedPossibleKey = normalizeKey(pKey);
+                    const foundKey = objectKeys.find(ok => normalizeKey(ok) === normalizedPossibleKey);
+                    if (foundKey && obj[foundKey] != null) {
+                        return obj[foundKey];
+                    }
+                }
+                return undefined;
+            };
+            const mappedTeachers = tchrsData
+                .map(t => {
+                    if (!t || typeof t !== 'object') return null;
+                    const nombre = findValue(t, ['Nombre Completo', 'nombreCompleto', 'nombre']);
+                    const curpVal = findValue(t, ['CURP', 'curp']);
+                    const emailVal = findValue(t, ['email', 'Email']);
+                    if (!nombre) return null;
+                    return {
+                        nombreCompleto: String(nombre).trim().toUpperCase(),
+                        curp: String(curpVal || '').trim().toUpperCase(),
+                        email: String(emailVal || '').trim().toLowerCase(),
+                    };
+                })
+                .filter((t) => t !== null && !!t.nombreCompleto);
+            const mappedCourses = crssData
+                 .map((c) => {
+                    if (!c || typeof c !== 'object') return null;
+                    const id = findValue(c, ['id_curso', 'Id_Curso', 'id']);
+                    const periodo = findValue(c, ['periodo', 'Periodo']);
+                    if (id == null || periodo == null) return null;
+                    const nombre = findValue(c, ['#', 'nombre_curso', 'nombre', 'curso', 'nombre del curso']);
+                    const horario = findValue(c, ['horario', 'Horario']);
+                    const fechas = findValue(c, ['fechas', 'Fechas', 'fecha', 'FechaVisible']);
+                    const lugar = findValue(c, ['lugar', 'Lugar', 'location', 'ubicacion']);
+                    const tipo = findValue(c, ['tipo', 'Tipo', 'type']);
+                    const horas = findValue(c, ['horas', 'Horas']);
+                    return {
+                        id_curso: String(id).trim(),
+                        nombre_curso: String(nombre || '').trim(),
+                        horario: String(horario || '').trim(),
+                        fechas: String(fechas || '').trim(),
+                        lugar: String(lugar || '').trim(),
+                        tipo: String(tipo || '').trim(),
+                        periodo: String(periodo).trim(),
+                        ...(horas != null && { horas: Number(horas) }),
+                    };
+                })
+                .filter((c) => c !== null);
+            mappedCourses.sort((a, b) => a.periodo.localeCompare(b.periodo));
+            setCourses(mappedCourses);
+            setTeachers(mappedTeachers);
+        } catch (e) {
+            if (e instanceof Error) {
+                setError(`Error al cargar los datos: ${e.message}. Asegúrese de que los archivos JSON estén disponibles en GitHub y su formato sea correcto.`);
+            } else {
+                setError('Ocurrió un error desconocido al cargar los datos.');
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+    const handleNextStep = () => setStep(prev => Math.min(prev + 1, 4));
+    const handlePrevStep = () => setStep(prev => Math.max(prev - 1, 1));
+
+    const updateFormData = (data) => {
+        setFormData(prev => ({ ...prev, ...data }));
+    };
+
+    const handleConfirm = async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const result = await submitRegistration(APPS_SCRIPT_URL, formData, courses);
+            if (result.status === 'success') {
+                updateFormData({ registrationId: result.registrationId });
+                handleNextStep();
+            } else {
+                throw new Error(result.message || 'An unknown error occurred during registration.');
+            }
+        } catch (e) {
+            if (e instanceof Error) {
+                setError(e.message);
+            } else {
+                setError('Failed to submit registration.');
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const renderStep = () => {
+        switch (step) {
+            case Step.PersonalInfo:
+                return React.createElement(Step1PersonalInfo, {
+                    formData: formData,
+                    updateFormData: updateFormData,
+                    departments: hardcodedDepartments,
+                    teachers: teachers,
+                    onNext: handleNextStep
+                });
+            case Step.CourseSelection:
+                return React.createElement(Step2CourseSelection, {
+                    formData: formData,
+                    updateFormData: updateFormData,
+                    courses: courses,
+                    onNext: handleNextStep,
+                    onBack: handlePrevStep
+                });
+            case Step.Confirmation:
+                return React.createElement(Step3Confirmation, {
+                    formData: formData,
+                    courses: courses,
+                    onConfirm: handleConfirm,
+                    onBack: handlePrevStep,
+                    isLoading: isLoading
+                });
+            case Step.Success:
+                return React.createElement(Step4Success, { registrationId: formData.registrationId });
+            default:
+                return React.createElement("div", null, "Invalid Step");
+        }
+    };
+
+    return (
+        React.createElement("div", { className: "min-h-screen flex flex-col bg-gray-100" },
+            React.createElement(Header, null),
+            React.createElement("div", { className: "w-full border-b-8 border-blue-800" }),
+            React.createElement("main", { className: "flex-grow container mx-auto px-4 py-8 md:py-12" },
+                React.createElement("div", { className: "max-w-4xl mx-auto" },
+                    React.createElement(Stepper, { currentStep: step }),
+                    isLoading && step === 1 && React.createElement("div", { className: "text-center p-8" }, React.createElement("p", { className: "text-xl text-gray-600" }, "Cargando datos...")),
+                    error && React.createElement("div", { className: "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md my-4", role: "alert" }, React.createElement("p", null, error)),
+                    !isLoading && !error && renderStep())),
+            React.createElement(Footer, null))
+    );
+};
+
+// --- From index.tsx ---
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error("Could not find root element to mount to");
+}
+const root = ReactDOM.createRoot(rootElement);
+root.render(
+  React.createElement(React.StrictMode, null, React.createElement(App, null))
+);
+</script>
   </body>
 </html>
