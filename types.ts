@@ -1,24 +1,37 @@
 
-export interface Teacher {
-  id: number;
-  name: string;
-  curp?: string;
-  email?: string;
-  departmentId: number;
-}
-
 export interface Department {
-  id: number;
-  name:string;
+    departamento: string;
 }
 
 export interface Course {
-  id: number;
-  name: string;
-  schedule: {
-    day: 'Lunes' | 'Martes' | 'Miércoles' | 'Jueves' | 'Viernes' | 'Sábado';
-    startTime: string; // "HH:mm"
-    endTime: string; // "HH:mm"
-    date: string; // "YYYY-MM-DD"
-  };
+    id_curso: string;
+    nombre_curso: string;
+    horario: string;
+    fechas: string;
+    lugar: string;
+    tipo: string;
+    periodo: string;
+}
+
+export interface Teacher {
+    nombreCompleto: string;
+    curp: string;
+    email: string;
+}
+
+export interface FormData {
+    fullName: string;
+    curp: string;
+    email: string;
+    gender: string;
+    department: string;
+    selectedCourses: string[];
+    registrationId: string;
+}
+
+export enum Step {
+    PersonalInfo = 1,
+    CourseSelection = 2,
+    Confirmation = 3,
+    Success = 4
 }

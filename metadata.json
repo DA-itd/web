@@ -1,5 +1,5 @@
 {
-  "name": "Registro de Cursos para Docentes",
-  "description": "Una aplicación para que los docentes se registren en cursos de actualización. Autocompleta los datos del usuario, gestiona la selección de cursos y valida los conflictos de horarios.",
+  "name": "Sistema de Inscripción a Cursos Docentes",
+  "description": "Una aplicación de una sola página para que los docentes se inscriban en cursos de desarrollo profesional. Carga datos de cursos, departamentos y docentes desde CSVs públicos, presenta un formulario de varios pasos y envía los datos de inscripción a un backend de Google Apps Script para su procesamiento y notificación por correo electrónico.",
   "requestFramePermissions": []
 }
