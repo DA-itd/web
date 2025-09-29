@@ -255,7 +255,7 @@ const Step1PersonalInfo = ({ formData, updateFormData, departments, teachers, on
         }
         if (!formData.email.trim()) {
             newErrors.email = 'El email es obligatorio.';
-        } else if (!/\\S+@\\S+\\.\\S+/.test(formData.email)) {
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
             newErrors.email = 'El formato del email no es válido.';
         }
         if (!formData.gender) newErrors.gender = 'Seleccione un género.';
@@ -765,3 +765,4 @@ root.render(
 </script>
   </body>
 </html>
+--- START OF FILE google-apps-script/Code.gs ---
