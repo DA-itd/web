@@ -28,6 +28,9 @@
     
     <!-- React Hot Toast from CDN (available as global 'toast' and 'Toaster') -->
     <script src="https://unpkg.com/react-hot-toast@2.4.1/dist/react-hot-toast.js"></script>
+    
+    <!-- Babel Standalone for JSX transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
 <script type="importmap">
 {
@@ -41,8 +44,8 @@
     
     <div id="root"></div>
     
-    <!-- Load the bundled application script -->
-    <script src="bundle.js"></script>
+    <!-- Load the application script with JSX, which will be transpiled by Babel -->
+    <script type="text/babel" src="index.tsx"></script>
     
 </body>
 </html>
