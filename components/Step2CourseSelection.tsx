@@ -1,126 +1,126 @@
-
 import React, { useState } from 'react';
-import type { FormData, Course } from '../types';
+import { Course } from '../types';
 
-interface Props {
-    formData: FormData;
-    updateFormData: (data: Partial<FormData>) => void;
+interface Step2Props {
     courses: Course[];
+    selectedCourses: Course[];
+    setSelectedCourses: (courses: Course[]) => void;
     onNext: () => void;
     onBack: () => void;
 }
 
-const parseTime = (timeStr: string): [number, number] | null => {
-    const match = timeStr.match(/(\d{1,2}):(\d{2})/g);
-    if (!match || match.length < 2) return null;
-
-    const [start, end] = match.map(t => {
-        const [h, m] = t.split(':').map(Number);
-        return h * 60 + m;
-    });
-    return [start, end];
-};
-
-const checkConflict = (newCourse: Course, selectedCourses: Course[]): boolean => {
-    const newCourseTimes = parseTime(newCourse.horario);
-
-    for (const selected of selectedCourses) {
-        if (selected.fechas.trim().toLowerCase() === newCourse.fechas.trim().toLowerCase()) {
-            const selectedTimes = parseTime(selected.horario);
-            if (newCourseTimes && selectedTimes) {
-                // Check for overlap: (StartA <= EndB) and (EndA >= StartB)
-                if (newCourseTimes[0] < selectedTimes[1] && newCourseTimes[1] > selectedTimes[0]) {
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
-};
-
-
-const Step2CourseSelection: React.FC<Props> = ({ formData, updateFormData, courses, onNext, onBack }) => {
+const Step2CourseSelection: React.FC<Step2Props> = ({ courses, selectedCourses, setSelectedCourses, onNext, onBack }) => {
     const [error, setError] = useState<string | null>(null);
 
-    const handleSelectCourse = (courseId: string) => {
-        setError(null);
-        const isSelected = formData.selectedCourses.includes(courseId);
-        let newSelectedCourses: string[];
+    const handleSelectCourse = (course: Course) => {
+        const isSelected = selectedCourses.some(c => c.id === course.id);
+        let newSelection = [...selectedCourses];
 
         if (isSelected) {
-            newSelectedCourses = formData.selectedCourses.filter(id => id !== courseId);
+            newSelection = newSelection.filter(c => c.id !== course.id);
         } else {
-            if (formData.selectedCourses.length >= 3) {
-                setError('Puede seleccionar un máximo de 3 cursos.');
+            // Check for max courses
+            if (selectedCourses.length >= 3) {
+                setError("No puede seleccionar más de 3 cursos.");
                 return;
             }
-
-            const courseToAdd = courses.find(c => c.id_curso === courseId);
-            const currentlySelected = formData.selectedCourses.map(id => courses.find(c => c.id_curso === id)).filter(Boolean) as Course[];
-            
-            if (courseToAdd && checkConflict(courseToAdd, currentlySelected)) {
-                setError('El horario de este curso se empalma con otro curso ya seleccionado.');
+            // Check for period conflict
+            const hasPeriodConflict = selectedCourses.some(c => c.period === course.period);
+            if (hasPeriodConflict) {
+                setError("Ya ha seleccionado un curso para este periodo.");
                 return;
             }
-            newSelectedCourses = [...formData.selectedCourses, courseId];
+            // Check for time conflict
+            const hasTimeConflict = selectedCourses.some(selected => {
+                const selectedTimes = selected.schedule.split(' a ').map(t => parseInt(t.replace(':', '')));
+                const courseTimes = course.schedule.split(' a ').map(t => parseInt(t.replace(':', '')));
+                return selected.dates === course.dates && Math.max(selectedTimes[0], courseTimes[0]) < Math.min(selectedTimes[1], courseTimes[1]);
+            });
+            if (hasTimeConflict) {
+                setError("El horario de este curso se solapa con otro curso seleccionado.");
+                return;
+            }
+            newSelection.push(course);
         }
-        updateFormData({ selectedCourses: newSelectedCourses });
+        
+        setSelectedCourses(newSelection);
+        setError(null);
+    };
+    
+    const getCourseCardClass = (course: Course) => {
+        const hasPeriodConflict = selectedCourses.some(c => c.period === course.period);
+        const isSelected = selectedCourses.some(c => c.id === course.id);
+
+        if (isSelected) {
+            return `ring-2 ring-offset-2 ${course.period === 'PERIODO_1' ? 'ring-teal-500' : 'ring-indigo-500'}`;
+        }
+        if (hasPeriodConflict) {
+            return "opacity-50 bg-gray-200 cursor-not-allowed";
+        }
+        return "bg-white";
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (selectedCourses.length > 0) {
+            onNext();
+        } else {
+            setError("Debe seleccionar al menos un curso.");
+        }
     };
 
     return (
-        <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg animate-fade-in">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Selección de Cursos</h2>
-            <p className="text-gray-600 mb-4">Seleccione hasta 3 cursos de actualización. Los cursos están organizados por periodo.</p>
-            <div className="bg-blue-50 border border-blue-200 text-blue-800 rounded-md px-4 py-2 mb-6">
-                Cursos seleccionados: {formData.selectedCourses.length} / 3
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl mx-auto">
+            <h2 className="text-2xl font-bold mb-2 text-gray-800">Selección de Cursos</h2>
+            <p className="text-gray-600 mb-6">Seleccione hasta 3 cursos de actualización. Los cursos están organizados por periodo.</p>
+            
+            <div className="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-6 rounded-md" role="alert">
+                <p className="font-bold">Cursos seleccionados: {selectedCourses.length} / 3</p>
             </div>
-
-            {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-3 rounded-md">{error}</p>}
+            
+            {error && (
+                <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-md" role="alert">
+                    <p>{error}</p>
+                </div>
+            )}
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {courses.map(course => {
-                    const isSelected = formData.selectedCourses.includes(course.id_curso);
-                    const isPeriod1 = course.periodo.trim() === 'PERIODO 1';
-                    return (
-                        <div
-                            key={course.id_curso}
-                            onClick={() => handleSelectCourse(course.id_curso)}
-                            className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 transform hover:scale-105
-                                ${isSelected 
-                                    ? 'bg-blue-600 text-white border-blue-700 ring-2 ring-blue-400' 
-                                    : `bg-white hover:shadow-md ${isPeriod1 ? 'border-teal-300' : 'border-indigo-300'}`
-                                }`}
-                        >
-                            <div className="flex justify-between items-start">
-                                <h3 className={`font-bold text-sm ${isSelected ? 'text-white' : 'text-gray-800'}`}>{course.nombre_curso}</h3>
-                                <div className={`w-5 h-5 border rounded flex items-center justify-center ml-2 flex-shrink-0 ${isSelected ? 'bg-white border-blue-600' : 'border-gray-400'}`}>
-                                    {isSelected && <svg className="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>}
-                                </div>
+                {courses.map(course => (
+                    <div
+                        key={course.id}
+                        onClick={() => {
+                            const hasPeriodConflict = selectedCourses.some(c => c.period === course.period);
+                            const isSelected = selectedCourses.some(c => c.id === course.id);
+                            if (hasPeriodConflict && !isSelected) {
+                                setError("Ya ha seleccionado un curso para este periodo.");
+                            } else {
+                                handleSelectCourse(course);
+                            }
+                        }}
+                        className={`p-3 rounded-lg border transition-all duration-200 cursor-pointer ${getCourseCardClass(course)} ${course.period === 'PERIODO_1' ? 'border-teal-300 hover:border-teal-500 bg-teal-50' : 'border-indigo-300 hover:border-indigo-500 bg-indigo-50'}`}
+                    >
+                        <div className="flex items-start justify-between">
+                            <div className="flex-grow pr-2">
+                                <h3 className="font-bold text-sm text-gray-800">{course.name}</h3>
+                                <p className="text-xs text-gray-500 mt-1">Fechas: {course.dates}</p>
                             </div>
-                            <p className={`text-xs mt-2 ${isSelected ? 'text-blue-100' : 'text-gray-600'}`}>Fechas: {course.fechas}</p>
-                            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full mt-3 inline-block ${isPeriod1 ? (isSelected ? 'bg-teal-400 text-teal-900' : 'bg-teal-100 text-teal-800') : (isSelected ? 'bg-indigo-400 text-indigo-900' : 'bg-indigo-100 text-indigo-800')}`}>
-                                {course.periodo}
-                            </span>
+                            <input
+                                type="checkbox"
+                                checked={selectedCourses.some(c => c.id === course.id)}
+                                readOnly
+                                className="form-checkbox h-5 w-5 text-blue-600 rounded cursor-pointer"
+                            />
                         </div>
-                    );
-                })}
+                    </div>
+                ))}
             </div>
 
-            <div className="mt-8 flex justify-between">
-                <button
-                    onClick={onBack}
-                    className="bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors"
-                >
-                    Regresar
-                </button>
-                <button
-                    onClick={onNext}
-                    disabled={formData.selectedCourses.length === 0}
-                    className="bg-blue-600 text-white font-bold py-2 px-6 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-                >
-                    Continuar
-                </button>
-            </div>
+            <form onSubmit={handleSubmit}>
+                <div className="mt-8 flex justify-between">
+                    <button type="button" onClick={onBack} className="bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-400">Regresar</button>
+                    <button type="submit" className="bg-rose-800 text-white font-bold py-2 px-6 rounded-lg hover:bg-rose-900">Continuar</button>
+                </div>
+            </form>
         </div>
     );
 };

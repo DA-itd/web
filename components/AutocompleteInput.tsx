@@ -1,81 +1,65 @@
+import React, { useState, useEffect } from 'react';
+import { Teacher } from '../types';
 
-import React, { useState, useEffect, useRef } from 'react';
-
-interface AutocompleteInputProps {
-    id: string;
-    name: string;
+interface AutocompleteProps {
+    teachers: Teacher[];
+    onSelect: (teacher: Teacher) => void;
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onSelect: (value: string) => void;
-    suggestions: string[];
+    name?: string;
     placeholder?: string;
 }
 
-const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
-    id,
-    name,
-    value,
-    onChange,
-    onSelect,
-    suggestions,
-    placeholder
-}) => {
-    const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
+const AutocompleteInput: React.FC<AutocompleteProps> = ({ teachers, onSelect, value, onChange, name, placeholder }) => {
+    const [suggestions, setSuggestions] = useState<Teacher[]>([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
-    const wrapperRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-                setShowSuggestions(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        onChange(e);
-        const userInput = e.currentTarget.value;
-        if (userInput) {
-            const filtered = suggestions.filter(
-                suggestion => suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-            );
-            setFilteredSuggestions(filtered.slice(0, 5)); // Limit to 5 suggestions
-            setShowSuggestions(true);
+        if (value && value.length > 2) {
+            const filteredTeachers = teachers.filter(teacher =>
+                teacher.nombreCompleto.toLowerCase().includes(value.toLowerCase())
+            ).slice(0, 5);
+            setSuggestions(filteredTeachers);
         } else {
-            setShowSuggestions(false);
+            setSuggestions([]);
         }
-    };
+    }, [value, teachers]);
 
-    const handleSuggestionClick = (suggestion: string) => {
-        onSelect(suggestion);
+    const handleSelect = (teacher: Teacher) => {
+        onSelect(teacher);
+        setSuggestions([]);
         setShowSuggestions(false);
     };
 
+    const handleFocus = () => {
+      if (value && value.length > 2) {
+        setShowSuggestions(true);
+      }
+    };
+
     return (
-        <div className="relative" ref={wrapperRef}>
+        <div className="relative">
             <input
                 type="text"
-                id={id}
                 name={name}
                 value={value}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder={placeholder}
+                onChange={onChange}
+                onFocus={handleFocus}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                placeholder={placeholder || "Escriba su nombre completo"}
+                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                required
                 autoComplete="off"
             />
-            {showSuggestions && filteredSuggestions.length > 0 && (
-                <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-auto shadow-lg">
-                    {filteredSuggestions.map((suggestion, index) => (
+            {showSuggestions && suggestions.length > 0 && (
+                <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-auto">
+                    {suggestions.map((teacher) => (
                         <li
-                            key={index}
-                            onClick={() => handleSuggestionClick(suggestion)}
-                            className="px-3 py-2 cursor-pointer hover:bg-gray-100"
+                            key={teacher.curp}
+                            onMouseDown={() => handleSelect(teacher)}
+                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                         >
-                            {suggestion}
+                            {teacher.nombreCompleto}
                         </li>
                     ))}
                 </ul>

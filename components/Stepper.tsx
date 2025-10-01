@@ -1,40 +1,31 @@
-
 import React from 'react';
 
 interface StepperProps {
     currentStep: number;
+    steps: string[];
 }
 
-const steps = [
-    { number: 1, title: 'Información Personal' },
-    { number: 2, title: 'Selección de Cursos' },
-    { number: 3, title: 'Confirmación' },
-    { number: 4, title: 'Registro Completo' }
-];
-
-const Stepper: React.FC<StepperProps> = ({ currentStep }) => {
+const Stepper: React.FC<StepperProps> = ({ currentStep, steps }) => {
     return (
-        <div className="w-full py-4 px-2 md:px-8 mb-8">
-            <div className="flex items-center">
+        <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="flex items-start">
                 {steps.map((step, index) => (
-                    <React.Fragment key={step.number}>
-                        <div className="flex flex-col items-center text-center">
-                            <div
-                                className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-300
-                                ${currentStep >= step.number ? 'bg-red-700 text-white' : 'bg-gray-300 text-gray-600'}
-                                ${currentStep === step.number ? 'ring-4 ring-red-300' : ''}`}
-                            >
-                                <span className="font-bold">{step.number}</span>
+                    <React.Fragment key={index}>
+                        <div className="flex flex-col items-center w-1/4">
+                            <div className="relative flex items-center justify-center">
+                                <div className={`w-10 h-10 flex items-center justify-center z-10 rounded-full font-semibold text-white ${index < currentStep - 1 ? 'bg-rose-800' : 'bg-gray-300'} ${index === currentStep - 1 && 'ring-4 ring-rose-300'}`}>
+                                    {index + 1}
+                                </div>
+                                {index < steps.length - 1 && (
+                                    <div className={`absolute w-full top-1/2 -translate-y-1/2 left-1/2 h-1 ${index < currentStep - 1 ? 'bg-rose-800' : 'bg-gray-300'}`} />
+                                )}
                             </div>
-                            <p className={`mt-2 text-xs md:text-sm transition-colors duration-300 ${currentStep >= step.number ? 'text-gray-800 font-semibold' : 'text-gray-500'}`}>
-                                {step.title}
-                            </p>
+                            <div className="mt-2 text-center">
+                                <p className={`text-sm font-medium ${index < currentStep - 1 ? 'text-rose-800' : 'text-gray-500'}`}>
+                                    {step}
+                                </p>
+                            </div>
                         </div>
-                        {index < steps.length - 1 && (
-                            <div className={`flex-auto border-t-2 transition-colors duration-300 mx-2
-                                ${currentStep > step.number ? 'border-red-700' : 'border-gray-300'}`}
-                            ></div>
-                        )}
                     </React.Fragment>
                 ))}
             </div>

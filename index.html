@@ -3,42 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Cursos para Docentes</title>
-    
-    <!-- Tailwind CSS from CDN -->
+    <title>Sistema de Inscripción a Cursos</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'brand-dark': '#0D1B2A',
-              'brand-blue': '#1B263B',
-              'brand-lightblue': '#E0E1DD',
-              'brand-accent': '#415A77',
-            }
-          }
-        }
-      }
-    </script>
-
-    <!-- React and ReactDOM from CDN (available as global variables) -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    
-    <!-- React Hot Toast from CDN (available as global 'toast' and 'Toaster') -->
-    <script src="https://unpkg.com/react-hot-toast@2.4.1/dist/react-hot-toast.js"></script>
-    
-    <!-- Babel Standalone for JSX transpilation -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
 </head>
 <body class="bg-gray-100">
-    
     <div id="root"></div>
+
+    <!-- 
+    =============================================================================
+    == CONFIGURACIÓN OBLIGATORIA
+    =============================================================================
+    == Reemplaza la siguiente URL de ejemplo con la URL de tu Google Apps Script.
+    == Esta es la URL que copiaste al final de la Parte 2 de las instrucciones.
+    =============================================================================
+    -->
+    <script>
+      window.CONFIG = {
+        APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbywqbnoE7o6nZHLR9vjipoRRqo_Pv1qNZ-lPeoqvW_vEgEjYm-g-iX3P764THe_BI_5/exec'
+      };
+    </script>
     
-    <!-- Load the application script with JSX, which will be transpiled by Babel -->
-    <script type="text/babel" src="index.tsx"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     
+    <script type="module" src="index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
 </body>
 </html>
