@@ -1,135 +1,45 @@
-import { Course, Teacher, FormData, SubmissionData } from '../types';
+import { Teacher, Course, SubmissionData, RegistrationResult } from '../types';
 
-const URLS = {
-  COURSES: 'https://raw.githubusercontent.com/DA-itd/web/main/cursos.json',
-  TEACHERS: 'https://raw.githubusercontent.com/DA-itd/web/main/docentes.json',
+// Mock data
+const mockTeachers: Teacher[] = [
+    { nombreCompleto: 'MARIA GUADALUPE SOTO', curp: 'SOMM800101HDFLRA01', email: 'maria.soto@itdurango.edu.mx' },
+    { nombreCompleto: 'JUAN PEREZ GONZALEZ', curp: 'PEGJ750315HDFLRA02', email: 'juan.perez@itdurango.edu.mx' },
+    { nombreCompleto: 'ANA KAREN MARTINEZ', curp: 'MAAK901220MDFLRA03', email: 'ana.martinez@itdurango.edu.mx' }
+];
+
+const mockCourses: Course[] = [
+    { id: 'C1', name: 'Inteligencia Artificial', dates: '19-23 AGO', period: 'PERIODO_1', hours: 40, location: 'Sala A', schedule: '09:00 a 13:00', type: 'Presencial' },
+    { id: 'C2', name: 'Desarrollo Web Moderno', dates: '19-23 AGO', period: 'PERIODO_1', hours: 40, location: 'Sala B', schedule: '14:00 a 18:00', type: 'Presencial' },
+    { id: 'C3', name: 'Bases de Datos NoSQL', dates: '26-30 AGO', period: 'PERIODO_2', hours: 40, location: 'Sala A', schedule: '09:00 a 13:00', type: 'Presencial' },
+    { id: 'C4', name: 'Gestión de Proyectos Ágiles', dates: '26-30 AGO', period: 'PERIODO_2', hours: 40, location: 'Sala C', schedule: '09:00 a 13:00', type: 'Presencial' }
+];
+
+const mockDepartments: string[] = [
+    "Sistemas y Computación",
+    "Ingeniería Industrial",
+    "Ciencias Básicas",
+    "Eléctrica y Electrónica",
+    "Ciencias Económico Administrativas"
+];
+
+
+export const getTeachers = (): Promise<Teacher[]> => {
+    return new Promise(resolve => setTimeout(() => resolve(mockTeachers), 500));
 };
 
-const fetchData = async (url: string) => {
-    const response = await fetch(`${url}?v=${new Date().getTime()}`);
-    if (!response.ok) {
-        throw new Error(`Failed to load file: ${response.statusText}`);
-    }
-    return response.text();
+export const getCourses = (): Promise<Course[]> => {
+    return new Promise(resolve => setTimeout(() => resolve(mockCourses), 500));
 };
 
-const safeJSONParse = (text: string) => {
-    // Strip BOM
-    let cleanedText = text.replace(/^\uFEFF/, '');
-    try {
-        return JSON.parse(cleanedText);
-    } catch (e) {
-        console.error("Error parsing JSON:", e, cleanedText);
-        throw new Error("A data file has an incorrect format.");
-    }
+export const getDepartments = (): Promise<string[]> => {
+    return new Promise(resolve => setTimeout(() => resolve(mockDepartments), 500));
 };
 
-const getProp = (obj: any, keys: string[]): any => {
-    const key = Object.keys(obj).find(k => keys.includes(k.trim().replace(/\uFEFF/g, "").toLowerCase()));
-    return key ? obj[key] : undefined;
-};
-
-const trimString = (value: any) => (value || "").trim();
-
-export const loadInitialData = async (): Promise<{ courses: Course[], teachers: Teacher[] }> => {
-    const [coursesText, teachersText] = await Promise.all([
-        fetchData(URLS.COURSES),
-        fetchData(URLS.TEACHERS),
-    ]);
-
-    const coursesData = safeJSONParse(coursesText);
-    const teachersData = safeJSONParse(teachersText);
-    
-    const courses: Course[] = coursesData.map((item: any) => ({
-        id: getProp(item, ["id_curso", "id"]),
-        name: getProp(item, ["#", "nombre_curso", "nombre del curso", "nombre"]),
-        dates: getProp(item, ["fechavisible", "fechas"]),
-        period: getProp(item, ["periodo"]),
-        hours: getProp(item, ["horas"]),
-        location: getProp(item, ["lugar"]),
-        schedule: getProp(item, ["horario"]),
-        type: getProp(item, ["tipo"]),
-    })).filter((c: Course) => c.id && c.name).sort((a,b) => a.period.localeCompare(b.period));
-
-    const teachers: Teacher[] = teachersData.map((item: any) => ({
-        nombreCompleto: trimString(getProp(item, ["nombre completo", "nombrecompleto", "nombre"])),
-        curp: trimString(getProp(item, ["curp"])).toUpperCase(),
-        email: trimString(getProp(item, ["email"])).toLowerCase(),
-    })).filter((t: Teacher) => t.nombreCompleto);
-
-    return { courses, teachers };
-};
-
-export const submitRegistration = async (formData: FormData, allCourses: Course[]): Promise<{ status: string, registrationId?: string, message?: string }> => {
-    const scriptUrl = window.CONFIG.APPS_SCRIPT_URL;
-
-    if (!scriptUrl || scriptUrl.includes('YOUR_DEPLOYMENT_ID')) {
-      console.warn("SIMULATION MODE: Google Apps Script URL is not configured. Returning a mock response.");
-      return new Promise(resolve => {
-        setTimeout(() => {
-          const courseId = formData.selectedCourses[0];
-          let periodCode = "XX";
-          if (courseId) {
-            const courseParts = courseId.split('-');
-            if (courseParts.length === 4) {
-              periodCode = courseParts[2];
-            }
-          }
-          const registrationId = `TNM-054-${periodCode}-2026-${Math.floor(Math.random() * 1000) + 1}`;
-          resolve({ status: 'success', registrationId });
-        }, 1000);
-      });
-    }
-
-    const payload: SubmissionData = {
-        fullName: formData.fullName,
-        curp: formData.curp,
-        email: formData.email,
-        gender: formData.gender,
-        department: formData.department,
-        timestamp: new Date().toISOString(),
-        selectedCourses: allCourses
-            .filter(course => formData.selectedCourses.includes(course.id))
-            .map(course => ({
-                id: course.id,
-                name: course.name,
-                dates: course.dates,
-                location: course.location,
-                schedule: course.schedule
-            })),
-    };
-
-    try {
-        const response = await fetch(scriptUrl, {
-            method: 'POST',
-            mode: 'cors',
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
-        }
-
-        const result = await response.json();
-
-        if (result.status === 'error') {
-            throw new Error(`Apps Script Error: ${result.message}`);
-        }
-
-        return result;
-
-    } catch (error: any) {
-        console.error("Error in submitRegistration:", error);
-        let errorMessage = "Error submitting registration. Please try again later.";
-        if (error.message === 'Failed to fetch') {
-            errorMessage = 'Connection Error. Could not contact the registration server. Please check your internet connection and verify the Google Script URL is correct and deployed for "Anyone" access.';
-        } else if (error.message.includes('Apps Script Error')) {
-            errorMessage = error.message;
-        }
-        throw new Error(errorMessage);
-    }
+export const submitRegistration = (submission: SubmissionData): Promise<RegistrationResult[]> => {
+    console.log("Submitting registration:", submission);
+    const results: RegistrationResult[] = submission.selectedCourses.map(course => ({
+        courseName: course.name,
+        registrationId: `REG-${course.id}-${Math.random().toString(36).substring(2, 9).toUpperCase()}`
+    }));
+    return new Promise(resolve => setTimeout(() => resolve(results), 1500));
 };

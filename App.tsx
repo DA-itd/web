@@ -6,146 +6,123 @@ import Step1PersonalInfo from './components/Step1PersonalInfo';
 import Step2CourseSelection from './components/Step2CourseSelection';
 import Step3Confirmation from './components/Step3Confirmation';
 import Step4Success from './components/Step4Success';
-import { loadInitialData, submitRegistration } from './services/api';
-import { FormData, Course, Teacher } from './types';
+import { FormData, Course, Teacher, RegistrationResult, SubmissionData } from './types';
+import { getTeachers, getCourses, getDepartments, submitRegistration } from './services/api';
 
-declare global {
-  interface Window {
-    CONFIG: {
-      APPS_SCRIPT_URL: string;
-    }
-  }
-}
-
-const App: React.FC = () => {
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<FormData>({
+const initialFormData: FormData = {
     fullName: '',
     curp: '',
     email: '',
     gender: 'Mujer',
     department: '',
-    selectedCourses: [],
-  });
+    selectedCourses: []
+};
 
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [teachers, setTeachers] = useState<Teacher[]>([]);
-  const [departments, setDepartments] = useState<string[]>([
-      "DEPARTAMENTO DE SISTEMAS Y COMPUTACION",
-      "DEPARTAMENTO DE INGENIERÍA ELÉCTRICA Y ELECTRÓNICA",
-      "DEPARTAMENTO DE CIENCIAS ECONOMICO-ADMINISTRATIVAS",
-      "DEPARTAMENTO DE INGENIERÍA QUÍMICA-BIOQUÍMICA",
-      "DEPARTAMENTO DE CIENCIAS DE LA TIERRA",
-      "DEPARTAMENTO DE CIENCIAS BASICAS",
-      "DEPARTAMENTO DE METAL-MECÁNICA",
-      "DEPARTAMENTO DE INGENIERÍA INDUSTRIAL",
-      "DIVISION DE ESTUDIOS DE POSGRADO E INVESTIGACION",
-      "ADMINISTRATIVO",
-      "EXTERNO"
-  ]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+const App: React.FC = () => {
+    const [currentStep, setCurrentStep] = useState(1);
+    const [formData, setFormData] = useState<FormData>(initialFormData);
+    const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
+    const [registrationResult, setRegistrationResult] = useState<RegistrationResult[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const { courses, teachers } = await loadInitialData();
-        setCourses(courses);
-        setTeachers(teachers);
-      } catch (err: any) {
-        console.error("Error loading initial data:", err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
+    const [teachers, setTeachers] = useState<Teacher[]>([]);
+    const [courses, setCourses] = useState<Course[]>([]);
+    const [departments, setDepartments] = useState<string[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                const [teachersData, coursesData, departmentsData] = await Promise.all([
+                    getTeachers(),
+                    getCourses(),
+                    getDepartments()
+                ]);
+                setTeachers(teachersData);
+                setCourses(coursesData);
+                setDepartments(departmentsData);
+            } catch (err) {
+                setError("No se pudieron cargar los datos necesarios para la inscripción. Por favor, intente de nuevo más tarde.");
+                console.error(err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const steps = ["Información Personal", "Selección de Cursos", "Confirmación", "Registro Exitoso"];
+
+    const handleNext = () => setCurrentStep(prev => prev + 1);
+    const handleBack = () => setCurrentStep(prev => prev - 1);
+
+    const handleSubmit = async () => {
+        const submissionData: SubmissionData = {
+            ...formData,
+            timestamp: new Date().toISOString(),
+            selectedCourses: selectedCourses.map(c => ({
+                id: c.id,
+                name: c.name,
+                dates: c.dates,
+                location: c.location,
+                schedule: c.schedule,
+            })),
+        };
+
+        // Update formData to store just the IDs, matching the type definition
+        const updatedFormData = { ...formData, selectedCourses: selectedCourses.map(c => c.id) };
+        setFormData(updatedFormData);
+
+        try {
+            const result = await submitRegistration(submissionData);
+            setRegistrationResult(result);
+            handleNext();
+        } catch (error) {
+            console.error("Error submitting registration:", error);
+            setError("Hubo un error al procesar su registro. Intente de nuevo.");
+        }
     };
 
-    fetchData();
-  }, []);
+    const renderStep = () => {
+        switch (currentStep) {
+            case 1:
+                return <Step1PersonalInfo formData={formData} setFormData={setFormData} departments={departments} teachers={teachers} onNext={handleNext} />;
+            case 2:
+                return <Step2CourseSelection courses={courses} selectedCourses={selectedCourses} setSelectedCourses={setSelectedCourses} onNext={handleNext} onBack={handleBack} />;
+            case 3:
+                return <Step3Confirmation formData={formData} courses={selectedCourses} onBack={handleBack} onSubmit={handleSubmit} />;
+            case 4:
+                return <Step4Success registrationResult={registrationResult} applicantName={formData.fullName} />;
+            default:
+                return null;
+        }
+    };
 
-  const handleSubmit = async () => {
-    setError(null);
-    try {
-      const response = await submitRegistration(formData, courses);
-      if (response.status === 'success' && response.registrationId) {
-        setFormData(prev => ({ ...prev, registrationId: response.registrationId }));
-        setStep(4);
-      } else {
-        throw new Error(response.message || 'An unknown error occurred.');
-      }
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
-
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <Step1PersonalInfo
-            formData={formData}
-            setFormData={setFormData}
-            departments={departments}
-            teachers={teachers}
-            onNext={() => setStep(2)}
-          />
-        );
-      case 2:
-        return (
-          <Step2CourseSelection
-            courses={courses}
-            selectedCourses={courses.filter(c => formData.selectedCourses.includes(c.id))}
-            setSelectedCourses={(selected) => {
-              const selectedIds = selected.map(c => c.id);
-              setFormData(prev => ({ ...prev, selectedCourses: selectedIds }));
-            }}
-            onNext={() => setStep(3)}
-            onBack={() => setStep(1)}
-          />
-        );
-      case 3:
-        return (
-          <Step3Confirmation
-            formData={formData}
-            courses={courses.filter(c => formData.selectedCourses.includes(c.id))}
-            onBack={() => setStep(2)}
-            onSubmit={handleSubmit}
-          />
-        );
-      case 4:
-        return <Step4Success registrationId={formData.registrationId || ''} />;
-      default:
-        return null;
-    }
-  };
-
-  const steps = ["Información Personal", "Selección de Cursos", "Confirmación", "Registro Completo"];
-
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <div className="border-b-8 border-blue-800" />
-      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Stepper currentStep={step} steps={steps} />
-        {loading ? (
-          <div className="text-center text-gray-500">Cargando datos...</div>
-        ) : (
-          <>
-            {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-w-4xl mx-auto" role="alert">
-                <strong className="font-bold">Error: </strong>
-                <span className="block sm:inline">{error}</span>
-              </div>
-            )}
-            {renderStep()}
-          </>
-        )}
-      </main>
-      <Footer />
-    </div>
-  );
+    return (
+        <div className="flex flex-col min-h-screen bg-gray-50">
+            <Header />
+            <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <Stepper currentStep={currentStep} steps={steps} />
+                <div className="mt-8">
+                    {isLoading ? (
+                        <div className="text-center">
+                            <p className="text-lg font-semibold text-gray-700">Cargando datos...</p>
+                        </div>
+                    ) : error ? (
+                        <div className="text-center bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                            <strong className="font-bold">Error: </strong>
+                            <span className="block sm:inline">{error}</span>
+                        </div>
+                    ) : (
+                        renderStep()
+                    )}
+                </div>
+            </main>
+            <Footer />
+        </div>
+    );
 };
 
 export default App;

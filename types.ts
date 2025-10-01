@@ -22,11 +22,15 @@ export interface FormData {
   gender: string;
   department: string;
   selectedCourses: string[];
-  registrationId?: string;
+}
+
+export interface RegistrationResult {
+  courseName: string;
+  registrationId: string;
 }
 
 // FIX: Omitted 'selectedCourses' from FormData to avoid type conflict.
-export interface SubmissionData extends Omit<FormData, 'registrationId' | 'selectedCourses'> {
+export interface SubmissionData extends Omit<FormData, 'selectedCourses'> {
   timestamp: string;
   selectedCourses: {
     id: string;
