@@ -20,19 +20,21 @@ const AutocompleteInput: React.FC<AutocompleteProps> = ({ teachers, onSelect, va
                 teacher.nombreCompleto.toLowerCase().includes(value.toLowerCase())
             ).slice(0, 5);
             setSuggestions(filteredTeachers);
+            setShowSuggestions(filteredTeachers.length > 0);
         } else {
             setSuggestions([]);
+            setShowSuggestions(false);
         }
     }, [value, teachers]);
 
     const handleSelect = (teacher: Teacher) => {
         onSelect(teacher);
-        setSuggestions([]);
         setShowSuggestions(false);
     };
 
     const handleFocus = () => {
-      if (value && value.length > 2) {
+      // Show suggestions on focus only if they already exist for the current value
+      if (suggestions.length > 0) {
         setShowSuggestions(true);
       }
     };
@@ -55,7 +57,7 @@ const AutocompleteInput: React.FC<AutocompleteProps> = ({ teachers, onSelect, va
                 <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-auto">
                     {suggestions.map((teacher) => (
                         <li
-                            key={teacher.curp}
+                            key={teacher.curp || teacher.nombreCompleto}
                             onMouseDown={() => handleSelect(teacher)}
                             className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                         >

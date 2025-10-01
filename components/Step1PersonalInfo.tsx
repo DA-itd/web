@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { FormData, Teacher } from '../types';
 import AutocompleteInput from './AutocompleteInput';
 
@@ -12,6 +12,7 @@ interface Step1Props {
 
 const Step1PersonalInfo: React.FC<Step1Props> = ({ formData, setFormData, departments, teachers, onNext }) => {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const isSelectingRef = useRef(false);
 
     const validate = () => {
         const newErrors: { [key: string]: string } = {};
@@ -33,33 +34,44 @@ const Step1PersonalInfo: React.FC<Step1Props> = ({ formData, setFormData, depart
         }
     };
 
-    const simpleHandleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        
-        setFormData(prev => {
-            const newState = { ...prev, [name]: value };
-            
-            if (name === 'fullName') {
-                // If the name is changed by typing, clear the dependent fields
-                newState.curp = '';
-                newState.email = '';
-                newState.fullName = value.toUpperCase();
-            } else if (name === 'email') {
-                newState.email = value.toLowerCase();
-            }
+        let finalValue = value;
 
-            return newState;
-        });
+        if (name === 'email') {
+            finalValue = value.toLowerCase();
+        } else if (name === 'curp') {
+            finalValue = value.toUpperCase();
+        }
+
+        setFormData(prev => ({ ...prev, [name]: finalValue }));
+    };
+
+    const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (isSelectingRef.current) {
+            return;
+        }
+        const { value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            fullName: value.toUpperCase(),
+            curp: '',
+            email: '',
+        }));
     };
 
     const handleTeacherSelect = (teacher: Teacher) => {
+        isSelectingRef.current = true;
         const { nombreCompleto, curp, email } = teacher;
         setFormData(prev => ({
             ...prev,
-            fullName: nombreCompleto || '',
+            fullName: (nombreCompleto || '').toUpperCase(),
             curp: curp || '',
             email: email || '',
         }));
+        setTimeout(() => {
+            isSelectingRef.current = false;
+        }, 100);
     };
 
     return (
@@ -73,7 +85,7 @@ const Step1PersonalInfo: React.FC<Step1Props> = ({ formData, setFormData, depart
                             teachers={teachers} 
                             onSelect={handleTeacherSelect} 
                             value={formData.fullName}
-                            onChange={simpleHandleChange}
+                            onChange={handleFullNameChange}
                             name="fullName"
                             placeholder="Escriba su nombre completo"
                         />
@@ -81,17 +93,17 @@ const Step1PersonalInfo: React.FC<Step1Props> = ({ formData, setFormData, depart
                     </div>
                     <div>
                         <label htmlFor="curp" className="block text-sm font-medium text-gray-700">CURP *</label>
-                        <input type="text" name="curp" id="curp" value={formData.curp} onChange={simpleHandleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="18 caracteres" maxLength={18} required />
+                        <input type="text" name="curp" id="curp" value={formData.curp} onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="18 caracteres" maxLength={18} required />
                         {errors.curp && <p className="text-red-500 text-xs mt-1">{errors.curp}</p>}
                     </div>
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Institucional *</label>
-                        <input type="email" name="email" id="email" value={formData.email} onChange={simpleHandleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="nombre@itdurango.edu.mx" required />
+                        <input type="email" name="email" id="email" value={formData.email} onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="nombre@itdurango.edu.mx" required />
                         {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                     </div>
                     <div>
                         <label htmlFor="gender" className="block text-sm font-medium text-gray-700">Género *</label>
-                        <select name="gender" id="gender" value={formData.gender} onChange={simpleHandleChange} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" required>
+                        <select name="gender" id="gender" value={formData.gender} onChange={handleChange} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" required>
                             <option>Mujer</option>
                             <option>Hombre</option>
                             <option>Otro</option>
@@ -99,7 +111,7 @@ const Step1PersonalInfo: React.FC<Step1Props> = ({ formData, setFormData, depart
                     </div>
                     <div className="md:col-span-2">
                         <label htmlFor="department" className="block text-sm font-medium text-gray-700">Departamento *</label>
-                        <select name="department" id="department" value={formData.department} onChange={simpleHandleChange} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" required>
+                        <select name="department" id="department" value={formData.department} onChange={handleChange} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" required>
                             <option value="">Seleccione un departamento</option>
                             {departments.map(dep => <option key={dep} value={dep}>{dep}</option>)}
                         </select>

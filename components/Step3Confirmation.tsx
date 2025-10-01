@@ -30,12 +30,11 @@ const Step3Confirmation: React.FC<Step3Props> = ({ formData, courses, onBack, on
                 <h3 className="text-lg font-semibold text-gray-700 mb-4">Resumen de su Registro</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div>
-                        <p><strong>ID de Registro: </strong>TNM-054-02-2026-18</p>
+                        <p><strong>Nombre: </strong>{formData.fullName}</p>
                         <p><strong>CURP: </strong>{formData.curp}</p>
                         <p><strong>Género: </strong>{formData.gender}</p>
                     </div>
                     <div>
-                        <p><strong>Nombre: </strong>{formData.fullName}</p>
                         <p><strong>Email: </strong>{formData.email}</p>
                         <p><strong>Departamento: </strong>{formData.department}</p>
                     </div>
