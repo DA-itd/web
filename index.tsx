@@ -1,6 +1,5 @@
-// FIX: Import React and ReactDOM to resolve missing namespace and module errors.
-import React, { useState, useEffect, useRef } from 'react';
-import ReactDOM from 'react-dom/client';
+// Las importaciones de React y ReactDOM se eliminan porque se cargan como globales en index.html
+const { useState, useEffect, useRef, Fragment } = React;
 
 // =============================================================================
 // == TYPES (from types.ts)
@@ -642,7 +641,7 @@ const Stepper: React.FC<StepperProps> = ({ currentStep, steps }) => {
                     const isActive = index === currentStep - 1;
 
                     return (
-                        <React.Fragment key={index}>
+                        <Fragment key={index}>
                             <div className="flex flex-col items-center w-1/4">
                                 <div className="relative flex items-center justify-center">
                                     <div className={`w-10 h-10 flex items-center justify-center z-10 rounded-full font-semibold text-white ${isCompleted ? 'bg-rose-800' : 'bg-gray-300'} ${isActive && 'ring-4 ring-rose-300'}`}>
@@ -658,7 +657,7 @@ const Stepper: React.FC<StepperProps> = ({ currentStep, steps }) => {
                                     </p>
                                 </div>
                             </div>
-                        </React.Fragment>
+                        </Fragment>
                     );
                 })}
             </div>
