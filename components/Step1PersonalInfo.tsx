@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { FormData, Teacher } from '../types';
-import AutocompleteInput from './AutocompleteInput';
+import { FormData, Teacher } from '../types.ts';
+import AutocompleteInput from './AutocompleteInput.tsx';
 
 interface Step1Props {
     formData: FormData;

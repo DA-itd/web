@@ -1,4 +1,4 @@
-import { Teacher, Course, SubmissionData, RegistrationResult } from '../types';
+import { Teacher, Course, SubmissionData, RegistrationResult } from '../types.ts';
 
 // Mock data
 const mockTeachers: Teacher[] = [

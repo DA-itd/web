@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Course, FormData } from '../types';
+import { Course, FormData } from '../types.ts';
 
 interface Step3Props {
     formData: FormData;

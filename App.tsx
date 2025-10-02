@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Stepper from './components/Stepper';
-import Step1PersonalInfo from './components/Step1PersonalInfo';
-import Step2CourseSelection from './components/Step2CourseSelection';
-import Step3Confirmation from './components/Step3Confirmation';
-import Step4Success from './components/Step4Success';
-import { FormData, Course, Teacher, RegistrationResult, SubmissionData } from './types';
-import { getTeachers, getCourses, getDepartments, submitRegistration } from './services/api';
+import Header from './components/Header.tsx';
+import Footer from './components/Footer.tsx';
+import Stepper from './components/Stepper.tsx';
+import Step1PersonalInfo from './components/Step1PersonalInfo.tsx';
+import Step2CourseSelection from './components/Step2CourseSelection.tsx';
+import Step3Confirmation from './components/Step3Confirmation.tsx';
+import Step4Success from './components/Step4Success.tsx';
+import { FormData, Course, Teacher, RegistrationResult, SubmissionData } from './types.ts';
+import { getTeachers, getCourses, getDepartments, submitRegistration } from './services/api.ts';
 
 const initialFormData: FormData = {
     fullName: '',

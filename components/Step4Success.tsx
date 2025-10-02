@@ -1,5 +1,5 @@
 import React from 'react';
-import { RegistrationResult } from '../types';
+import { RegistrationResult } from '../types.ts';
 
 interface Step4Props {
     registrationResult: RegistrationResult[];

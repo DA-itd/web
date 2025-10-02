@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Course } from '../types';
+import { Course } from '../types.ts';
 
 interface Step2Props {
     courses: Course[];

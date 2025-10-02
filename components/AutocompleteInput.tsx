@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Teacher } from '../types';
+import { Teacher } from '../types.ts';
 
 interface AutocompleteProps {
     teachers: Teacher[];
