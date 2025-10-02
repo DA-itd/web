@@ -1,4 +1,4 @@
-// FIX: Import React and ReactDOM to resolve UMD global errors for React.StrictMode and ReactDOM.createRoot.
+// FIX: Import React and ReactDOM to fix UMD global errors.
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';

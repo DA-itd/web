@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+// FIX: Import React and hooks to fix UMD global error.
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header.tsx';
 import Footer from './components/Footer.tsx';
 import Stepper from './components/Stepper.tsx';

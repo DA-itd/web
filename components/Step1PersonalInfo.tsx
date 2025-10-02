@@ -1,4 +1,5 @@
-import { useState } from 'react';
+// FIX: Import React and useState hook to fix UMD global error.
+import React, { useState } from 'react';
 import { FormData, Teacher } from '../types.ts';
 import AutocompleteInput from './AutocompleteInput.tsx';
 
