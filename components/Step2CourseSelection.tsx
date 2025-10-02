@@ -15,6 +15,7 @@ const Step2CourseSelection: React.FC<Step2Props> = ({ courses, selectedCourses, 
     const handleSelectCourse = (course: Course) => {
         const isSelected = selectedCourses.some(c => c.id === course.id);
         let newSelection = [...selectedCourses];
+        setError(null); // Clear previous errors on a new action
 
         if (isSelected) {
             newSelection = newSelection.filter(c => c.id !== course.id);
@@ -44,11 +45,10 @@ const Step2CourseSelection: React.FC<Step2Props> = ({ courses, selectedCourses, 
         }
         
         setSelectedCourses(newSelection);
-        setError(null);
     };
     
     const getCourseCardClass = (course: Course) => {
-        const hasPeriodConflict = selectedCourses.some(c => c.period === course.period);
+        const hasPeriodConflict = selectedCourses.some(c => c.period === course.period && c.id !== course.id);
         const isSelected = selectedCourses.some(c => c.id === course.id);
 
         if (isSelected) {
@@ -88,15 +88,7 @@ const Step2CourseSelection: React.FC<Step2Props> = ({ courses, selectedCourses, 
                 {courses.map(course => (
                     <div
                         key={course.id}
-                        onClick={() => {
-                            const hasPeriodConflict = selectedCourses.some(c => c.period === course.period);
-                            const isSelected = selectedCourses.some(c => c.id === course.id);
-                            if (hasPeriodConflict && !isSelected) {
-                                setError("Ya ha seleccionado un curso para este periodo.");
-                            } else {
-                                handleSelectCourse(course);
-                            }
-                        }}
+                        onClick={() => handleSelectCourse(course)}
                         className={`p-3 rounded-lg border transition-all duration-200 cursor-pointer ${getCourseCardClass(course)} ${course.period === 'PERIODO_1' ? 'border-teal-300 hover:border-teal-500 bg-teal-50' : 'border-indigo-300 hover:border-indigo-500 bg-indigo-50'}`}
                     >
                         <div className="flex items-start justify-between">

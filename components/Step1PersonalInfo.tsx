@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { FormData, Teacher } from '../types';
 import AutocompleteInput from './AutocompleteInput';
 
@@ -12,7 +12,6 @@ interface Step1Props {
 
 const Step1PersonalInfo: React.FC<Step1Props> = ({ formData, setFormData, departments, teachers, onNext }) => {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const isSelectingRef = useRef(false);
 
     const validate = () => {
         const newErrors: { [key: string]: string } = {};
@@ -40,28 +39,14 @@ const Step1PersonalInfo: React.FC<Step1Props> = ({ formData, setFormData, depart
 
         if (name === 'email') {
             finalValue = value.toLowerCase();
-        } else if (name === 'curp') {
+        } else if (name === 'curp' || name === 'fullName') {
             finalValue = value.toUpperCase();
         }
 
         setFormData(prev => ({ ...prev, [name]: finalValue }));
     };
 
-    const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (isSelectingRef.current) {
-            return;
-        }
-        const { value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            fullName: value.toUpperCase(),
-            curp: '',
-            email: '',
-        }));
-    };
-
     const handleTeacherSelect = (teacher: Teacher) => {
-        isSelectingRef.current = true;
         const { nombreCompleto, curp, email } = teacher;
         setFormData(prev => ({
             ...prev,
@@ -69,9 +54,6 @@ const Step1PersonalInfo: React.FC<Step1Props> = ({ formData, setFormData, depart
             curp: curp || '',
             email: email || '',
         }));
-        setTimeout(() => {
-            isSelectingRef.current = false;
-        }, 100);
     };
 
     return (
@@ -85,7 +67,7 @@ const Step1PersonalInfo: React.FC<Step1Props> = ({ formData, setFormData, depart
                             teachers={teachers} 
                             onSelect={handleTeacherSelect} 
                             value={formData.fullName}
-                            onChange={handleFullNameChange}
+                            onChange={handleChange}
                             name="fullName"
                             placeholder="Escriba su nombre completo"
                         />
