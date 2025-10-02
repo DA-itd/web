@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Inscripción a Cursos</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!--
+    =============================================================================
+    == CAMBIO REQUERIDO: AÑADIR BABEL PARA LA TRANSPILACIÓN EN EL NAVEGADOR
+    =============================================================================
+    == Babel traducirá nuestro código TSX/JSX a JavaScript que el navegador
+    == puede entender. Esto es necesario porque GitHub Pages no lo hace.
+    =============================================================================
+    -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -18,7 +27,6 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
 <body class="bg-gray-100">
     <div id="root"></div>
@@ -37,7 +45,14 @@
       };
     </script>
     
-    <script type="module" src="index.tsx"></script>
-<script type="module" src="/index.tsx"></script>
+    <!--
+    =============================================================================
+    == CAMBIO REQUERIDO: CAMBIAR EL TIPO DE SCRIPT
+    =============================================================================
+    == Cambiamos `type="module"` a `type="text/babel"` y añadimos `data-type="module"`
+    == para que Babel sepa que debe procesar este archivo.
+    =============================================================================
+    -->
+    <script type="text/babel" data-type="module" src="index.tsx"></script>
 </body>
 </html>
