@@ -1,4 +1,4 @@
-// FIX: Import React and ReactDOM to resolve UMD global errors for React.StrictMode and ReactDOM.createRoot.
+// FIX: Import React and ReactDOM to resolve missing namespace and module errors.
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 
