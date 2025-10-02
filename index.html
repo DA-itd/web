@@ -7,12 +7,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!--
     =============================================================================
-    == CAMBIO REQUERIDO: AÑADIR BABEL PARA LA TRANSPILACIÓN EN EL NAVEGADOR
+    == CAMBIO #1: AÑADIR REACT Y REACT-DOM COMO SCRIPTS GLOBALES (MÉTODO ROBUSTO)
     =============================================================================
-    == Babel traducirá nuestro código TSX/JSX a JavaScript que el navegador
-    == puede entender. Esto es necesario porque GitHub Pages no lo hace.
+    == En lugar de usar importmap, cargamos las librerías directamente.
+    == Esto crea las variables globales `React` y `ReactDOM`.
     =============================================================================
     -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel sigue siendo necesario para traducir nuestro código JSX y TypeScript -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -21,12 +25,13 @@
 <script type="importmap">
 {
   "imports": {
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
-    "react": "https://aistudiocdn.com/react@^19.1.1",
-    "react/": "https://aistudiocdn.com/react@^19.1.1/"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
   }
 }
 </script>
+<link rel="stylesheet" href="/index.css">
 </head>
 <body class="bg-gray-100">
     <div id="root"></div>
@@ -36,7 +41,6 @@
     == CONFIGURACIÓN OBLIGATORIA
     =============================================================================
     == Reemplaza la siguiente URL de ejemplo con la URL de tu Google Apps Script.
-    == Esta es la URL que copiaste al final de la Parte 2 de las instrucciones.
     =============================================================================
     -->
     <script>
@@ -47,12 +51,13 @@
     
     <!--
     =============================================================================
-    == CAMBIO REQUERIDO: CAMBIAR EL TIPO DE SCRIPT A TYPESCRIPT
+    == CAMBIO #2: SIMPLIFICAR EL SCRIPT DE LA APLICACIÓN
     =============================================================================
-    == Cambiamos `type="text/babel"` a `type="text/typescript"` para que Babel
-    == sepa que debe procesar este archivo usando el preset de TypeScript.
+    == Usamos `text/babel` y le indicamos que use el preset de TypeScript.
+    == Ya no necesitamos `data-type="module"` porque no usamos ES Modules nativos.
     =============================================================================
     -->
-    <script type="text/typescript" data-type="module" src="index.tsx"></script>
+    <script type="text/babel" data-presets="typescript,react" src="index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
 </body>
 </html>

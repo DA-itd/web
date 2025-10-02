@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FormData, Teacher } from '../types.ts';
 import AutocompleteInput from './AutocompleteInput.tsx';
 

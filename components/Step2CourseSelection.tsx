@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Course } from '../types.ts';
 
 interface Step2Props {
