@@ -1,3 +1,5 @@
+// FIX: Import React to resolve namespace errors.
+import React from 'react';
 import { RegistrationResult } from '../types.ts';
 
 interface Step4Props {

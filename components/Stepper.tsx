@@ -1,4 +1,4 @@
-// FIX: Import React to fix UMD global error.
+// FIX: Import React to resolve UMD global errors for React.FC and React.Fragment.
 import React from 'react';
 
 interface StepperProps {

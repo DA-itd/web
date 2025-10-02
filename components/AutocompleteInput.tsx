@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+// FIX: Add React to import to resolve namespace errors.
+import React, { useState, useEffect, useRef } from 'react';
 import { Teacher } from '../types.ts';
 
 interface AutocompleteProps {

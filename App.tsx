@@ -1,4 +1,4 @@
-// FIX: Import React and hooks to fix UMD global error.
+// FIX: Add React to import to resolve namespace errors.
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header.tsx';
 import Footer from './components/Footer.tsx';

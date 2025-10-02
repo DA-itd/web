@@ -1,4 +1,4 @@
-// FIX: Import React and useState hook to fix UMD global error.
+// FIX: Add React to import to resolve namespace errors.
 import React, { useState } from 'react';
 import { FormData, Teacher } from '../types.ts';
 import AutocompleteInput from './AutocompleteInput.tsx';
