@@ -27,7 +27,6 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
 <body class="bg-gray-100">
     <div id="root"></div>
@@ -48,13 +47,12 @@
     
     <!--
     =============================================================================
-    == CAMBIO REQUERIDO: CAMBIAR EL TIPO DE SCRIPT
+    == CAMBIO REQUERIDO: CAMBIAR EL TIPO DE SCRIPT A TYPESCRIPT
     =============================================================================
-    == Cambiamos `type="module"` a `type="text/babel"` y añadimos `data-type="module"`
-    == para que Babel sepa que debe procesar este archivo.
+    == Cambiamos `type="text/babel"` a `type="text/typescript"` para que Babel
+    == sepa que debe procesar este archivo usando el preset de TypeScript.
     =============================================================================
     -->
-    <script type="text/babel" data-type="module" src="index.tsx"></script>
-<script type="module" src="/index.tsx"></script>
+    <script type="text/typescript" data-type="module" src="index.tsx"></script>
 </body>
 </html>
